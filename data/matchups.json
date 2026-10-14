@@ -1,0 +1,1890 @@
+[
+ {
+  "goodVs": [
+   {
+    "k": "roadhog",
+    "r": "Anti-heal granát vypne Take a Breather, uspání zastaví hák",
+    "s": 2
+   },
+   {
+    "k": "mauga",
+    "r": "Anti-heal granát vypne léčení z Cardiac Overdrive",
+    "s": 2
+   },
+   {
+    "k": "junker-queen",
+    "r": "Anti-heal granát vypne léčení z Adrenaline Rush",
+    "s": 1
+   },
+   {
+    "k": "winston",
+    "r": "Uspání hned po skoku zastaví dive",
+    "s": 1
+   },
+   {
+    "k": "reinhardt",
+    "r": "Uspání přeruší Charge i rozběh na Earthshatter",
+    "s": 1
+   },
+   {
+    "k": "doomfist",
+    "r": "Uspání chytí hrdinu hned po Rocket Punchi",
+    "s": 1
+   },
+   {
+    "k": "bastion",
+    "r": "Uspání okamžitě ukončí Configuration: Assault",
+    "s": 1
+   },
+   {
+    "k": "ramattra",
+    "r": "Uspání a anti-heal během Annihilation",
+    "s": 1
+   },
+   {
+    "k": "hazard",
+    "r": "Uspání po Violent Leapu, anti-heal na celý brawl",
+    "s": 1
+   },
+   {
+    "k": "emre",
+    "r": "Anti-heal granát vypne pasivní regeneraci",
+    "s": 1
+   },
+   {
+    "k": "doctrine",
+    "r": "Anti-heal granát zablokuje léčení dronů",
+    "s": 1
+   },
+   {
+    "k": "moira",
+    "r": "Anti-heal granát vypne sebeléčení z Biotic Grasp",
+    "s": 1
+   },
+   {
+    "k": "orisa",
+    "r": "Anti-heal granát omezí výdrž ve Fortify",
+    "s": 1
+   }
+  ],
+  "key": "ana"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "zenyatta",
+    "r": "Bez únikovky – Inferno Rush a hoření rychle dorazí",
+    "s": 2
+   },
+   {
+    "k": "ana",
+    "r": "Dancing Blaze uhne uspání, oheň dorazí zblízka",
+    "s": 1
+   },
+   {
+    "k": "widowmaker",
+    "r": "Inferno Rush rychle dostane k odstřelovací pozici",
+    "s": 1
+   },
+   {
+    "k": "lifeweaver",
+    "r": "Velký hitbox bez burstu, hoření rychle srazí",
+    "s": 1
+   },
+   {
+    "k": "illari",
+    "r": "Hoření a Dancing Blaze vyhrají souboj zblízka",
+    "s": 1
+   }
+  ],
+  "key": "anran"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "pharah",
+    "r": "Hitscan na dlouhou vzdálenost sundá letce ze vzduchu",
+    "s": 2
+   },
+   {
+    "k": "echo",
+    "r": "Přesné hitscan rány proti křehkému letci",
+    "s": 1
+   },
+   {
+    "k": "juno",
+    "r": "Rychle srazí štíty i nízké zdraví ve vzduchu",
+    "s": 1
+   },
+   {
+    "k": "jetpack-cat",
+    "r": "Zaměřená puška snadno trefí létajícího supporta",
+    "s": 1
+   },
+   {
+    "k": "reaper",
+    "r": "Coach Gun drží odstup, puška trestá z dálky",
+    "s": 1
+   },
+   {
+    "k": "mizuki",
+    "r": "Hitscan rány Kekkai Sanctuary nepohltí",
+    "s": 1
+   },
+   {
+    "k": "freja",
+    "r": "Hitscan trefí i během Updraftu",
+    "s": 1
+   },
+   {
+    "k": "cassidy",
+    "r": "Větší dosah a zoom vyhrají souboj na dálku",
+    "s": 1
+   },
+   {
+    "k": "mercy",
+    "r": "Hitscan trefí i během Guardian Angel",
+    "s": 1
+   }
+  ],
+  "key": "ashe"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "genji",
+    "r": "Immortality Field zruší Dragonblade",
+    "s": 1
+   },
+   {
+    "k": "junkrat",
+    "r": "Immortality Field přežije RIP-Tire i spam",
+    "s": 1
+   },
+   {
+    "k": "reaper",
+    "r": "Immortality Field zachrání tým před Death Blossom",
+    "s": 1
+   },
+   {
+    "k": "tracer",
+    "r": "Immortality Field zruší Pulse Bomb",
+    "s": 1
+   }
+  ],
+  "key": "baptiste"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "reinhardt",
+    "r": "Assault forma roztaví bariéru během pár vteřin",
+    "s": 2
+   },
+   {
+    "k": "domina",
+    "r": "Rychle prostřelí Barrier Array",
+    "s": 1
+   },
+   {
+    "k": "sigma",
+    "r": "Experimental Barrier proti kulometu dlouho nevydrží",
+    "s": 1
+   },
+   {
+    "k": "dmon",
+    "r": "Rozstřílí Power Barrier i mech",
+    "s": 1
+   },
+   {
+    "k": "winston",
+    "r": "Bublina i velké tělo v Assault formě rychle padnou",
+    "s": 1
+   },
+   {
+    "k": "brigitte",
+    "r": "Štít a zbroj proti kulometu nestačí",
+    "s": 1
+   }
+  ],
+  "key": "bastion"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "tracer",
+    "r": "Whip Shot a Inspire vyhrají souboj zblízka",
+    "s": 2
+   },
+   {
+    "k": "genji",
+    "r": "Široký dosah cepu a Whip Shot zastaví dive",
+    "s": 2
+   },
+   {
+    "k": "anran",
+    "r": "Bariéra a Whip Shot zastaví útok zblízka",
+    "s": 1
+   },
+   {
+    "k": "venture",
+    "r": "Whip Shot odhodí hned po vynoření z podzemí",
+    "s": 1
+   },
+   {
+    "k": "shion",
+    "r": "Cep a bariéra zastaví flank na motorce",
+    "s": 1
+   },
+   {
+    "k": "vendetta",
+    "r": "Whip Shot přeruší kombo meče, bariéra pohltí útok",
+    "s": 1
+   },
+   {
+    "k": "sombra",
+    "r": "Cep a léčení z Inspire vyhrají souboj zblízka",
+    "s": 1
+   },
+   {
+    "k": "lucio",
+    "r": "Whip Shot shodí ze zdi",
+    "s": 1
+   }
+  ],
+  "key": "brigitte"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "tracer",
+    "r": "Dvě přesné rány z Peacekeeperu stačí",
+    "s": 2
+   },
+   {
+    "k": "wrecking-ball",
+    "r": "Vysoké poškození na velký cíl",
+    "s": 1
+   },
+   {
+    "k": "pharah",
+    "r": "Hitscan na střední vzdálenost trefí letce",
+    "s": 1
+   },
+   {
+    "k": "echo",
+    "r": "Přesné rány trefí i během letu",
+    "s": 1
+   },
+   {
+    "k": "anran",
+    "r": "Burst z revolveru dorazí dřív, než oheň zabere",
+    "s": 1
+   },
+   {
+    "k": "sombra",
+    "r": "Burst srazí hned po vynoření ze stealthu",
+    "s": 1
+   },
+   {
+    "k": "lucio",
+    "r": "Přesné rány trefí i rychlý cíl na zdi",
+    "s": 1
+   },
+   {
+    "k": "venture",
+    "r": "Rychlý burst hned po vynoření",
+    "s": 1
+   },
+   {
+    "k": "shion",
+    "r": "Velký burst srazí po skončení Evade",
+    "s": 1
+   },
+   {
+    "k": "juno",
+    "r": "Hitscan srazí nízké zdraví i ve vzduchu",
+    "s": 1
+   }
+  ],
+  "key": "cassidy"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "hanzo",
+    "r": "Power Barrier zastaví šípy",
+    "s": 1
+   },
+   {
+    "k": "sojourn",
+    "r": "Power Barrier pohltí railgun",
+    "s": 1
+   },
+   {
+    "k": "widowmaker",
+    "r": "Bariéra kryje tým před dálkovými ranami",
+    "s": 1
+   }
+  ],
+  "key": "dmon"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "mauga",
+    "r": "Deliverance sníží maximální zdraví velkých tanků",
+    "s": 1
+   },
+   {
+    "k": "roadhog",
+    "r": "Deliverance zmenší obří zásobu zdraví",
+    "s": 1
+   },
+   {
+    "k": "winston",
+    "r": "Shrouded Momentum s redukcí poškození uteče z dive",
+    "s": 1
+   }
+  ],
+  "key": "doctrine"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "doomfist",
+    "r": "Sonic Repulsors zastaví vstup a omráčí u zdi",
+    "s": 1
+   },
+   {
+    "k": "wrecking-ball",
+    "r": "Sonic Repulsors odhodí kouli do zdi",
+    "s": 1
+   },
+   {
+    "k": "widowmaker",
+    "r": "Barrier Array zablokuje dálkové rány",
+    "s": 1
+   },
+   {
+    "k": "sojourn",
+    "r": "Segmenty bariéry pohltí railgun",
+    "s": 1
+   },
+   {
+    "k": "sierra",
+    "r": "Barrier Array zablokuje dálkovou palbu",
+    "s": 1
+   }
+  ],
+  "key": "domina"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "widowmaker",
+    "r": "Rocket Punch dosáhne až na high ground",
+    "s": 2
+   },
+   {
+    "k": "zenyatta",
+    "r": "Pomalý cíl bez únikovky",
+    "s": 1
+   },
+   {
+    "k": "ashe",
+    "r": "Seismic Slam a punch rychle zavřou vzdálenost",
+    "s": 1
+   },
+   {
+    "k": "cassidy",
+    "r": "Rocket Punch a Seismic Slam zavřou vzdálenost",
+    "s": 1
+   }
+  ],
+  "key": "doomfist"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "pharah",
+    "r": "Defense Matrix pohltí rakety, Boosters doletí až k letci",
+    "s": 2
+   },
+   {
+    "k": "junkrat",
+    "r": "Defense Matrix pohltí granáty",
+    "s": 1
+   },
+   {
+    "k": "widowmaker",
+    "r": "Boosters dostanou mech přímo na odstřelovací pozici",
+    "s": 1
+   },
+   {
+    "k": "hanzo",
+    "r": "Defense Matrix pohltí šípy",
+    "s": 1
+   },
+   {
+    "k": "ana",
+    "r": "Defense Matrix pohltí uspání i granát",
+    "s": 1
+   },
+   {
+    "k": "echo",
+    "r": "Matrix pohltí Sticky Bombs, Boosters doletí za letcem",
+    "s": 1
+   },
+   {
+    "k": "sigma",
+    "r": "Defense Matrix pohltí Hyperspheres",
+    "s": 1
+   },
+   {
+    "k": "freja",
+    "r": "Defense Matrix pohltí explozivní šípy",
+    "s": 1
+   },
+   {
+    "k": "jetpack-cat",
+    "r": "Matrix pohltí Pawjectiles, Boosters dohoní ve vzduchu",
+    "s": 1
+   },
+   {
+    "k": "baptiste",
+    "r": "Defense Matrix pohltí léčivé granáty",
+    "s": 1
+   }
+  ],
+  "key": "dva"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "brigitte",
+    "r": "Střílí ze vzduchu mimo dosah cepu",
+    "s": 1
+   },
+   {
+    "k": "junkrat",
+    "r": "Ve vzduchu mimo dosah pastí a min",
+    "s": 1
+   },
+   {
+    "k": "reinhardt",
+    "r": "Přeletí bariéru a útočí shora",
+    "s": 1
+   },
+   {
+    "k": "mei",
+    "r": "Let přes Ice Wall, mimo dosah zpomalení",
+    "s": 1
+   },
+   {
+    "k": "vendetta",
+    "r": "Ve vzduchu mimo dosah meče",
+    "s": 1
+   },
+   {
+    "k": "venture",
+    "r": "Ve vzduchu mimo dosah útoků z podzemí",
+    "s": 1
+   },
+   {
+    "k": "moira",
+    "r": "Mimo krátký dosah paprsku",
+    "s": 1
+   },
+   {
+    "k": "zarya",
+    "r": "Ve vzduchu mimo dosah paprsku",
+    "s": 1
+   }
+  ],
+  "key": "echo"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "pharah",
+    "r": "Zoomovaná puška trefí letce na dálku",
+    "s": 1
+   },
+   {
+    "k": "echo",
+    "r": "Přesné dávky trefí i ve vzduchu",
+    "s": 1
+   },
+   {
+    "k": "junkrat",
+    "r": "Delší dosah než granáty",
+    "s": 1
+   },
+   {
+    "k": "torbjorn",
+    "r": "Zničí věž z bezpečné vzdálenosti",
+    "s": 1
+   }
+  ],
+  "key": "emre"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "zenyatta",
+    "r": "Explozivní šípy smažou pomalý cíl",
+    "s": 1
+   },
+   {
+    "k": "torbjorn",
+    "r": "Výbuchy zničí věž z dálky",
+    "s": 1
+   },
+   {
+    "k": "junkrat",
+    "r": "Updraft nad granáty a přesné šípy shora",
+    "s": 1
+   },
+   {
+    "k": "ana",
+    "r": "Velký burst na pomalý cíl",
+    "s": 1
+   }
+  ],
+  "key": "freja"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "ana",
+    "r": "Deflect odrazí uspání, dive na zadní linii",
+    "s": 2
+   },
+   {
+    "k": "zenyatta",
+    "r": "Snadný cíl bez únikovky",
+    "s": 2
+   },
+   {
+    "k": "bastion",
+    "r": "Deflect vrátí palbu kulometu zpět",
+    "s": 1
+   },
+   {
+    "k": "junkrat",
+    "r": "Deflect vrátí granáty zpět",
+    "s": 1
+   },
+   {
+    "k": "hanzo",
+    "r": "Deflect odrazí šípy",
+    "s": 1
+   },
+   {
+    "k": "widowmaker",
+    "r": "Vyšplhá na high ground, Deflect odrazí ránu",
+    "s": 1
+   },
+   {
+    "k": "sojourn",
+    "r": "Deflect odrazí nabitý railgun",
+    "s": 1
+   },
+   {
+    "k": "freja",
+    "r": "Deflect odrazí explozivní šípy",
+    "s": 1
+   },
+   {
+    "k": "soldier-76",
+    "r": "Deflect vrátí palbu i Helix Rockets",
+    "s": 1
+   },
+   {
+    "k": "emre",
+    "r": "Deflect vrátí dávky i Cyber Frag",
+    "s": 1
+   }
+  ],
+  "key": "genji"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "bastion",
+    "r": "Headshot z dálky mimo dosah kulometu",
+    "s": 1
+   },
+   {
+    "k": "zenyatta",
+    "r": "Velká hlava a pomalý pohyb",
+    "s": 1
+   },
+   {
+    "k": "junkrat",
+    "r": "Delší dosah a jednorázový burst",
+    "s": 1
+   },
+   {
+    "k": "lifeweaver",
+    "r": "Velký hitbox snadno trefitelný šípy",
+    "s": 1
+   },
+   {
+    "k": "torbjorn",
+    "r": "Storm Arrows rychle zničí věž",
+    "s": 1
+   }
+  ],
+  "key": "hanzo"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "tracer",
+    "r": "Spike Guard vystřelí samonaváděcí trny",
+    "s": 1
+   },
+   {
+    "k": "genji",
+    "r": "Samonaváděcí trny trestají rychlé cíle",
+    "s": 1
+   },
+   {
+    "k": "widowmaker",
+    "r": "Vault a Violent Leap dostanou na high ground",
+    "s": 1
+   },
+   {
+    "k": "venture",
+    "r": "Jagged Wall a trny trestají útok zblízka",
+    "s": 1
+   }
+  ],
+  "key": "hazard"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "pharah",
+    "r": "Solar Rifle trefí letce z dálky",
+    "s": 1
+   },
+   {
+    "k": "echo",
+    "r": "Dalekonosná puška proti letci",
+    "s": 1
+   },
+   {
+    "k": "freja",
+    "r": "Hitscan trefí i během Updraftu",
+    "s": 1
+   },
+   {
+    "k": "jetpack-cat",
+    "r": "Silné rány na létající cíl",
+    "s": 1
+   }
+  ],
+  "key": "illari"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "tracer",
+    "r": "Purr odhodí, ve vzduchu mimo dosah pistolí",
+    "s": 1
+   },
+   {
+    "k": "genji",
+    "r": "Purr odhodí dive, Lifeline odtáhne ohroženého spoluhráče",
+    "s": 1
+   },
+   {
+    "k": "junkrat",
+    "r": "Ve vzduchu mimo pasti a miny",
+    "s": 1
+   },
+   {
+    "k": "reaper",
+    "r": "Ve vzduchu mimo krátký dosah brokovnic",
+    "s": 1
+   }
+  ],
+  "key": "jetpack-cat"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "roadhog",
+    "r": "Rampage blokuje léčení z Take a Breather",
+    "s": 1
+   },
+   {
+    "k": "reinhardt",
+    "r": "Vyhraje brawl zblízka díky ranám a Carnage",
+    "s": 1
+   },
+   {
+    "k": "mauga",
+    "r": "Rampage blokuje léčení z Cardiac Overdrive",
+    "s": 1
+   },
+   {
+    "k": "winston",
+    "r": "Brokovnice a Carnage trestají dive zblízka",
+    "s": 1
+   }
+  ],
+  "key": "junker-queen"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "reinhardt",
+    "r": "Granáty přes bariéru a zpoza rohů",
+    "s": 1
+   },
+   {
+    "k": "torbjorn",
+    "r": "Granáty zničí věž zpoza rohu",
+    "s": 1
+   },
+   {
+    "k": "domina",
+    "r": "Spam přes segmenty bariéry i kolem nich",
+    "s": 1
+   },
+   {
+    "k": "brigitte",
+    "r": "Granáty z odstupu mimo dosah cepu",
+    "s": 1
+   },
+   {
+    "k": "bastion",
+    "r": "Spam zpoza rohu bez rizika",
+    "s": 1
+   },
+   {
+    "k": "symmetra",
+    "r": "Granáty zničí věže i bariéru",
+    "s": 1
+   },
+   {
+    "k": "dmon",
+    "r": "Granáty obejdou Power Barrier",
+    "s": 1
+   }
+  ],
+  "key": "junkrat"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "reaper",
+    "r": "Hover a Glide Boost drží mimo dosah brokovnic",
+    "s": 1
+   },
+   {
+    "k": "mei",
+    "r": "Ve vzduchu mimo zpomalení a Ice Wall",
+    "s": 1
+   },
+   {
+    "k": "junkrat",
+    "r": "Vznáší se nad pastmi a minami",
+    "s": 1
+   }
+  ],
+  "key": "juno"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "ana",
+    "r": "Protection Suzu očistí anti-heal i uspání",
+    "s": 2
+   },
+   {
+    "k": "sombra",
+    "r": "Suzu očistí oslabení z Cyberspace",
+    "s": 1
+   },
+   {
+    "k": "mei",
+    "r": "Suzu vysvobodí tým z Blizzardu",
+    "s": 1
+   },
+   {
+    "k": "junker-queen",
+    "r": "Suzu očistí krvácení z ran",
+    "s": 1
+   },
+   {
+    "k": "anran",
+    "r": "Suzu uhasí hoření",
+    "s": 1
+   }
+  ],
+  "key": "kiriko"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "roadhog",
+    "r": "Life Grip vytáhne spoluhráče z háku",
+    "s": 1
+   },
+   {
+    "k": "junkrat",
+    "r": "Life Grip zachrání z pasti i před RIP-Tire",
+    "s": 1
+   },
+   {
+    "k": "doomfist",
+    "r": "Life Grip vytáhne cíl Rocket Punche",
+    "s": 1
+   }
+  ],
+  "key": "lifeweaver"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "mei",
+    "r": "Speed Boost vytáhne tým z Blizzardu",
+    "s": 1
+   },
+   {
+    "k": "symmetra",
+    "r": "Speed Boost proletí kolem věží",
+    "s": 1
+   },
+   {
+    "k": "torbjorn",
+    "r": "Rychlost a wall ride mimo zaměření věže",
+    "s": 1
+   }
+  ],
+  "key": "lucio"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "dva",
+    "r": "Trvalá palba roztaví mech, Matrix nepomůže",
+    "s": 2
+   },
+   {
+    "k": "winston",
+    "r": "Trvalá palba roztaví bublinu i tank",
+    "s": 1
+   },
+   {
+    "k": "wrecking-ball",
+    "r": "Velké trvalé poškození na velký cíl",
+    "s": 1
+   },
+   {
+    "k": "hazard",
+    "r": "Overrun a trvalá palba vyhrají brawl",
+    "s": 1
+   }
+  ],
+  "key": "mauga"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "dva",
+    "r": "Proud z Endothermic Blasteru Matrix neblokuje",
+    "s": 1
+   },
+   {
+    "k": "winston",
+    "r": "Zpomalení a Ice Wall rozdělí dive",
+    "s": 1
+   },
+   {
+    "k": "wrecking-ball",
+    "r": "Zpomalení a Ice Wall zastaví kouli",
+    "s": 1
+   },
+   {
+    "k": "genji",
+    "r": "Proud z Blasteru Deflect neodrazí",
+    "s": 1
+   },
+   {
+    "k": "tracer",
+    "r": "Zpomalení a Cryo-Freeze vyhrají souboj zblízka",
+    "s": 1
+   },
+   {
+    "k": "vendetta",
+    "r": "Zpomalení a Ice Wall zastaví útok mečem",
+    "s": 1
+   },
+   {
+    "k": "anran",
+    "r": "Zpomalení a Ice Wall rozbijí vstup",
+    "s": 1
+   },
+   {
+    "k": "shion",
+    "r": "Zpomalení zastaví rychlý flank",
+    "s": 1
+   }
+  ],
+  "key": "mei"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "junkrat",
+    "r": "Guardian Angel uletí z dosahu pasti a RIP-Tire",
+    "s": 1
+   },
+   {
+    "k": "reaper",
+    "r": "Guardian Angel uletí od brokovnic",
+    "s": 1
+   },
+   {
+    "k": "mei",
+    "r": "Přeletí Ice Wall za spoluhráčem",
+    "s": 1
+   }
+  ],
+  "key": "mercy"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "tracer",
+    "r": "Binding Chain omezí pohyb rychlého flankera",
+    "s": 1
+   },
+   {
+    "k": "wrecking-ball",
+    "r": "Binding Chain zastaví kouli",
+    "s": 1
+   },
+   {
+    "k": "junkrat",
+    "r": "Kekkai Sanctuary pohltí granáty",
+    "s": 1
+   },
+   {
+    "k": "doomfist",
+    "r": "Binding Chain zabrzdí vstup",
+    "s": 1
+   },
+   {
+    "k": "pharah",
+    "r": "Kekkai Sanctuary pohltí rakety",
+    "s": 1
+   }
+  ],
+  "key": "mizuki"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "genji",
+    "r": "Samonaváděcí paprsek Deflect neodrazí",
+    "s": 2
+   },
+   {
+    "k": "tracer",
+    "r": "Paprsek zaměří i rychlý cíl",
+    "s": 1
+   },
+   {
+    "k": "dva",
+    "r": "Paprsek Defense Matrix neblokuje",
+    "s": 1
+   },
+   {
+    "k": "shion",
+    "r": "Paprsek a Fade vyhrají souboj s flankerem",
+    "s": 1
+   }
+  ],
+  "key": "moira"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "doomfist",
+    "r": "Fortify ignoruje knockback, Javelin zastaví vstup",
+    "s": 2
+   },
+   {
+    "k": "reinhardt",
+    "r": "Fortify ignoruje Earthshatter, Javelin zastaví Charge",
+    "s": 1
+   },
+   {
+    "k": "hazard",
+    "r": "Fortify ignoruje knockback z Jagged Wall",
+    "s": 1
+   },
+   {
+    "k": "wrecking-ball",
+    "r": "Javelin a Fortify zastaví kouli",
+    "s": 1
+   },
+   {
+    "k": "junker-queen",
+    "r": "Fortify sníží poškození z ran",
+    "s": 1
+   }
+  ],
+  "key": "orisa"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "junkrat",
+    "r": "Ve vzduchu mimo dosah pastí a min",
+    "s": 2
+   },
+   {
+    "k": "brigitte",
+    "r": "Mimo dosah cepu i Whip Shotu",
+    "s": 1
+   },
+   {
+    "k": "reinhardt",
+    "r": "Rakety přes bariéru shora",
+    "s": 1
+   },
+   {
+    "k": "mei",
+    "r": "Ve vzduchu mimo dosah zpomalení",
+    "s": 1
+   },
+   {
+    "k": "zarya",
+    "r": "Mimo krátký dosah paprsku",
+    "s": 1
+   },
+   {
+    "k": "moira",
+    "r": "Mimo krátký dosah paprsku",
+    "s": 1
+   },
+   {
+    "k": "symmetra",
+    "r": "Ve vzduchu mimo dosah paprsku i věží",
+    "s": 1
+   },
+   {
+    "k": "vendetta",
+    "r": "Ve vzduchu mimo dosah meče",
+    "s": 1
+   },
+   {
+    "k": "venture",
+    "r": "Ve vzduchu mimo dosah útoků z podzemí",
+    "s": 1
+   },
+   {
+    "k": "reaper",
+    "r": "Mimo dosah brokovnic",
+    "s": 1
+   },
+   {
+    "k": "ramattra",
+    "r": "Mimo dosah Pummelu i Annihilation",
+    "s": 1
+   }
+  ],
+  "key": "pharah"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "reinhardt",
+    "r": "Pummel prochází bariérou",
+    "s": 2
+   },
+   {
+    "k": "sigma",
+    "r": "Pummel ignoruje Experimental Barrier",
+    "s": 1
+   },
+   {
+    "k": "domina",
+    "r": "Pummel prochází Barrier Array",
+    "s": 1
+   },
+   {
+    "k": "dmon",
+    "r": "Pummel prochází Power Barrier",
+    "s": 1
+   }
+  ],
+  "key": "ramattra"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "roadhog",
+    "r": "Brokovnice drtí velké cíle, The Reaping léčí",
+    "s": 2
+   },
+   {
+    "k": "winston",
+    "r": "Velké poškození zblízka trestá dive",
+    "s": 1
+   },
+   {
+    "k": "wrecking-ball",
+    "r": "Brokovnice na velký cíl zblízka",
+    "s": 1
+   },
+   {
+    "k": "mauga",
+    "r": "Velké poškození na velký hitbox",
+    "s": 1
+   },
+   {
+    "k": "hazard",
+    "r": "Vyhraje brawl zblízka",
+    "s": 1
+   },
+   {
+    "k": "ramattra",
+    "r": "Brokovnice na velký hitbox v Nemesis formě",
+    "s": 1
+   },
+   {
+    "k": "dmon",
+    "r": "Brokovnice zblízka na mech",
+    "s": 1
+   },
+   {
+    "k": "junker-queen",
+    "r": "Brokovnice zblízka vyhraje brawl",
+    "s": 1
+   }
+  ],
+  "key": "reaper"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "hanzo",
+    "r": "Bariéra zastaví šípy",
+    "s": 1
+   },
+   {
+    "k": "ashe",
+    "r": "Bariéra pohltí dálkové rány i dynamit",
+    "s": 1
+   },
+   {
+    "k": "sojourn",
+    "r": "Bariéra pohltí railgun",
+    "s": 1
+   },
+   {
+    "k": "soldier-76",
+    "r": "Bariéra zastaví palbu i Helix Rockets",
+    "s": 1
+   },
+   {
+    "k": "sierra",
+    "r": "Bariéra pohltí palbu z Helix Rifle",
+    "s": 1
+   }
+  ],
+  "key": "reinhardt"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "junkrat",
+    "r": "Trash Compactor pohltí granáty a vrátí je",
+    "s": 1
+   },
+   {
+    "k": "pharah",
+    "r": "Trash Compactor pohltí rakety, hák stáhne ze vzduchu",
+    "s": 1
+   },
+   {
+    "k": "doomfist",
+    "r": "Hák stáhne a přeruší vstup",
+    "s": 1
+   },
+   {
+    "k": "anran",
+    "r": "Hák stáhne flankera do palby",
+    "s": 1
+   }
+  ],
+  "key": "roadhog",
+  "review": {
+   "reason": "Rework 6. 10. 2026 (dvoudávková brokovnice, Trash Compactor, slabší hák). Countery jsou napsané pro novou sadu schopností, ale zatím nejsou ověřené ve hře.",
+   "since": "2026-10-06"
+  }
+ },
+ {
+  "goodVs": [
+   {
+    "k": "ana",
+    "r": "Rychlý flank na motorce a palba zblízka",
+    "s": 1
+   },
+   {
+    "k": "zenyatta",
+    "r": "Pomalý cíl bez únikovky",
+    "s": 1
+   },
+   {
+    "k": "widowmaker",
+    "r": "Joyride rychle dostane k odstřelovací pozici",
+    "s": 1
+   },
+   {
+    "k": "lifeweaver",
+    "r": "Vysoké poškození na velký hitbox",
+    "s": 1
+   }
+  ],
+  "key": "shion"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "tracer",
+    "r": "Tracking Shot navádí palbu i na rychlé cíle",
+    "s": 1
+   },
+   {
+    "k": "genji",
+    "r": "Tracking Shot trefí i přes mobilitu",
+    "s": 1
+   },
+   {
+    "k": "lucio",
+    "r": "Tracking Shot dohoní cíl na zdi",
+    "s": 1
+   },
+   {
+    "k": "pharah",
+    "r": "Navádějící palba trefí letce",
+    "s": 1
+   },
+   {
+    "k": "jetpack-cat",
+    "r": "Navádějící palba trefí létající cíl",
+    "s": 1
+   }
+  ],
+  "key": "sierra"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "junkrat",
+    "r": "Kinetic Grasp pohltí granáty",
+    "s": 1
+   },
+   {
+    "k": "pharah",
+    "r": "Kinetic Grasp pohltí rakety",
+    "s": 1
+   },
+   {
+    "k": "hanzo",
+    "r": "Kinetic Grasp pohltí šípy",
+    "s": 1
+   },
+   {
+    "k": "freja",
+    "r": "Kinetic Grasp pohltí explozivní šípy",
+    "s": 1
+   }
+  ],
+  "key": "sigma"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "bastion",
+    "r": "Railgun headshot z dálky",
+    "s": 1
+   },
+   {
+    "k": "cassidy",
+    "r": "Delší dosah a burst z railgunu",
+    "s": 1
+   },
+   {
+    "k": "zenyatta",
+    "r": "Nabitý railgun zabije jednou ranou",
+    "s": 1
+   },
+   {
+    "k": "torbjorn",
+    "r": "Railgun zničí věž z dálky",
+    "s": 1
+   },
+   {
+    "k": "mizuki",
+    "r": "Nabitý railgun Kekkai Sanctuary nezastaví",
+    "s": 1
+   }
+  ],
+  "key": "sojourn"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "pharah",
+    "r": "Hitscan trefí letce i na střední vzdálenost",
+    "s": 2
+   },
+   {
+    "k": "echo",
+    "r": "Hitscan trefí i během letu",
+    "s": 1
+   },
+   {
+    "k": "juno",
+    "r": "Stálá palba srazí štíty i nízké zdraví",
+    "s": 1
+   },
+   {
+    "k": "jetpack-cat",
+    "r": "Hitscan trefí létající cíl",
+    "s": 1
+   },
+   {
+    "k": "freja",
+    "r": "Hitscan trefí i během Updraftu",
+    "s": 1
+   },
+   {
+    "k": "mercy",
+    "r": "Tactical Visor trefí i během Guardian Angel",
+    "s": 1
+   },
+   {
+    "k": "lucio",
+    "r": "Stálá palba trefí rychlý cíl",
+    "s": 1
+   },
+   {
+    "k": "mizuki",
+    "r": "Hitscan Kekkai Sanctuary nepohltí",
+    "s": 1
+   }
+  ],
+  "key": "soldier-76"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "torbjorn",
+    "r": "Hotfix hackne věž",
+    "s": 1
+   },
+   {
+    "k": "symmetra",
+    "r": "Hotfix hackne věže, EMP zničí bariéru",
+    "s": 1
+   },
+   {
+    "k": "illari",
+    "r": "Hotfix hackne Healing Pylon",
+    "s": 1
+   },
+   {
+    "k": "reinhardt",
+    "r": "EMP zničí bariéru",
+    "s": 1
+   },
+   {
+    "k": "roadhog",
+    "r": "Cyberspace oslabí i vlastní léčení",
+    "s": 1
+   },
+   {
+    "k": "mauga",
+    "r": "Cyberspace sníží poškození i léčení na polovinu",
+    "s": 1
+   },
+   {
+    "k": "doctrine",
+    "r": "Cyberspace sníží léčení na polovinu",
+    "s": 1
+   },
+   {
+    "k": "wuyang",
+    "r": "Cyberspace sníží léčení na polovinu",
+    "s": 1
+   }
+  ],
+  "key": "sombra",
+  "review": {
+   "reason": "Rework 6. 10. 2026: přesun do role supportu, Hack nahradil Hotfix a Cyberspace. Countery jsou napsané pro novou sadu schopností, ale zatím nejsou ověřené ve hře.",
+   "since": "2026-10-06"
+  }
+ },
+ {
+  "goodVs": [
+   {
+    "k": "dva",
+    "r": "Paprsek Defense Matrix neblokuje",
+    "s": 1
+   },
+   {
+    "k": "winston",
+    "r": "Paprsek sílí, věže zpomalí dive",
+    "s": 1
+   },
+   {
+    "k": "genji",
+    "r": "Paprsek Deflect neodrazí, věže zpomalí",
+    "s": 1
+   },
+   {
+    "k": "reinhardt",
+    "r": "Paprsek se nabíjí i na bariéře",
+    "s": 1
+   }
+  ],
+  "key": "symmetra"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "tracer",
+    "r": "Věž trestá rychlý flank",
+    "s": 1
+   },
+   {
+    "k": "genji",
+    "r": "Věž a Overload odrazí dive",
+    "s": 1
+   },
+   {
+    "k": "shion",
+    "r": "Věž hlídá flankovací trasy",
+    "s": 1
+   },
+   {
+    "k": "dva",
+    "r": "Molten Core dává extra poškození zbroji",
+    "s": 1
+   }
+  ],
+  "key": "torbjorn"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "zenyatta",
+    "r": "Bez únikovky a s nízkým zdravím",
+    "s": 2
+   },
+   {
+    "k": "widowmaker",
+    "r": "Blink přímo na odstřelovací pozici",
+    "s": 1
+   },
+   {
+    "k": "ana",
+    "r": "Rychlý flank, uspání se těžko trefuje",
+    "s": 1
+   },
+   {
+    "k": "juno",
+    "r": "Nízké zdraví a burst z pistolí",
+    "s": 1
+   },
+   {
+    "k": "lifeweaver",
+    "r": "Velký hitbox a pomalé léčení",
+    "s": 1
+   },
+   {
+    "k": "illari",
+    "r": "Rychle zničí Healing Pylon",
+    "s": 1
+   },
+   {
+    "k": "emre",
+    "r": "Bez mobility se těžko brání",
+    "s": 1
+   },
+   {
+    "k": "kiriko",
+    "r": "Rychlý burst dřív, než stihne Swift Step",
+    "s": 1
+   },
+   {
+    "k": "wuyang",
+    "r": "Nízké zdraví a burst zblízka",
+    "s": 1
+   }
+  ],
+  "key": "tracer"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "ana",
+    "r": "Soaring Slice rychle doletí k zadní linii",
+    "s": 1
+   },
+   {
+    "k": "zenyatta",
+    "r": "Pomalý cíl bez únikovky",
+    "s": 1
+   },
+   {
+    "k": "widowmaker",
+    "r": "Soaring Slice dosáhne na high ground",
+    "s": 1
+   },
+   {
+    "k": "hanzo",
+    "r": "Warding Stance a rychlý vstup na blízko",
+    "s": 1
+   },
+   {
+    "k": "reinhardt",
+    "r": "Sundering Blade prosekne bariéru",
+    "s": 1
+   }
+  ],
+  "key": "vendetta"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "ana",
+    "r": "Burrow pod pozici a výbuch při vynoření",
+    "s": 1
+   },
+   {
+    "k": "zenyatta",
+    "r": "Pomalý cíl bez únikovky",
+    "s": 1
+   },
+   {
+    "k": "widowmaker",
+    "r": "Překvapivý útok z podzemí",
+    "s": 1
+   },
+   {
+    "k": "ashe",
+    "r": "Burrow pod pozici a odhození",
+    "s": 1
+   },
+   {
+    "k": "hanzo",
+    "r": "Burrow uhne šípům a vynoří se zblízka",
+    "s": 1
+   }
+  ],
+  "key": "venture"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "pharah",
+    "r": "Jednoranový headshot na letce",
+    "s": 2
+   },
+   {
+    "k": "echo",
+    "r": "Headshot na letce z dálky",
+    "s": 1
+   },
+   {
+    "k": "mercy",
+    "r": "Headshot i během Guardian Angel",
+    "s": 1
+   },
+   {
+    "k": "zenyatta",
+    "r": "Velká hlava a pomalý pohyb",
+    "s": 1
+   },
+   {
+    "k": "juno",
+    "r": "Nízké zdraví, headshot i ve vzduchu",
+    "s": 1
+   },
+   {
+    "k": "bastion",
+    "r": "Headshot mimo dosah kulometu",
+    "s": 1
+   },
+   {
+    "k": "doctrine",
+    "r": "Na dlouhou vzdálenost mimo dosah žezla",
+    "s": 1
+   },
+   {
+    "k": "mizuki",
+    "r": "Hitscan Kekkai Sanctuary nepohltí",
+    "s": 1
+   },
+   {
+    "k": "lifeweaver",
+    "r": "Velký hitbox a pomalý pohyb",
+    "s": 1
+   },
+   {
+    "k": "emre",
+    "r": "Delší dosah než puška",
+    "s": 1
+   },
+   {
+    "k": "sierra",
+    "r": "Delší dosah než Helix Rifle",
+    "s": 1
+   },
+   {
+    "k": "cassidy",
+    "r": "Delší dosah, revolver nestačí",
+    "s": 1
+   },
+   {
+    "k": "jetpack-cat",
+    "r": "Headshot na pomalý létající cíl",
+    "s": 1
+   },
+   {
+    "k": "baptiste",
+    "r": "Delší dosah než Biotic Launcher",
+    "s": 1
+   },
+   {
+    "k": "kiriko",
+    "r": "Headshot na křehký cíl z dálky",
+    "s": 1
+   },
+   {
+    "k": "moira",
+    "r": "Daleko mimo dosah paprsku",
+    "s": 1
+   },
+   {
+    "k": "soldier-76",
+    "r": "Delší dosah, Tactical Visor nestačí",
+    "s": 1
+   },
+   {
+    "k": "wuyang",
+    "r": "Headshot na křehký cíl z dálky",
+    "s": 1
+   },
+   {
+    "k": "zarya",
+    "r": "Z dálky mimo dosah paprsku, bubliny nestačí",
+    "s": 1
+   }
+  ],
+  "key": "widowmaker"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "widowmaker",
+    "r": "Jump Pack přímo na odstřelovací pozici",
+    "s": 2
+   },
+   {
+    "k": "ashe",
+    "r": "Skok na pozici, Tesla nepotřebuje mířit",
+    "s": 1
+   },
+   {
+    "k": "genji",
+    "r": "Tesla nepotřebuje mířit a Deflect ji neodrazí",
+    "s": 1
+   },
+   {
+    "k": "zenyatta",
+    "r": "Pomalý cíl bez únikovky",
+    "s": 1
+   },
+   {
+    "k": "illari",
+    "r": "Bublina a Tesla rychle zničí pylon",
+    "s": 1
+   },
+   {
+    "k": "lifeweaver",
+    "r": "Tesla na velký hitbox",
+    "s": 1
+   },
+   {
+    "k": "emre",
+    "r": "Skok na pozici hrdiny bez únikovky",
+    "s": 1
+   },
+   {
+    "k": "sierra",
+    "r": "Dive dřív, než stihne Anchor Drone",
+    "s": 1
+   },
+   {
+    "k": "kiriko",
+    "r": "Tesla trefí i po Swift Stepu",
+    "s": 1
+   },
+   {
+    "k": "baptiste",
+    "r": "Tesla na zadní linii za bublinou",
+    "s": 1
+   },
+   {
+    "k": "sojourn",
+    "r": "Skok na pozici, Tesla bez míření",
+    "s": 1
+   },
+   {
+    "k": "hanzo",
+    "r": "Skok na pozici, Tesla bez míření",
+    "s": 1
+   },
+   {
+    "k": "domina",
+    "r": "Skok za segmenty bariéry",
+    "s": 1
+   }
+  ],
+  "key": "winston"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "widowmaker",
+    "r": "Grappling Claw a Piledriver na odstřelovací pozici",
+    "s": 1
+   },
+   {
+    "k": "zenyatta",
+    "r": "Rozrazí zadní linii",
+    "s": 1
+   },
+   {
+    "k": "hanzo",
+    "r": "Rychlý vstup na high ground",
+    "s": 1
+   }
+  ],
+  "key": "wrecking-ball"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "doomfist",
+    "r": "Guardian Wave odhodí, Tidal Blast ochrání cíl",
+    "s": 1
+   },
+   {
+    "k": "winston",
+    "r": "Guardian Wave odhodí dive",
+    "s": 1
+   },
+   {
+    "k": "junker-queen",
+    "r": "Tidal Blast vyléčí a odhodí brawlera",
+    "s": 1
+   },
+   {
+    "k": "reinhardt",
+    "r": "Guardian Wave odhodí a rozbije postup za bariérou",
+    "s": 1
+   }
+  ],
+  "key": "wuyang"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "dva",
+    "r": "Paprsek Defense Matrix neblokuje",
+    "s": 2
+   },
+   {
+    "k": "reinhardt",
+    "r": "Údery do bubliny jen nabíjí energii",
+    "s": 1
+   },
+   {
+    "k": "genji",
+    "r": "Paprsek Deflect neodrazí, bublina vykryje kombo",
+    "s": 1
+   },
+   {
+    "k": "dmon",
+    "r": "Bubliny nabíjí energii během brawlu",
+    "s": 1
+   },
+   {
+    "k": "orisa",
+    "r": "Vysoká energie roztaví i Fortify",
+    "s": 1
+   },
+   {
+    "k": "junker-queen",
+    "r": "Bublina vykryje Rampage i Carnage",
+    "s": 1
+   },
+   {
+    "k": "hazard",
+    "r": "Bublina vykryje Downpour i burst",
+    "s": 1
+   },
+   {
+    "k": "winston",
+    "r": "Bublina nabije energii z Tesly",
+    "s": 1
+   }
+  ],
+  "key": "zarya"
+ },
+ {
+  "goodVs": [
+   {
+    "k": "mauga",
+    "r": "Orb of Discord zvýší poškození na velký cíl",
+    "s": 1
+   },
+   {
+    "k": "roadhog",
+    "r": "Discord na velký cíl, Transcendence přežije burst",
+    "s": 1
+   },
+   {
+    "k": "orisa",
+    "r": "Discord prolomí Fortify",
+    "s": 1
+   },
+   {
+    "k": "ramattra",
+    "r": "Discord na velký cíl, Transcendence proti Annihilation",
+    "s": 1
+   },
+   {
+    "k": "reinhardt",
+    "r": "Discord a stálá palba přes bariéru",
+    "s": 1
+   }
+  ],
+  "key": "zenyatta"
+ }
+]

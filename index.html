@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Counterpick Atlas</title>
+<meta name="description" content="Neoficiální český průvodce k Overwatch: patch notes, countery, schopnosti a perky všech hrdinů.">
+<meta name="theme-color" content="#0d1320">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M9 4h23l-9 24H0z' fill='%23f99e1a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky slanted command bar; home = patch board, then roster wall by role;
+   hero = full-bleed art banner with HP pips, two-column matchup board, ability grid. Single dark look on purpose. */
+:root {
+  color-scheme: dark;
+  --bg: #0d1320;
+  --bg-rgb: 13, 19, 32;
+  --panel: #161f30;
+  --panel-hi: #1e2a40;
+  --line: #2a3953;
+  --fg: #eef2f8;
+  --muted: #94a2ba;
+  --dim: #63718b;
+  --accent: #f99e1a;
+  --accent-ink: #1c1203;
+  --good: #5bd38f;
+  --bad: #ff626a;
+  --blue: #5ab6ff;
+  --hp: #eef2f8;
+  --armor: #f6b93b;
+  --shield: #5ab6ff;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --f-body: "Barlow", "Helvetica Neue", system-ui, sans-serif;
+  --cut: 10px;
+}
+html { background: var(--bg); }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--fg); font: 400 16px/1.5 var(--f-body); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; letter-spacing: .01em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1180px; margin-inline: auto; padding-inline: 16px; }
+@media (min-width: 720px) { .wrap { padding-inline: 28px; } }
+
+/* ---------- command bar ---------- */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: rgba(var(--bg-rgb), .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; align-items: center; gap: 16px; padding-block: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+.brand-mark { width: 34px; height: 30px; background: var(--accent); clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%); display: grid; place-items: center; color: var(--accent-ink); font: italic 800 17px/1 var(--f-display); }
+.brand-name { font: italic 800 22px/1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; }
+.brand-name span { color: var(--accent); }
+.nav { display: flex; gap: 4px; margin-left: auto; }
+.nav a { font: 700 15px/1 var(--f-display); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); text-decoration: none; padding: 9px 12px; }
+.nav a:hover { color: var(--fg); }
+.search { position: relative; flex: 1 1 320px; max-width: 420px; }
+.search input { width: 100%; box-sizing: border-box; height: 40px; padding: 0 44px 0 40px; background: var(--panel); border: 1px solid var(--line); color: var(--fg); font: 500 16px var(--f-body); clip-path: polygon(var(--cut) 0, 100% 0, calc(100% - var(--cut)) 100%, 0 100%); }
+.search input::placeholder { color: var(--dim); }
+.search input:focus { outline: none; border-color: var(--accent); background: var(--panel-hi); }
+.search > svg { position: absolute; left: 16px; top: 11px; width: 18px; height: 18px; color: var(--muted); pointer-events: none; }
+.search kbd { position: absolute; right: 18px; top: 9px; font: 600 12px/20px var(--f-body); color: var(--dim); border: 1px solid var(--line); padding: 0 6px; border-radius: 3px; }
+.sugg { position: absolute; left: 0; right: 0; top: 46px; margin: 0; padding: 6px; list-style: none; background: var(--panel-hi); border: 1px solid var(--line); box-shadow: 0 18px 40px rgba(0,0,0,.45); max-height: min(60vh, 420px); overflow-y: auto; }
+.sugg li { display: flex; align-items: center; gap: 10px; padding: 6px 8px; cursor: pointer; }
+.sugg li[aria-selected="true"], .sugg li:hover { background: var(--line); }
+.sugg img { width: 34px; height: 34px; object-fit: cover; background: var(--panel); }
+.sugg .s-name { font: 700 18px/1 var(--f-display); }
+.sugg .s-role { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.sugg .empty { color: var(--muted); cursor: default; }
+.role-ic { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+@media (max-width: 640px) {
+  .bar .wrap { flex-wrap: wrap; gap: 10px; }
+  .nav { margin-left: auto; }
+  .nav a { padding: 8px 6px; font-size: 14px; }
+  .search { flex-basis: 100%; max-width: none; order: 3; }
+  .search kbd { display: none; }
+}
+
+/* ---------- shared bits ---------- */
+.sec { padding-block: 40px 8px; }
+.sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.sec-head h2 { font: italic 800 clamp(30px, 4vw, 42px)/1 var(--f-display); text-transform: uppercase; }
+.sec-head .aside { color: var(--muted); font-size: 14px; }
+.sec-head a.aside { text-decoration: none; border-bottom: 1px solid var(--line); }
+.sec-head a.aside:hover { color: var(--fg); border-color: var(--accent); }
+.tag { display: inline-flex; align-items: center; gap: 6px; font: 700 13px/1 var(--f-display); text-transform: uppercase; letter-spacing: .08em; padding: 6px 14px; background: var(--panel-hi); color: var(--muted); clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); white-space: nowrap; }
+.tag.accent { background: var(--accent); color: var(--accent-ink); }
+.pill { display: inline-flex; align-items: center; gap: 5px; font: 800 13px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; padding: 5px 10px 5px 9px; clip-path: polygon(5px 0, 100% 0, calc(100% - 5px) 100%, 0 100%); white-space: nowrap; }
+.pill.buff { background: rgba(91, 211, 143, .16); color: var(--good); }
+.pill.nerf { background: rgba(255, 98, 106, .16); color: var(--bad); }
+.pill.rework { background: rgba(90, 182, 255, .16); color: var(--blue); }
+.pill.mixed { background: rgba(249, 158, 26, .16); color: var(--accent); }
+.eyebrow { font: 700 12px/1 var(--f-display); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+
+/* ---------- patch notes ---------- */
+.patch { padding-block: 26px 30px; border-top: 1px solid var(--line); }
+.patch:first-of-type { border-top: 0; padding-top: 4px; }
+.patch-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+.date { font: italic 800 18px/1 var(--f-display); padding: 7px 16px; background: var(--fg); color: var(--bg); clip-path: polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%); font-variant-numeric: tabular-nums; }
+.patch h3 { font: italic 800 clamp(26px, 3.4vw, 36px)/1.05 var(--f-display); text-transform: uppercase; }
+.patch .summary { color: var(--muted); max-width: 68ch; margin: 8px 0 0; font-size: 17px; }
+.highlights { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-top: 22px; }
+.hl { background: var(--panel); border-left: 3px solid var(--accent); padding: 14px 16px 16px; min-width: 0; }
+.hl strong { display: block; font: 700 21px/1.1 var(--f-display); margin: 7px 0 6px; }
+.hl p { margin: 0; color: var(--muted); font-size: 15px; }
+.sub { font: 700 15px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 28px 0 12px; }
+.changes { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 10px; }
+.hc { background: var(--panel); padding: 12px 14px 14px; min-width: 0; }
+.hc-top { display: flex; align-items: center; gap: 10px; }
+.hc-who { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; }
+.hc-who img { width: 42px; height: 42px; object-fit: cover; background: var(--panel-hi); }
+.hc-who span { font: 700 21px/1 var(--f-display); }
+.hc-who:hover span { color: var(--accent); }
+.hc .pill { margin-left: auto; }
+.hc ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; font-size: 15px; }
+.hc li { padding-left: 12px; position: relative; color: var(--muted); }
+.hc li::before { content: ""; position: absolute; left: 0; top: .62em; width: 5px; height: 5px; background: var(--dim); }
+.hc li b { color: var(--fg); font-weight: 600; }
+.delta { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--fg); }
+.delta s { color: var(--dim); text-decoration-thickness: 1px; }
+.delta em { font-style: normal; font-weight: 600; }
+.v-buff .delta em { color: var(--good); }
+.v-nerf .delta em { color: var(--bad); }
+.v-rework .delta em { color: var(--blue); }
+.v-mixed .delta em { color: var(--accent); }
+
+/* ---------- roster ---------- */
+.role-group { margin-bottom: 28px; }
+.role-group h3 { display: flex; align-items: center; gap: 8px; font: 700 17px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.role-group h3 .role-ic { width: 16px; height: 16px; color: var(--accent); }
+.role-group h3 small { font: inherit; color: var(--dim); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.tile { position: relative; display: block; text-decoration: none; background: var(--panel); overflow: hidden; }
+.tile img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; transition: transform .25s ease; }
+.tile span { display: block; padding: 6px 8px 7px; font: 700 15px/1.1 var(--f-display); text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-top: 2px solid transparent; }
+.tile:hover img { transform: scale(1.06); }
+.tile:hover span, .tile:focus-visible span { border-top-color: var(--accent); color: var(--accent); }
+.tile .flag { position: absolute; top: 5px; right: 5px; font-size: 11px; padding: 4px 7px 4px 6px; }
+.flag.buff { background: var(--good); color: #062012; }
+.flag.nerf { background: var(--bad); color: #2a0507; }
+.flag.rework { background: var(--blue); color: #04182b; }
+.flag.mixed { background: var(--accent); color: var(--accent-ink); }
+
+/* ---------- hero ---------- */
+.banner { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+.art-box { position: absolute; inset: 0; }
+.art-box img { width: 100%; height: 100%; object-fit: cover; object-position: 72% 18%; display: block; }
+.art-box::after { content: ""; position: absolute; inset: 0; background:
+  linear-gradient(90deg, rgba(var(--bg-rgb), 1) 0%, rgba(var(--bg-rgb), .88) 32%, rgba(var(--bg-rgb), 0) 64%),
+  linear-gradient(0deg, rgba(var(--bg-rgb), 1) 0%, rgba(var(--bg-rgb), 0) 34%); }
+.banner-body { position: relative; z-index: 1; min-height: clamp(400px, 46vw, 560px); display: flex; flex-direction: column; justify-content: flex-end; padding-block: 28px 34px; }
+.banner-inner { max-width: 540px; min-width: 0; }
+.back { display: inline-flex; align-items: center; gap: 6px; font: 700 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-decoration: none; margin-bottom: auto; padding-block: 6px; align-self: flex-start; }
+.back:hover { color: var(--accent); }
+.role-line { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.hero h1 { font: italic 800 clamp(54px, 9vw, 104px)/.88 var(--f-display); text-transform: uppercase; letter-spacing: -.005em; text-shadow: 0 2px 24px rgba(0,0,0,.35); }
+.lore { color: var(--muted); margin: 14px 0 0; max-width: 52ch; font-size: 16px; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 14px 0 0; }
+.facts div { display: flex; gap: 6px; align-items: baseline; }
+.facts dt { font: 700 12px/1 var(--f-display); letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+.facts dd { margin: 0; font-size: 15px; }
+.hp { margin-top: 20px; max-width: 460px; }
+.hp-pips { display: flex; gap: 3px; }
+.hp-pips i { flex: 1 1 0; max-width: 16px; height: 14px; transform: skewX(-18deg); background: var(--hp); }
+.hp-pips i.a { background: var(--armor); }
+.hp-pips i.s { background: var(--shield); }
+.hp-legend { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-top: 9px; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.hp-legend strong { font: italic 800 26px/1 var(--f-display); color: var(--fg); margin-right: -8px; }
+.lg::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 6px; transform: skewX(-18deg); background: var(--hp); }
+.lg.a::before { background: var(--armor); }
+.lg.s::before { background: var(--shield); }
+.patch-flags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.patch-flags a { text-decoration: none; }
+
+.matchups { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding-block: 34px 6px; }
+.mu-col { min-width: 0; }
+.mu-col h2 { display: flex; align-items: center; gap: 10px; font: italic 800 30px/1 var(--f-display); text-transform: uppercase; }
+.mu-col h2::before { content: ""; width: 14px; height: 22px; transform: skewX(-18deg); background: var(--bad); }
+.mu-col.good h2::before { background: var(--good); }
+.mu-col h2 .n { font: 700 16px/1 var(--f-display); color: var(--dim); }
+.mu-col .hint { color: var(--muted); margin: 8px 0 14px; font-size: 15px; }
+.mu-list { display: grid; gap: 6px; }
+.mu { display: grid; grid-template-columns: 54px 1fr; gap: 12px; align-items: center; padding: 8px 12px 8px 8px; background: var(--panel); text-decoration: none; border-left: 3px solid transparent; transition: background .15s; }
+.mu:hover { background: var(--panel-hi); }
+.bad .mu { border-left-color: rgba(255, 98, 106, .55); }
+.good .mu { border-left-color: rgba(91, 211, 143, .55); }
+.mu img { width: 54px; height: 54px; object-fit: cover; background: var(--panel-hi); }
+.mu-txt { min-width: 0; }
+.mu-name { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; font: 700 20px/1.05 var(--f-display); text-transform: uppercase; letter-spacing: .02em; }
+.mu-name .role-ic { color: var(--dim); }
+.mu p { margin: 3px 0 0; color: var(--muted); font-size: 15px; line-height: 1.4; }
+.hard { font: 800 11px/1 var(--f-display); letter-spacing: .1em; padding: 4px 8px 4px 7px; clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%); }
+.bad .hard { background: var(--bad); color: #2a0507; }
+.good .hard { background: var(--good); color: #062012; }
+.note { color: var(--dim); font-size: 13px; margin: 14px 0 0; grid-column: 1 / -1; }
+
+.h-sec { padding-block: 34px 6px; }
+.h-sec > h2 { font: italic 800 30px/1 var(--f-display); text-transform: uppercase; margin-bottom: 6px; }
+.h-sec > .hint { color: var(--muted); margin: 0 0 16px; font-size: 15px; }
+.ab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.ab { display: grid; grid-template-columns: 52px 1fr; gap: 14px; align-items: start; background: var(--panel); padding: 14px; min-width: 0; }
+.ab-ic { width: 52px; height: 52px; display: grid; place-items: center; background: var(--panel-hi); clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+.ab-ic img { width: 38px; height: 38px; }
+.ab h3 { font: 700 20px/1.1 var(--f-display); }
+.ab p { margin: 4px 0 0; color: var(--muted); font-size: 15px; line-height: 1.45; }
+.perk-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.perk-cols h3 { font: 700 15px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.perk-cols .ab-grid { grid-template-columns: 1fr; }
+.perk-cols .ab-ic { background: transparent; border: 1px solid var(--line); clip-path: none; border-radius: 50%; }
+.perk-cols .major .ab-ic { border-color: var(--accent); }
+
+.foot { margin-top: 48px; border-top: 1px solid var(--line); padding-block: 22px 36px; color: var(--dim); font-size: 13px; }
+.foot p { margin: 0 0 6px; max-width: 90ch; }
+.state { padding-block: 80px; color: var(--muted); }
+.back-m { display: none; position: absolute; z-index: 2; top: 12px; left: 16px; background: rgba(var(--bg-rgb), .75); padding: 8px 12px; }
+
+@media (max-width: 760px) {
+  .banner-body { min-height: 0; padding-top: 0; }
+  .art-box { position: relative; inset: auto; aspect-ratio: 1600 / 760; max-width: 100%; }
+  .art-box::after { background: linear-gradient(0deg, rgba(var(--bg-rgb), 1) 0%, rgba(var(--bg-rgb), 0) 45%); }
+  .banner { display: flex; flex-direction: column; }
+  .banner-body .back { display: none; }
+  .back-m { display: inline-flex; }
+  .hero h1 { margin-top: -18px; }
+  .matchups, .perk-cols { grid-template-columns: 1fr; }
+  .changes { grid-template-columns: 1fr; }
+}
+/* ---------- database states ---------- */
+.status-line { display: flex; align-items: center; gap: 8px; margin: -8px 0 20px; color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+.status-line .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px rgba(91, 211, 143, .18); }
+.patch-head .src { margin-left: auto; font-size: 14px; color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); }
+.patch-head .src:hover { color: var(--fg); border-color: var(--accent); }
+.empty-box { background: var(--panel); border-left: 3px solid var(--line); padding: 18px 20px; max-width: 68ch; }
+.empty-box strong { font: 700 21px/1.15 var(--f-display); }
+.empty-box p { margin: 6px 0 0; color: var(--muted); }
+.empty-box a { color: var(--fg); }
+.placeholder { display: grid; gap: 12px; justify-items: start; padding-block: 4px 20px; }
+.placeholder p, .mu-wait p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+.ph { display: block; height: 14px; background: var(--panel-hi); }
+.ph-date { width: 120px; height: 30px; clip-path: polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%); }
+.ph-title { width: min(520px, 90%); height: 34px; }
+.ph-line { width: min(640px, 100%); }
+.ph-line.short { width: min(380px, 70%); }
+.mu-wait { display: grid; gap: 6px; }
+.mu-wait .ph { height: 70px; background: var(--panel); }
+.mu-empty { color: var(--muted); background: var(--panel); padding: 16px; margin: 0; font-size: 15px; }
+.tag.rv { background: rgba(249, 158, 26, .16); color: var(--accent); }
+.mu-name .tag.rv { font-size: 11px; padding: 4px 9px; }
+.review { padding-block: 24px 0; }
+.review-in { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; background: var(--panel); border-left: 3px solid var(--accent); padding: 14px 16px; }
+.review-in p { margin: 0; color: var(--muted); font-size: 15px; flex: 1 1 280px; min-width: 0; }
+.older-list { display: grid; gap: 6px; }
+.older > summary { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; cursor: pointer; list-style: none; background: var(--panel); padding: 10px 12px; }
+.older > summary::-webkit-details-marker { display: none; }
+.older > summary:hover { background: var(--panel-hi); }
+.older-title { font: 700 19px/1.1 var(--f-display); text-transform: uppercase; }
+.older .patch { border-top: 0; padding-top: 18px; }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#" aria-label="Counterpick Atlas – přehled">
+      <span class="brand-mark" aria-hidden="true">CA</span>
+      <span class="brand-name">Counterpick <span>Atlas</span></span>
+    </a>
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+      <input id="q" type="text" placeholder="Najdi hrdinu… třeba Genji nebo Rein" autocomplete="off" spellcheck="false"
+             role="combobox" aria-label="Najdi hrdinu" aria-autocomplete="list" aria-controls="sugg" aria-expanded="false">
+      <kbd aria-hidden="true">/</kbd>
+      <ul id="sugg" class="sugg" role="listbox" hidden></ul>
+    </div>
+    <nav class="nav" aria-label="Sekce">
+      <a href="#patch">Patch notes</a>
+      <a href="#hrdinove">Hrdinové</a>
+    </nav>
+  </div>
+</header>
+
+<main id="app"><div class="wrap state">Načítám hrdiny…</div></main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Neoficiální fanouškovský projekt, není spojený s Blizzard Entertainment. Obrázky hrdinů, názvy a anglické popisy schopností © Blizzard Entertainment.</p>
+    <p>Data hrdinů z OverFast API. Patch notes jsou česká shrnutí oficiálních poznámek. Countery jsou orientační: vychází ze schopností hrdinů, ne ze statistik zápasů.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const app = document.getElementById('app');
+  const q = document.getElementById('q');
+  const sugg = document.getElementById('sugg');
+
+  const OFFICIAL = 'https://overwatch.blizzard.com/en-us/news/patch-notes/';
+  const ROLES = [
+    { key: 'tank', label: 'Tank' },
+    { key: 'damage', label: 'Damage' },
+    { key: 'support', label: 'Support' },
+  ];
+  const ROLE_LABEL = Object.fromEntries(ROLES.map(r => [r.key, r.label]));
+  const ROLE_SVG = {
+    tank: '<svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5.2v6.1c0 5 3.4 9.3 8 10.7 4.6-1.4 8-5.7 8-10.7V5.2L12 2Z"/></svg>',
+    damage: '<svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1.4 2.6a7.5 7.5 0 0 1 6 6h-3.1v2.8h3.1a7.5 7.5 0 0 1-6 6v-3.1h-2.8v3.1a7.5 7.5 0 0 1-6-6h3.1v-2.8H4.6a7.5 7.5 0 0 1 6-6v3.1h2.8V4.6Z"/></svg>',
+    support: '<svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6V3Z"/></svg>',
+  };
+  const VERDICT = {
+    buff: { label: 'Buff', sym: '▲' },
+    nerf: { label: 'Nerf', sym: '▼' },
+    rework: { label: 'Rework', sym: '◆' },
+    mixed: { label: 'Buff i nerf', sym: '◆' },
+  };
+  const ALIASES = {
+    'soldier-76': ['soldier', 's76', '76', 'vojak'], 'wrecking-ball': ['ball', 'hammond', 'koule', 'wb'],
+    'junker-queen': ['jq', 'queen'], torbjorn: ['torb'], widowmaker: ['widow', 'wm'], zenyatta: ['zen'],
+    baptiste: ['bap', 'bapt'], brigitte: ['brig'], reinhardt: ['rein'], roadhog: ['hog'], symmetra: ['sym', 'symm'],
+    lifeweaver: ['lw', 'weaver'], 'jetpack-cat': ['cat', 'kocka', 'jetpack'], dva: ['diva'], dmon: ['demon'],
+    cassidy: ['mccree', 'cass'], sojourn: ['soj'], doomfist: ['doom'], ramattra: ['ram'], kiriko: ['kiri'],
+    junkrat: ['junk', 'rat'], pharah: ['phara', 'farah'], winston: ['monkey', 'opice'], sigma: ['sig'],
+    freja: ['freya'], vendetta: ['vend'], doctrine: ['doc'], lucio: ['lucio'], moira: ['moi'],
+  };
+  const SHOWN_PATCHES = 3;          // newest patches shown in full, older ones fold away
+  const FLAG_PATCHES = 2;           // roster corner flags cover this many newest patches
+
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const norm = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const isDate = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s);
+  const fmtDate = iso => { const [y, m, d] = String(iso).slice(0, 10).split('-').map(Number); return `${d}. ${m}. ${y}`; };
+  const fmtStamp = iso => {
+    const t = new Date(iso);
+    if (isNaN(t)) return '';
+    return `${t.getDate()}. ${t.getMonth() + 1}. ${t.getFullYear()} v ${t.getHours()}:${String(t.getMinutes()).padStart(2, '0')}`;
+  };
+  const arr = v => Array.isArray(v) ? v : [];
+  const safeUrl = u => typeof u === 'string' && /^https:\/\//.test(u) ? u : OFFICIAL;
+
+  let HEROES = [], HM = {}, ICONS = null;
+  // Patch notes, counters and last check. null = still loading, 'off' = failed to load.
+  let PATCHES = null, MATCH = null, STATUS = null;
+  let BY = {}, VS = {}, REVIEW = {}, LATEST = {};
+
+  /* ---------- static hero files ---------- */
+  const getJSON = url => fetch(url).then(r => { if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); });
+
+  // Opened straight from disk, browsers refuse to load the data files next to the page.
+  if (location.protocol === 'file:') {
+    app.innerHTML = `<div class="wrap state"><div class="empty-box"><strong>Tohle je zdrojový soubor webu.</strong>
+      <p>Stránku otevři na její webové adrese. Prohlížeč ze souboru na disku nenačte data hrdinů.</p></div></div>`;
+    return;
+  }
+
+  getJSON('data/heroes.json')
+    .then(heroes => {
+      HEROES = heroes.sort((a, b) => a.name.localeCompare(b.name, 'cs'));
+      HEROES.forEach(h => { HM[h.key] = h; h._n = norm(h.name); h._a = (ALIASES[h.key] || []).map(norm); });
+      route();
+      loadData();
+      getJSON('data/icons.json').then(icons => { ICONS = icons; fillIcons(); }).catch(() => {});
+    })
+    .catch(() => {
+      app.innerHTML = '<div class="wrap state">Data hrdinů se nepodařilo načíst. Zkus stránku obnovit.</div>';
+    });
+
+  /* ---------- patch notes, counters, last check (data files updated by the daily check) ---------- */
+  function loadData() {
+    const fresh = url => fetch(url, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); });
+    fresh('data/patches.json').then(list => {
+      PATCHES = arr(list).map(d => cleanPatch(d && d.id, d)).filter(Boolean).sort((a, b) => b.date.localeCompare(a.date));
+      indexPatches();
+      refresh();
+    }).catch(() => { PATCHES = 'off'; refresh(); });
+    fresh('data/matchups.json').then(list => {
+      indexMatchups(arr(list));
+      MATCH = 'ready';
+      refresh();
+    }).catch(() => { MATCH = 'off'; refresh(); });
+    fresh('data/status.json').then(st => { STATUS = st; refresh(); }).catch(() => {});
+  }
+
+  // Keep only well-formed fields; everything is escaped on render.
+  function cleanPatch(id, d) {
+    if (!d || !isDate(d.date)) return null;
+    return {
+      id: 'p-' + String(id).replace(/[^a-zA-Z0-9_-]/g, ''),
+      date: d.date,
+      kind: String(d.kind || 'Patch'),
+      title: String(d.title || 'Patch notes'),
+      summary: String(d.summary || ''),
+      url: safeUrl(d.url),
+      highlights: arr(d.highlights).filter(h => h && h.title),
+      heroes: arr(d.heroes)
+        .filter(c => c && HM[c.key])
+        .map(c => ({ key: c.key, verdict: VERDICT[c.verdict] ? c.verdict : 'mixed', changes: arr(c.changes).filter(ch => ch && ch.a) })),
+    };
+  }
+
+  function indexPatches() {
+    LATEST = {};
+    if (!Array.isArray(PATCHES)) return;
+    for (const p of PATCHES.slice(0, FLAG_PATCHES)) for (const c of p.heroes) if (!LATEST[c.key]) LATEST[c.key] = { patch: p, change: c };
+  }
+
+  function indexMatchups(docs) {
+    BY = {}; VS = {}; REVIEW = {};
+    for (const d of docs) {
+      if (!d || !HM[d.key]) continue;
+      if (d.review && d.review.reason) REVIEW[d.key] = { reason: String(d.review.reason), since: isDate(d.review.since) ? d.review.since : null };
+      for (const e of arr(d.goodVs)) {
+        if (!e || !HM[e.k] || e.k === d.key) continue;
+        const s = e.s === 2 ? 2 : 1, r = String(e.r || '');
+        (VS[d.key] ||= []).push({ k: e.k, s, r });
+        (BY[e.k] ||= []).push({ k: d.key, s, r });
+      }
+    }
+  }
+
+  let refreshQueued = false;
+  function refresh() {
+    if (refreshQueued || !HEROES.length) return;
+    refreshQueued = true;
+    requestAnimationFrame(() => {
+      refreshQueued = false;
+      const y = window.scrollY;
+      route(true);
+      window.scrollTo(0, y);
+    });
+  }
+
+  /* ---------- routing ---------- */
+  window.addEventListener('hashchange', () => route(false));
+  function route(isRefresh) {
+    if (!HEROES.length) return;
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (HM[id]) {
+      renderHero(id);
+      if (!isRefresh) window.scrollTo(0, 0);
+      document.title = `${HM[id].name} · Counterpick Atlas`;
+      return;
+    }
+    if (isRefresh || !app.querySelector('.home')) renderHome();
+    document.title = 'Counterpick Atlas';
+    if (isRefresh) return;
+    const target = id && document.getElementById(id);
+    if (target) {
+      if (target.tagName === 'DETAILS') target.open = true;
+      target.scrollIntoView({ block: 'start' });
+    } else window.scrollTo(0, 0);
+  }
+
+  /* ---------- small renderers ---------- */
+  const pill = (v, extra = '') => `<span class="pill ${v} ${extra}">${VERDICT[v].sym} ${VERDICT[v].label}</span>`;
+  const roleTag = h => `<span class="tag accent">${ROLE_SVG[h.role]}${ROLE_LABEL[h.role]}</span>` +
+    (h.subrole ? `<span class="tag">${esc(h.subrole)}</span>` : '') +
+    (h.stadium ? '<span class="tag">Stadium</span>' : '');
+
+  function changeItem(ch) {
+    const delta = ch.from ? ` <span class="delta"><s>${esc(ch.from)}</s> → <em>${esc(ch.to)}</em></span>` : '';
+    return `<li><b>${esc(ch.a)}</b>${ch.t ? ' · ' + esc(ch.t) : ''}${delta}</li>`;
+  }
+
+  function heroChange(c) {
+    const h = HM[c.key];
+    return `<div class="hc v-${c.verdict}">
+      <div class="hc-top">
+        <a class="hc-who" href="#${c.key}"><img src="p/${c.key}.jpg" alt="" width="42" height="42" loading="lazy"><span>${esc(h.name)}</span></a>
+        ${pill(c.verdict)}
+      </div>
+      <ul>${c.changes.map(changeItem).join('')}</ul>
+    </div>`;
+  }
+
+  function patchBlock(p, i) {
+    const hl = p.highlights.length ? `<div class="highlights">${p.highlights.map(h => `
+      <div class="hl"><span class="eyebrow">${esc(h.tag)}</span><strong>${esc(h.title)}</strong><p>${esc(h.text)}</p></div>`).join('')}</div>` : '';
+    return `<article class="patch" id="${p.id}">
+      <div class="patch-head">
+        <span class="date">${fmtDate(p.date)}</span>
+        <span class="tag">${esc(p.kind)}</span>
+        ${i === 0 ? '<span class="tag accent">Nejnovější</span>' : ''}
+        <a class="aside src" href="${esc(p.url)}" target="_blank" rel="noopener">Oficiální znění ↗</a>
+      </div>
+      <h3>${esc(p.title)}</h3>
+      ${p.summary ? `<p class="summary">${esc(p.summary)}</p>` : ''}
+      ${hl}
+      ${p.heroes.length ? `<h4 class="sub">Změny hrdinů · ${p.heroes.length}</h4>
+      <div class="changes">${p.heroes.map(heroChange).join('')}</div>` : ''}
+    </article>`;
+  }
+
+  function olderPatch(p) {
+    return `<details class="older" id="${p.id}">
+      <summary><span class="date">${fmtDate(p.date)}</span><span class="tag">${esc(p.kind)}</span><span class="older-title">${esc(p.title)}</span></summary>
+      ${patchBlock(p, -1)}
+    </details>`;
+  }
+
+  function patchesSection() {
+    if (PATCHES === null) return `<div class="placeholder" aria-busy="true">
+        <span class="ph ph-date"></span><span class="ph ph-title"></span><span class="ph ph-line"></span><span class="ph ph-line short"></span>
+        <p>Načítám patch notes…</p></div>`;
+    if (PATCHES === 'off') return `<div class="empty-box"><strong>Patch notes se teď nepodařilo načíst.</strong>
+        <p>Zkus stránku obnovit, nebo se podívej na <a href="${OFFICIAL}" target="_blank" rel="noopener">oficiální patch notes ↗</a>.</p></div>`;
+    if (!PATCHES.length) return `<div class="empty-box"><strong>Zatím tu nejsou žádné patch notes.</strong>
+        <p>Mezitím je najdeš v <a href="${OFFICIAL}" target="_blank" rel="noopener">oficiálních patch notes ↗</a>.</p></div>`;
+    const shown = PATCHES.slice(0, SHOWN_PATCHES), older = PATCHES.slice(SHOWN_PATCHES);
+    return shown.map(patchBlock).join('') +
+      (older.length ? `<h4 class="sub">Starší patche · ${older.length}</h4><div class="older-list">${older.map(olderPatch).join('')}</div>` : '');
+  }
+
+  function statusLine() {
+    const stamp = STATUS && STATUS.lastCheck ? fmtStamp(STATUS.lastCheck) : '';
+    return stamp ? `<p class="status-line"><span class="dot" aria-hidden="true"></span>Data naposledy zkontrolována: ${esc(stamp)}</p>` : '';
+  }
+
+  function tile(h) {
+    const l = LATEST[h.key];
+    const flag = l ? `<span class="pill flag ${l.change.verdict}" title="${VERDICT[l.change.verdict].label} ${fmtDate(l.patch.date)}">${VERDICT[l.change.verdict].sym}</span>` : '';
+    return `<a class="tile" href="#${h.key}"><img src="p/${h.key}.jpg" alt="" loading="lazy" width="160" height="160">${flag}<span>${esc(h.name)}</span></a>`;
+  }
+
+  /* ---------- home ---------- */
+  function renderHome() {
+    const groups = ROLES.map(r => {
+      const list = HEROES.filter(h => h.role === r.key);
+      return `<div class="role-group"><h3>${ROLE_SVG[r.key]}${r.label} <small>${list.length}</small></h3>
+        <div class="grid">${list.map(tile).join('')}</div></div>`;
+    }).join('');
+    app.innerHTML = `<div class="home">
+      <section class="sec wrap" id="patch">
+        <div class="sec-head"><h2>Patch notes</h2>
+          <a class="aside" href="${OFFICIAL}" target="_blank" rel="noopener">Všechny patche v angličtině ↗</a></div>
+        ${statusLine()}
+        ${patchesSection()}
+      </section>
+      <section class="sec wrap" id="hrdinove">
+        <div class="sec-head"><h2>Hrdinové</h2><span class="aside">${HEROES.length} hrdinů · značka v rohu = změna v posledních patchích</span></div>
+        ${groups}
+      </section>
+    </div>`;
+  }
+
+  /* ---------- hero ---------- */
+  function hpBar(hp) {
+    const pips = [];
+    const add = (n, c) => { for (let i = 0; i < Math.ceil(n / 25); i++) pips.push(`<i class="${c}"></i>`); };
+    add(hp.health, 'h'); add(hp.armor, 'a'); add(hp.shields, 's');
+    return `<div class="hp">
+      <div class="hp-pips" aria-hidden="true">${pips.join('')}</div>
+      <div class="hp-legend"><strong>${hp.total}</strong> HP
+        <span class="lg h">${hp.health} zdraví</span>
+        ${hp.armor ? `<span class="lg a">${hp.armor} zbroj</span>` : ''}
+        ${hp.shields ? `<span class="lg s">${hp.shields} štíty</span>` : ''}</div>
+    </div>`;
+  }
+
+  const roleOrder = { tank: 0, damage: 1, support: 2 };
+  const sortEdges = list => [...(list || [])].sort((a, b) =>
+    b.s - a.s || roleOrder[HM[a.k].role] - roleOrder[HM[b.k].role] || HM[a.k].name.localeCompare(HM[b.k].name, 'cs'));
+
+  function muRow(e) {
+    const h = HM[e.k];
+    return `<a class="mu" href="#${e.k}">
+      <img src="p/${e.k}.jpg" alt="" width="54" height="54" loading="lazy">
+      <div class="mu-txt">
+        <div class="mu-name">${esc(h.name)} ${ROLE_SVG[h.role]}${e.s === 2 ? '<span class="hard">Tvrdý counter</span>' : ''}${REVIEW[e.k] ? '<span class="tag rv">Ke kontrole</span>' : ''}</div>
+        <p>${esc(e.r)}</p>
+      </div>
+    </a>`;
+  }
+
+  function muList(list, emptyText) {
+    if (MATCH === null) return '<div class="mu-wait" aria-busy="true"><span class="ph"></span><span class="ph"></span><span class="ph"></span><p>Načítám countery…</p></div>';
+    if (MATCH === 'off') return '<p class="mu-empty">Countery se teď nepodařilo načíst. Zkus stránku obnovit.</p>';
+    if (!list.length) return `<p class="mu-empty">${emptyText}</p>`;
+    return `<div class="mu-list">${list.map(muRow).join('')}</div>`;
+  }
+
+  const iconImg = id => ICONS && ICONS[id] ? `<img src="${ICONS[id]}" alt="" width="38" height="38">` : '';
+  const abCard = a => `<div class="ab"><span class="ab-ic" data-icon="${esc(a.icon)}">${iconImg(a.icon)}</span>
+    <div><h3>${esc(a.name)}</h3><p>${esc(a.desc)}</p></div></div>`;
+
+  function fillIcons() {
+    app.querySelectorAll('.ab-ic[data-icon]').forEach(el => { if (!el.firstChild) el.innerHTML = iconImg(el.dataset.icon); });
+  }
+
+  function renderHero(k) {
+    const h = HM[k];
+    const by = sortEdges(BY[k]), vs = sortEdges(VS[k]);
+    const changes = Array.isArray(PATCHES) ? PATCHES.flatMap(p => p.heroes.filter(c => c.key === k).map(c => ({ p, c }))) : [];
+    const flagLine = changes.length ? `<div class="patch-flags">${changes.slice(0, 3).map(({ p, c }) =>
+      `<a href="#${p.id}" title="Otevřít patch">${pill(c.verdict)}</a><span class="tag">${fmtDate(p.date)}</span>`).join('')}</div>` : '';
+    const rv = REVIEW[k];
+    const reviewBox = rv ? `<div class="review wrap"><div class="review-in">
+        <span class="tag rv">Countery ke kontrole${rv.since ? ' · od ' + fmtDate(rv.since) : ''}</span>
+        <p>${esc(rv.reason)}</p></div></div>` : '';
+
+    const patchSec = changes.length ? `<section class="h-sec wrap">
+        <h2>V posledních patchích</h2>
+        <p class="hint">Co se s hrdinou nedávno změnilo.</p>
+        <div class="changes">${changes.map(({ p, c }) => `<div class="hc v-${c.verdict}">
+          <div class="hc-top"><a class="hc-who" href="#${p.id}"><span>${fmtDate(p.date)}</span></a><span class="tag">${esc(p.kind)}</span>${pill(c.verdict)}</div>
+          <ul>${c.changes.map(changeItem).join('')}</ul></div>`).join('')}</div>
+      </section>` : '';
+
+    const perks = h.perks && (h.perks.minor.length || h.perks.major.length) ? `<section class="h-sec wrap">
+        <h2>Perky</h2>
+        <p class="hint">Během zápasu si vybíráš jeden minor a později jeden major perk.</p>
+        <div class="perk-cols">
+          <div><h3>Minor perky</h3><div class="ab-grid">${h.perks.minor.map(abCard).join('')}</div></div>
+          <div class="major"><h3>Major perky</h3><div class="ab-grid">${h.perks.major.map(abCard).join('')}</div></div>
+        </div>
+      </section>` : '';
+
+    app.innerHTML = `<article class="hero" data-role="${h.role}">
+      <div class="banner">
+        <div class="art-box"><img src="art/${k}.jpg" alt="${esc(h.name)} – artwork" width="1280" height="608"></div>
+        <a class="back back-m" href="#hrdinove">← Hrdinové</a>
+        <div class="banner-body wrap">
+          <a class="back" href="#hrdinove">← Všichni hrdinové</a>
+          <div class="banner-inner">
+            <div class="role-line">${roleTag(h)}</div>
+            <h1>${esc(h.name)}</h1>
+            <p class="lore">${esc(h.desc)}</p>
+            <dl class="facts">
+              ${h.location ? `<div><dt>Původ</dt><dd>${esc(h.location)}</dd></div>` : ''}
+              ${h.age ? `<div><dt>Věk</dt><dd>${esc(h.age)}</dd></div>` : ''}
+            </dl>
+            ${hpBar(h.hp)}
+            ${flagLine}
+          </div>
+        </div>
+      </div>
+
+      ${reviewBox}
+
+      <section class="matchups wrap" aria-label="Countery">
+        <div class="mu-col bad">
+          <h2>Má problém s <span class="n">${MATCH === 'ready' ? by.length : ''}</span></h2>
+          <p class="hint">Tyhle hrdiny si vyber, když soupeř hraje ${esc(h.name)}.</p>
+          ${muList(by, 'Zatím tu nejsou žádné countery.')}
+        </div>
+        <div class="mu-col good">
+          <h2>Silný proti <span class="n">${MATCH === 'ready' ? vs.length : ''}</span></h2>
+          <p class="hint">Proti těmhle hrdinům je ${esc(h.name)} dobrá volba.</p>
+          ${muList(vs, 'Zatím tu nejsou žádné matchupy.')}
+        </div>
+        <p class="note">Orientační přehled podle schopností hrdinů. Hodně záleží na mapě, složení týmu a skillu hráče.</p>
+      </section>
+
+      ${patchSec}
+
+      <section class="h-sec wrap">
+        <h2>Schopnosti</h2>
+        <p class="hint">Popisy jsou v angličtině, stejně jako ve hře.</p>
+        <div class="ab-grid">${h.abilities.map(abCard).join('')}</div>
+      </section>
+
+      ${perks}
+    </article>`;
+  }
+
+  /* ---------- search ---------- */
+  let results = [], active = 0;
+
+  function search(text) {
+    const n = norm(text);
+    if (!n) return [];
+    const score = h => {
+      if (h._n.startsWith(n)) return 0;
+      if (h._a.some(a => a.startsWith(n))) return 1;
+      if (h._n.includes(n)) return 2;
+      if (h._a.some(a => a.includes(n))) return 3;
+      return -1;
+    };
+    return HEROES.map(h => [score(h), h]).filter(([s]) => s >= 0)
+      .sort((a, b) => a[0] - b[0] || a[1].name.localeCompare(b[1].name, 'cs')).slice(0, 8).map(([, h]) => h);
+  }
+
+  function showSugg() {
+    results = search(q.value);
+    active = 0;
+    if (!q.value.trim()) { closeSugg(); return; }
+    sugg.innerHTML = results.length ? results.map((h, i) => `
+      <li role="option" id="opt-${h.key}" data-key="${h.key}" aria-selected="${i === active}">
+        <img src="p/${h.key}.jpg" alt=""><span class="s-name">${esc(h.name)}</span>
+        <span class="s-role">${ROLE_SVG[h.role]}${ROLE_LABEL[h.role]}</span>
+      </li>`).join('') : '<li class="empty" role="option" aria-disabled="true">Žádný hrdina neodpovídá. Zkus jiný název.</li>';
+    sugg.hidden = false;
+    q.setAttribute('aria-expanded', 'true');
+    q.setAttribute('aria-activedescendant', results[0] ? 'opt-' + results[0].key : '');
+  }
+  function closeSugg() { sugg.hidden = true; q.setAttribute('aria-expanded', 'false'); q.removeAttribute('aria-activedescendant'); }
+  function pick(key) { closeSugg(); q.value = ''; q.blur(); if (location.hash.slice(1) === key) route(false); else location.hash = key; }
+  function move(d) {
+    if (!results.length) return;
+    active = (active + d + results.length) % results.length;
+    sugg.querySelectorAll('li').forEach((li, i) => li.setAttribute('aria-selected', i === active));
+    q.setAttribute('aria-activedescendant', 'opt-' + results[active].key);
+    sugg.children[active]?.scrollIntoView({ block: 'nearest' });
+  }
+
+  q.addEventListener('input', showSugg);
+  q.addEventListener('focus', () => { if (q.value.trim()) showSugg(); });
+  q.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (results[active]) pick(results[active].key); }
+    else if (e.key === 'Escape') { closeSugg(); q.blur(); }
+  });
+  sugg.addEventListener('mousedown', e => {
+    const li = e.target.closest('li[data-key]');
+    if (li) { e.preventDefault(); pick(li.dataset.key); }
+  });
+  q.addEventListener('blur', () => setTimeout(closeSugg, 120));
+  document.addEventListener('keydown', e => {
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName);
+    if ((e.key === '/' && !typing) || (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey))) {
+      e.preventDefault(); q.focus(); q.select();
+    }
+  });
+})();
+</script>
+</body>
+</html>
