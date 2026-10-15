@@ -374,15 +374,16 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     const fresh = url => fetch(url, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); });
     fresh('data/patches.json').then(list => { CURATED = arr(list); mergePatches(); })
       .catch(() => { CURATED = 'off'; mergePatches(); });
-    if (window.BlizzardPatches) BlizzardPatches.load(HEROES)
-      .then(res => { if (res) { LIVE = res; mergePatches(); } })
-      .catch(() => {});
     fresh('data/matchups.json').then(list => {
       indexMatchups(arr(list));
       MATCH = 'ready';
       refresh();
     }).catch(() => { MATCH = 'off'; refresh(); });
-    fresh('data/status.json').then(st => { STATUS = st; refresh(); }).catch(() => {});
+    // status.json says when the Action last brought new patch notes; the scraper's cache keys on that.
+    fresh('data/status.json').then(st => { STATUS = st; refresh(); return st && st.patchNotesUpdated; }, () => null)
+      .then(version => window.BlizzardPatches && BlizzardPatches.load(HEROES, version))
+      .then(res => { if (res) { LIVE = res; mergePatches(); } })
+      .catch(() => {});
   }
 
   // Czech summaries are the history; scraped patches only add what came out after the newest one.
@@ -530,10 +531,8 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
   }
 
   function statusLine() {
-    const live = LIVE && LIVE.fetchedAt ? fmtStamp(LIVE.fetchedAt) : '';
     const stamp = STATUS && STATUS.lastCheck ? fmtStamp(STATUS.lastCheck) : '';
-    const text = live ? `Patch notes naposledy staženy z Blizzardu: ${live}` : stamp ? `Data naposledy zkontrolována: ${stamp}` : '';
-    return text ? `<p class="status-line"><span class="dot" aria-hidden="true"></span>${esc(text)}</p>` : '';
+    return stamp ? `<p class="status-line"><span class="dot" aria-hidden="true"></span>Data naposledy zkontrolována: ${esc(stamp)}</p>` : '';
   }
 
   function tile(h) {

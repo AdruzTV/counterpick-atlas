@@ -1,0 +1,32 @@
+name: Patch notes
+
+# Every 12 hours: copy Blizzard's patch notes into data/ so the site can read them (see scripts/mirror_patch_notes.py).
+on:
+  schedule:
+    - cron: '17 4,16 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: patch-notes
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Download patch notes
+        run: python3 scripts/mirror_patch_notes.py
+
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/blizzard-patch-notes.html data/status.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Automatická kontrola patch notes'
+          git push

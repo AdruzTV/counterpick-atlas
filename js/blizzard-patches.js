@@ -1,12 +1,11 @@
-/* Live patch notes scraped from the official Overwatch site with jQuery.
-   Blizzard sends no CORS headers, so the page is fetched through our own proxy (proxy/worker.js).
-   Parsed patches are cached in localStorage for 12 hours. Exposes window.BlizzardPatches.load(heroes). */
+/* Patch notes scraped from the official Overwatch site with jQuery.
+   Blizzard sends no CORS headers, so a GitHub Action copies its pages into data/blizzard-patch-notes.html
+   every 12 hours (scripts/mirror_patch_notes.py). Parsed patches are cached in localStorage for 12 hours.
+   Exposes window.BlizzardPatches.load(heroes, version). */
 (function ($) {
   'use strict';
 
-  // URL of the deployed Cloudflare Worker, ending with "?url=". Empty = live patch notes are off.
-  const PROXY = '';
-
+  const SOURCE = 'data/blizzard-patch-notes.html';
   const BASE = 'https://overwatch.blizzard.com/en-us/news/patch-notes/';
   const TTL = 12 * 60 * 60 * 1000;
   const STORE = 'cpa:blizzard-patches:v1';
@@ -214,45 +213,39 @@
     };
   }
 
-  function parsePage(html, pageUrl, heroKey) {
+  // The copy holds one <section data-source="..."> per Blizzard page (current and previous month).
+  function parsePage(html, heroKey) {
     // Parse into an inert document: no scripts run and no images load.
     const doc = document.implementation.createHTMLDocument('');
     const $root = $(doc.body).append($.parseHTML(html, doc, false));
-    return $root.find('.PatchNotes-patch').map(function () { return parsePatch($(this), pageUrl, heroKey); }).get();
+    const seen = {};
+    return $root.find('section[data-source]').map(function () {
+      const src = String($(this).attr('data-source') || '');
+      const pageUrl = src.indexOf(BASE) === 0 ? src : BASE;
+      return $(this).find('.PatchNotes-patch').map(function () { return parsePatch($(this), pageUrl, heroKey); }).get();
+    }).get()
+      .filter(p => p && !seen[p.id] && (seen[p.id] = true))
+      .sort((x, y) => y.date.localeCompare(x.date));
   }
 
   /* ---------- loading ---------- */
-  // Current month is on the main page; the previous month keeps late patches visible after the 1st.
-  function pageUrls() {
-    const now = new Date(), prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    return [BASE, `${BASE}live/${prev.getFullYear()}/${String(prev.getMonth() + 1).padStart(2, '0')}`];
-  }
-
-  function fetchPage(url, heroKey) {
-    return Promise.resolve($.ajax({ url: PROXY + encodeURIComponent(url), dataType: 'text', timeout: 20000 }))
-      .then(html => parsePage(html, url, heroKey));
-  }
-
-  // Resolves to { patches, fetchedAt, cached } or null when the live source is off.
-  function load(heroes) {
+  // `version` is patchNotesUpdated from data/status.json: when the Action brings a new copy, the cache is dropped.
+  // Resolves to { patches, fetchedAt }.
+  function load(heroes, version) {
+    const v = version ? String(version) : null;
     const cached = readCache();
-    if (cached && Date.now() - cached.t < TTL) return Promise.resolve({ patches: cached.patches, fetchedAt: cached.t, cached: true });
-    if (!PROXY) return Promise.resolve(null);
+    if (cached && (!v || cached.v === v) && Date.now() - cached.t < TTL) return Promise.resolve({ patches: cached.patches, fetchedAt: cached.t });
 
     const heroKey = {};
     for (const h of heroes) { heroKey[norm(h.name)] = h.key; heroKey[norm(h.key)] = h.key; }
-    const [current, previous] = pageUrls();
-    return Promise.all([fetchPage(current, heroKey), fetchPage(previous, heroKey).catch(() => [])])
-      .then(([a, b]) => {
-        const seen = {};
-        const patches = a.concat(b).filter(p => p && !seen[p.id] && (seen[p.id] = true))
-          .sort((x, y) => y.date.localeCompare(x.date));
-        const t = Date.now();
-        writeCache({ t, patches });
-        return { patches, fetchedAt: t, cached: false };
+    return Promise.resolve($.ajax({ url: SOURCE + (v ? '?v=' + encodeURIComponent(v) : ''), dataType: 'text', timeout: 20000 }))
+      .then(html => {
+        const patches = parsePage(html, heroKey), t = Date.now();
+        writeCache({ t, v, patches });
+        return { patches, fetchedAt: t };
       })
       .catch(err => {
-        if (cached) return { patches: cached.patches, fetchedAt: cached.t, cached: true };   // stale beats nothing
+        if (cached) return { patches: cached.patches, fetchedAt: cached.t };   // stale beats nothing
         throw err;
       });
   }
