@@ -286,10 +286,12 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
 <footer class="foot">
   <div class="wrap">
     <p>Neoficiální fanouškovský projekt, není spojený s Blizzard Entertainment. Obrázky hrdinů, názvy a anglické popisy schopností © Blizzard Entertainment.</p>
-    <p>Data hrdinů z OverFast API. Patch notes jsou česká shrnutí oficiálních poznámek. Countery jsou orientační: vychází ze schopností hrdinů, ne ze statistik zápasů.</p>
+    <p>Data hrdinů z OverFast API. Patch notes jsou česká shrnutí oficiálních poznámek; nejnovější patche se stahují automaticky z webu Blizzardu (v angličtině). Countery jsou orientační: vychází ze schopností hrdinů, ne ze statistik zápasů.</p>
   </div>
 </footer>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="js/blizzard-patches.js"></script>
 <script>
 (() => {
   const app = document.getElementById('app');
@@ -341,6 +343,8 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
   let HEROES = [], HM = {}, ICONS = null;
   // Patch notes, counters and last check. null = still loading, 'off' = failed to load.
   let PATCHES = null, MATCH = null, STATUS = null;
+  // Czech patches from data/patches.json and patches scraped live from Blizzard (js/blizzard-patches.js).
+  let CURATED = null, LIVE = null;
   let BY = {}, VS = {}, REVIEW = {}, LATEST = {};
 
   /* ---------- static hero files ---------- */
@@ -365,20 +369,32 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
       app.innerHTML = '<div class="wrap state">Data hrdinů se nepodařilo načíst. Zkus stránku obnovit.</div>';
     });
 
-  /* ---------- patch notes, counters, last check (data files updated by the daily check) ---------- */
+  /* ---------- patch notes (Czech data file + live scrape), counters, last check ---------- */
   function loadData() {
     const fresh = url => fetch(url, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); });
-    fresh('data/patches.json').then(list => {
-      PATCHES = arr(list).map(d => cleanPatch(d && d.id, d)).filter(Boolean).sort((a, b) => b.date.localeCompare(a.date));
-      indexPatches();
-      refresh();
-    }).catch(() => { PATCHES = 'off'; refresh(); });
+    fresh('data/patches.json').then(list => { CURATED = arr(list); mergePatches(); })
+      .catch(() => { CURATED = 'off'; mergePatches(); });
+    if (window.BlizzardPatches) BlizzardPatches.load(HEROES)
+      .then(res => { if (res) { LIVE = res; mergePatches(); } })
+      .catch(() => {});
     fresh('data/matchups.json').then(list => {
       indexMatchups(arr(list));
       MATCH = 'ready';
       refresh();
     }).catch(() => { MATCH = 'off'; refresh(); });
     fresh('data/status.json').then(st => { STATUS = st; refresh(); }).catch(() => {});
+  }
+
+  // Czech summaries are the history; scraped patches only add what came out after the newest one.
+  function mergePatches() {
+    if (CURATED === null) return;
+    const own = Array.isArray(CURATED) ? CURATED : [];
+    const newest = own.reduce((m, d) => d && isDate(d.date) && d.date > m ? d.date : m, '');
+    const live = arr(LIVE && LIVE.patches).filter(d => d && isDate(d.date) && d.date > newest);
+    PATCHES = CURATED === 'off' && !live.length ? 'off'
+      : own.concat(live).map(d => cleanPatch(d && d.id, d)).filter(Boolean).sort((a, b) => b.date.localeCompare(a.date));
+    indexPatches();
+    refresh();
   }
 
   // Keep only well-formed fields; everything is escaped on render.
@@ -391,6 +407,7 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
       title: String(d.title || 'Patch notes'),
       summary: String(d.summary || ''),
       url: safeUrl(d.url),
+      auto: d.auto === true,
       highlights: arr(d.highlights).filter(h => h && h.title),
       heroes: arr(d.heroes)
         .filter(c => c && HM[c.key])
@@ -481,6 +498,7 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
         <span class="date">${fmtDate(p.date)}</span>
         <span class="tag">${esc(p.kind)}</span>
         ${i === 0 ? '<span class="tag accent">Nejnovější</span>' : ''}
+        ${p.auto ? '<span class="tag" title="Staženo automaticky z oficiálních patch notes, bez českého shrnutí">Auto · EN</span>' : ''}
         <a class="aside src" href="${esc(p.url)}" target="_blank" rel="noopener">Oficiální znění ↗</a>
       </div>
       <h3>${esc(p.title)}</h3>
@@ -512,8 +530,10 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
   }
 
   function statusLine() {
+    const live = LIVE && LIVE.fetchedAt ? fmtStamp(LIVE.fetchedAt) : '';
     const stamp = STATUS && STATUS.lastCheck ? fmtStamp(STATUS.lastCheck) : '';
-    return stamp ? `<p class="status-line"><span class="dot" aria-hidden="true"></span>Data naposledy zkontrolována: ${esc(stamp)}</p>` : '';
+    const text = live ? `Patch notes naposledy staženy z Blizzardu: ${live}` : stamp ? `Data naposledy zkontrolována: ${stamp}` : '';
+    return text ? `<p class="status-line"><span class="dot" aria-hidden="true"></span>${esc(text)}</p>` : '';
   }
 
   function tile(h) {
