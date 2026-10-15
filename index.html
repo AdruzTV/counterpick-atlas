@@ -269,6 +269,9 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
 .seg-btn .role-ic { width: 15px; height: 15px; }
 .cp-reset { margin-left: auto; font: 700 15px/1 var(--f-display); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: none; border: 0; border-bottom: 1px solid var(--line); padding: 8px 2px; cursor: pointer; }
 .cp-reset:hover { color: var(--fg); border-color: var(--accent); }
+.cp-select { height: 44px; width: min(100vw - 32px, 260px); padding: 0 12px; background: var(--panel); color: var(--fg); border: 1px solid var(--line); font: 500 16px var(--f-body); }
+.cp-select:focus { outline: none; border-color: var(--accent); }
+.cp-map-slot { display: contents; }
 .cp-hint { color: var(--muted); background: var(--panel); border-left: 3px solid var(--accent); padding: 14px 16px; margin: 0; max-width: 68ch; }
 .teams { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .team h3 { display: flex; align-items: center; gap: 10px; font: italic 800 26px/1 var(--f-display); text-transform: uppercase; margin-bottom: 12px; }
@@ -311,6 +314,18 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
 .why .down b { color: var(--bad); }
 .why span { display: block; color: var(--muted); font-size: 14px; }
 .why .none { display: block; color: var(--muted); }
+.why .tip-good b { color: var(--blue); }
+.why .tip-bad b { color: var(--accent); }
+.tips { display: grid; gap: 8px; }
+.tip { min-width: 0; background: var(--panel); border-left: 3px solid var(--blue); padding: 12px 14px 14px; }
+.tip strong { font: 700 19px/1.1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; }
+.tip p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+.tip-heroes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+.tip-k { margin-right: 4px; font: 700 13px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; color: var(--good); }
+.tip-heroes.bad .tip-k { color: var(--bad); }
+.tip-hero { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 3px; background: var(--panel-hi); text-decoration: none; font: 700 15px/1 var(--f-display); text-transform: uppercase; }
+.tip-hero img { width: 28px; height: 28px; object-fit: cover; }
+.tip-hero:hover { color: var(--accent); }
 .rec-list { display: grid; gap: 6px; }
 .rec-row { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; background: var(--panel); padding: 6px 14px 6px 6px; text-decoration: none; }
 .rec-row:hover { background: var(--panel-hi); }
@@ -444,6 +459,8 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
       .catch(() => { CURATED = 'off'; mergePatches(); });
     fresh('data/synergies.json').then(d => { indexSynergies(d); SYN = 'ready'; refresh(); })
       .catch(() => { SYN = 'off'; refresh(); });
+    fresh('data/maps.json').then(d => { indexMaps(d); refresh(); })
+      .catch(() => { MAPS = 'off'; refresh(); });
     fresh('data/matchups.json').then(list => {
       indexMatchups(arr(list));
       MATCH = 'ready';
@@ -759,7 +776,7 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
   }
 
   /* ---------- counterpick ---------- */
-  // Mode and role are remembered across visits, the picks only for this tab (every match is different).
+  // Mode and role are remembered across visits, the picks and map only for this tab (every match is different).
   const CP_KEY = 'cpa:counterpick:v1';
   const COMP_5V5 = { tank: 1, damage: 2, support: 2 };
   const STYLE_INFO = {
@@ -769,8 +786,11 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
   };
   // Points per reason: [unused, normal, hard/signature].
   const W = { counter: [0, 2, 3], pair: [0, 1.5, 2.5], fit: 1.5, misfit: 1, role: 2 };
+  const MAP_MODES = [['control', 'Control'], ['escort', 'Escort'], ['hybrid', 'Hybrid'], ['push', 'Push'], ['flashpoint', 'Flashpoint'], ['clash', 'Clash']];
+  const SIDED_MODES = ['escort', 'hybrid'];   // only here do teams take turns attacking and defending
   let SYN = null, STYLES = {}, PAIRS = {};
-  const CP = { mode: '5v5', role: null, team: [], enemy: [] };
+  let MAPS = null, MAP_BY = {}, MAP_TRAITS = {}, SIDES = {}, HERO_TAGS = {};
+  const CP = { mode: '5v5', role: null, team: [], enemy: [], map: '', side: '' };
   readCP();
 
   function readCP() {
@@ -781,12 +801,14 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
       CP.role = ROLE_LABEL[prefs.role] ? prefs.role : null;
       CP.team = arr(picks.team);
       CP.enemy = arr(picks.enemy);
+      CP.map = typeof picks.map === 'string' ? picks.map : '';
+      CP.side = picks.side === 'attack' || picks.side === 'defense' ? picks.side : '';
     } catch (e) { /* storage blocked: start empty */ }
   }
   function saveCP() {
     try {
       localStorage.setItem(CP_KEY, JSON.stringify({ mode: CP.mode, role: CP.role }));
-      sessionStorage.setItem(CP_KEY, JSON.stringify({ team: CP.team, enemy: CP.enemy }));
+      sessionStorage.setItem(CP_KEY, JSON.stringify({ team: CP.team, enemy: CP.enemy, map: CP.map, side: CP.side }));
     } catch (e) { /* private mode */ }
   }
 
@@ -795,6 +817,17 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     STYLES = d && d.styles && typeof d.styles === 'object' ? d.styles : {};
     PAIRS = {};
     for (const p of arr(d && d.pairs)) if (p && p.a && p.b) PAIRS[pairKey(p.a, p.b)] = { s: p.s === 2 ? 2 : 1, r: String(p.r || '') };
+  }
+
+  // data/maps.json: what each map trait and each side (attack / defense) favours, hero tags and the maps with their traits.
+  function indexMaps(d) {
+    MAP_TRAITS = d && d.traits && typeof d.traits === 'object' ? d.traits : {};
+    SIDES = d && d.sides && typeof d.sides === 'object' ? d.sides : {};
+    HERO_TAGS = {};
+    for (const [tag, keys] of Object.entries(d && d.heroTags || {})) for (const k of arr(keys)) (HERO_TAGS[k] ||= []).push(tag);
+    MAPS = arr(d && d.maps).filter(m => m && m.key && m.name)
+      .map(m => ({ key: String(m.key), name: String(m.name), mode: String(m.mode), traits: arr(m.traits).filter(t => MAP_TRAITS[t]) }));
+    MAP_BY = Object.fromEntries(MAPS.map(m => [m.key, m]));
   }
 
   // Role of every slot; null = any hero (6v6 open queue). In 5v5 your own role is one slot short in your team.
@@ -824,7 +857,31 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     return { style: ranked[0][0], heroes: ranked[0][1] };
   }
 
-  function scoreHero(h, team, enemy, style) {
+  // Does a { tags, styles } rule from maps.json match the hero?
+  function heroHits(h, rule) {
+    const tags = HERO_TAGS[h.key] || [], styles = arr(STYLES[h.key]);
+    return !!rule && (arr(rule.tags).some(t => tags.includes(t)) || arr(rule.styles).some(st => styles.includes(st)));
+  }
+
+  // Map and side never change the score, they are only tips: ✓ where they suit the hero, ! where they work against them.
+  function mapTips(h, map, side) {
+    const out = [];
+    for (const key of map ? map.traits : []) {
+      const t = MAP_TRAITS[key];
+      if (heroHits(h, t.good)) out.push({ v: 0, tip: 'good', t: `Mapa: ${t.label}`, r: `${map.name} – ${t.desc}` });
+      else if (heroHits(h, t.bad)) out.push({ v: 0, tip: 'bad', t: `Mapa: ${t.label}`, r: `${map.name} – ${t.badDesc || t.desc}` });
+    }
+    if (side && heroHits(h, side.good)) out.push({ v: 0, tip: 'good', t: side.label, r: side.desc });
+    return out;
+  }
+
+  // The chosen side counts unless the map is one where nobody attacks or defends (Control, Push, ...).
+  function activeSide() {
+    const map = MAP_BY[CP.map];
+    return SIDES[CP.side] && (!map || SIDED_MODES.includes(map.mode)) ? SIDES[CP.side] : null;
+  }
+
+  function scoreHero(h, team, enemy, style, map, side) {
     const why = [];
     for (const e of enemy) {
       const win = arr(VS[h.key]).find(x => x.k === e);
@@ -850,17 +907,20 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
       else why.push({ v: -W.role, t: `Tým už má ${same}× ${ROLE_LABEL[h.role]}`, r: '' });
     }
     why.sort((a, b) => Math.abs(b.v) - Math.abs(a.v) || b.v - a.v);
+    why.push(...mapTips(h, map, side));
     return { h, why, score: why.reduce((s, w) => s + w.v, 0) };
   }
 
-  // Candidates ranked best first, or null while nothing is entered.
+  // Heroes you can still pick: your role in 5v5, nobody your team already has.
+  const candidates = () => HEROES.filter(h => !CP.team.includes(h.key) && (CP.mode === '6v6' || h.role === CP.role));
+
+  // Candidates ranked best first, or null while no hero is entered.
   function rankPicks() {
     const team = CP.team.filter(Boolean), enemy = CP.enemy.filter(Boolean);
     if (!team.length && !enemy.length) return null;
-    const style = teamStyle(team);
-    return HEROES
-      .filter(h => !team.includes(h.key) && (CP.mode === '6v6' || h.role === CP.role))
-      .map(h => scoreHero(h, team, enemy, style))
+    const style = teamStyle(team), map = MAP_BY[CP.map], side = activeSide();
+    return candidates()
+      .map(h => scoreHero(h, team, enemy, style, map, side))
       .sort((a, b) => b.score - a.score || b.why.filter(w => w.v > 0).length - a.why.filter(w => w.v > 0).length || a.h.name.localeCompare(b.h.name, 'cs'));
   }
 
@@ -890,7 +950,7 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
 
   function recCard(c, i) {
     const h = c.h;
-    const why = c.why.length ? c.why.map(w => `<li class="${w.v > 0 ? 'up' : 'down'}"><b>${fmtPts(w.v)}</b>
+    const why = c.why.length ? c.why.map(w => `<li class="${w.tip ? 'tip-' + w.tip : w.v > 0 ? 'up' : 'down'}"><b>${w.tip ? (w.tip === 'bad' ? '!' : '✓') : fmtPts(w.v)}</b>
         <div>${esc(w.t)}${w.r ? `<span>${esc(w.r)}</span>` : ''}</div></li>`).join('')
       : '<li><span class="none">Žádný counter ani kombo, neutrální volba.</span></li>';
     return `<article class="rec">
@@ -911,14 +971,34 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
       <span class="${scoreCls(c.score)}">${fmtPts(c.score)}</span></a>`;
   }
 
+  // Which of your candidates suit the chosen map and side. Separate from the ranking on purpose, shown below it.
+  function mapTipsHtml() {
+    const map = MAP_BY[CP.map], side = activeSide();
+    const rows = (map ? map.traits : []).map(k => MAP_TRAITS[k]).map(t =>
+      ({ label: `Mapa: ${t.label}`, desc: t.desc + (t.badDesc ? ' ' + t.badDesc : ''), good: t.good, bad: t.bad }));
+    if (side) rows.push({ label: side.label, desc: side.desc, good: side.good });
+    if (!rows.length) return map ? `<h4 class="sub">Tip k mapě</h4><p class="mu-empty">${esc(map.name)} zatím nemá popsané vlastnosti, tip k ní proto není.</p>` : '';
+    const pool = candidates();
+    const chips = (rule, cls, label) => {
+      const list = rule ? pool.filter(h => heroHits(h, rule)) : [];
+      return list.length ? `<div class="tip-heroes ${cls}"><span class="tip-k">${label}</span>${list.map(h =>
+        `<a class="tip-hero" href="#${h.key}"><img src="p/${h.key}.jpg" alt="" width="28" height="28" loading="lazy">${esc(h.name)}</a>`).join('')}</div>` : '';
+    };
+    const title = [map && map.name, side && (CP.side === 'attack' ? 'útok' : 'obrana')].filter(Boolean).join(' · ');
+    return `<h4 class="sub">Tip: ${esc(title)}</h4>
+      <div class="tips">${rows.map(r => `<div class="tip"><strong>${esc(r.label)}</strong><p>${esc(r.desc)}</p>
+        ${chips(r.good, '', 'Hodí se')}${chips(r.bad, 'bad', 'Spíš ne')}</div>`).join('')}</div>`;
+  }
+
   function resultsHtml() {
     if (CP.mode === '5v5' && !CP.role) return '';
     if (MATCH === null || SYN === null) return `<div class="mu-wait" aria-busy="true"><span class="ph"></span><span class="ph"></span><p>Načítám countery…</p></div>`;
     if (MATCH === 'off') return '<p class="mu-empty">Countery se teď nepodařilo načíst. Zkus stránku obnovit.</p>';
+    const tips = mapTipsHtml();
     const ranked = rankPicks();
-    if (!ranked) return '<p class="cp-hint">Doplň aspoň jednoho nepřítele nebo spoluhráče a ukážu ti, koho si vybrat.</p>';
+    if (!ranked) return '<p class="cp-hint">Doplň aspoň jednoho nepřítele nebo spoluhráče a ukážu ti, koho si vybrat.</p>' + tips;
     if (!ranked.length) return '<p class="mu-empty">Pro tuhle roli už nezbývá žádný hrdina.</p>';
-    if (!ranked[0].why.length) return '<p class="cp-hint">U zadaných hrdinů zatím nemám žádný counter ani kombo. Doplň další hrdiny.</p>';
+    if (!ranked.some(c => c.why.some(w => !w.tip))) return '<p class="cp-hint">U zadaných hrdinů zatím nemám žádný counter ani kombo. Doplň další hrdiny.</p>' + tips;
 
     const top = ranked.slice(0, 3);
     const more = ranked.slice(3, 8).filter(c => c.score >= 0);
@@ -928,12 +1008,34 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
       <div class="recs">${top.map(recCard).join('')}</div>
       ${more.length ? `<h4 class="sub">Další možnosti</h4><div class="rec-list">${more.map(c => recRow(c, why => why.find(w => w.v > 0))).join('')}</div>` : ''}
       ${avoid.length ? `<h4 class="sub">Raději ne</h4><div class="rec-list">${avoid.map(c => recRow(c, why => why.find(w => w.v < 0))).join('')}</div>` : ''}
-      <p class="note">Orientační doporučení podle counterů, známých komb a stylu týmu. Rozhoduje i mapa a to, na kom jsi dobrý.</p>`;
+      ${tips}
+      <p class="note">Pořadí určují countery, známá komba a styl týmu. Mapa a strana jsou jen tip, body nepřidávají. Rozhoduje i to, na kom jsi dobrý.</p>`;
+  }
+
+  function mapSelect() {
+    if (!Array.isArray(MAPS) || !MAPS.length) return '';
+    const groups = MAP_MODES.map(([mode, label]) => {
+      const list = MAPS.filter(m => m.mode === mode);
+      return list.length ? `<optgroup label="${label}">${list.map(m => `<option value="${esc(m.key)}"${m.key === CP.map ? ' selected' : ''}>${esc(m.name)}${m.traits.length ? '' : ' (bez hodnocení)'}</option>`).join('')}</optgroup>` : '';
+    }).join('');
+    return `<div class="cp-opt"><label class="cp-label" for="cp-map">Mapa</label>
+      <select id="cp-map" class="cp-select"><option value="">Neřešit mapu</option>${groups}</select></div>`;
+  }
+
+  // Attack / defense, optional: clicking the pressed button again clears it. Hidden on maps without sides.
+  function sidePicker() {
+    const map = MAP_BY[CP.map];
+    if (!Object.keys(SIDES).length || (map && !SIDED_MODES.includes(map.mode))) return '';
+    const btn = (key, label) => `<button type="button" class="seg-btn" data-sidepick="${key}" aria-pressed="${CP.side === key}">${label}</button>`;
+    return `<div class="cp-opt"><span class="cp-label">Strana · nepovinné</span>
+      <div class="seg" role="group" aria-label="Útok nebo obrana">${btn('attack', 'Útok')}${btn('defense', 'Obrana')}</div></div>`;
   }
 
   function updateCpResults() {
     const el = app.querySelector('.cp-results');
     if (el) el.innerHTML = resultsHtml();
+    const slot = app.querySelector('.cp-map-slot');   // maps.json can arrive after the page was drawn
+    if (slot && !slot.firstElementChild) slot.innerHTML = mapSelect() + sidePicker();
   }
 
   function renderCounterpick() {
@@ -948,6 +1050,7 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
             <div class="seg" role="group" aria-label="Mód">${seg('mode', '5v5', '5v5', CP.mode === '5v5')}${seg('mode', '6v6', '6v6', CP.mode === '6v6')}</div></div>
           ${CP.mode === '5v5' ? `<div class="cp-opt"><span class="cp-label">Hraju za</span>
             <div class="seg" role="group" aria-label="Tvoje role">${ROLES.map(r => seg('role', r.key, ROLE_SVG[r.key] + r.label, CP.role === r.key)).join('')}</div></div>` : ''}
+          <div class="cp-map-slot">${mapSelect()}${sidePicker()}</div>
           <button type="button" class="cp-reset" data-reset>Nová hra</button>
         </div>
         ${CP.mode === '5v5' && !CP.role ? '<p class="cp-hint">Vyber, za jakou roli hraješ. Doporučím ti hrdinu z ní.</p>'
@@ -1018,12 +1121,20 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     const li = e.target.closest('.pick-drop li[data-key]');
     if (li && drop) { e.preventDefault(); choose(drop.side, drop.i, li.dataset.key, false); }
   });
+  app.addEventListener('change', e => {
+    if (e.target.id !== 'cp-map') return;
+    CP.map = e.target.value;
+    saveCP();
+    renderCounterpick();   // the attack / defense choice shows only on Escort and Hybrid maps
+    app.querySelector('#cp-map')?.focus();
+  });
   app.addEventListener('click', e => {
     const b = e.target.closest('.cp button');
     if (!b) return;
     if (b.dataset.mode) CP.mode = b.dataset.mode;
     else if (b.dataset.role) CP.role = b.dataset.role;
-    else if ('reset' in b.dataset) { CP.team = []; CP.enemy = []; }
+    else if (b.dataset.sidepick) CP.side = CP.side === b.dataset.sidepick ? '' : b.dataset.sidepick;
+    else if ('reset' in b.dataset) { CP.team = []; CP.enemy = []; CP.map = ''; CP.side = ''; }
     else if ('clear' in b.dataset) { const s = b.closest('.slot'); CP[s.dataset.side][+s.dataset.i] = null; }
     else return;
     saveCP();

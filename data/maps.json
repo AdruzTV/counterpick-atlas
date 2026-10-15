@@ -1,0 +1,439 @@
+{
+ "traits": {
+  "long": {
+   "label": "dlouhé výhledy",
+   "desc": "Dlouhé přímé výhledy nahrávají snajperům a poke kompozicím.",
+   "good": {
+    "tags": [
+     "sniper"
+    ],
+    "styles": [
+     "poke"
+    ]
+   }
+  },
+  "close": {
+   "label": "úzké prostory",
+   "desc": "Úzké průchody a boj zblízka svědčí brawl hrdinům.",
+   "good": {
+    "styles": [
+     "brawl"
+    ]
+   },
+   "bad": {
+    "tags": [
+     "sniper"
+    ]
+   },
+   "badDesc": "Ve stísněných prostorech nemá sniper kde stát."
+  },
+  "high": {
+   "label": "hodně výšek",
+   "desc": "Hodně vyvýšených míst pro snajpery a létající hrdiny.",
+   "good": {
+    "tags": [
+     "flyer",
+     "sniper"
+    ]
+   }
+  },
+  "open": {
+   "label": "flanky a otevřený prostor",
+   "desc": "Boční cesty a otevřené plochy nahrávají dive.",
+   "good": {
+    "styles": [
+     "dive"
+    ]
+   }
+  },
+  "edges": {
+   "label": "srázy",
+   "desc": "Srázy a smrtící okraje: odhození tu zabíjí.",
+   "good": {
+    "tags": [
+     "knock"
+    ]
+   }
+  }
+ },
+ "sides": {
+  "attack": {
+   "label": "Útok: rozbít obranu",
+   "desc": "Na útoku se vyplatí hrdinové, kteří rychle rozbijí připravenou obranu: dive a silný engage.",
+   "good": {
+    "styles": [
+     "dive"
+    ],
+    "tags": [
+     "engage"
+    ]
+   }
+  },
+  "defense": {
+   "label": "Obrana: držet pozici",
+   "desc": "Na obraně se vyplatí držet výhodné pozice: poke, snajpeři a hrdinové, kteří zahradí průchod.",
+   "good": {
+    "styles": [
+     "poke"
+    ],
+    "tags": [
+     "setup"
+    ]
+   }
+  }
+ },
+ "heroTags": {
+  "sniper": [
+   "widowmaker",
+   "ashe",
+   "hanzo",
+   "sojourn",
+   "freja",
+   "emre",
+   "ana"
+  ],
+  "flyer": [
+   "pharah",
+   "echo",
+   "mercy",
+   "juno",
+   "jetpack-cat",
+   "doctrine"
+  ],
+  "knock": [
+   "lucio",
+   "doomfist",
+   "wrecking-ball",
+   "domina",
+   "junkrat",
+   "pharah",
+   "brigitte",
+   "orisa",
+   "jetpack-cat",
+   "wuyang",
+   "dmon"
+  ],
+  "engage": [
+   "lucio",
+   "kiriko",
+   "juno",
+   "reinhardt",
+   "junker-queen"
+  ],
+  "setup": [
+   "torbjorn",
+   "symmetra",
+   "junkrat",
+   "mei",
+   "bastion"
+  ]
+ },
+ "maps": [
+  {
+   "key": "antarctic-peninsula",
+   "name": "Antarctic Peninsula",
+   "mode": "control",
+   "traits": [
+    "close"
+   ]
+  },
+  {
+   "key": "arena-victoriae",
+   "name": "Arena Victoriae",
+   "mode": "control",
+   "traits": []
+  },
+  {
+   "key": "busan",
+   "name": "Busan",
+   "mode": "control",
+   "traits": [
+    "open"
+   ]
+  },
+  {
+   "key": "gogadoro",
+   "name": "Gogadoro",
+   "mode": "control",
+   "traits": []
+  },
+  {
+   "key": "ilios",
+   "name": "Ilios",
+   "mode": "control",
+   "traits": [
+    "edges",
+    "high"
+   ]
+  },
+  {
+   "key": "lijiang-tower",
+   "name": "Lijiang Tower",
+   "mode": "control",
+   "traits": [
+    "close",
+    "edges"
+   ]
+  },
+  {
+   "key": "nepal",
+   "name": "Nepal",
+   "mode": "control",
+   "traits": [
+    "edges",
+    "open"
+   ]
+  },
+  {
+   "key": "oasis",
+   "name": "Oasis",
+   "mode": "control",
+   "traits": [
+    "edges",
+    "open"
+   ]
+  },
+  {
+   "key": "samoa",
+   "name": "Samoa",
+   "mode": "control",
+   "traits": [
+    "open"
+   ]
+  },
+  {
+   "key": "wuxing-university",
+   "name": "Wuxing University",
+   "mode": "control",
+   "traits": []
+  },
+  {
+   "key": "circuit-royal",
+   "name": "Circuit Royal",
+   "mode": "escort",
+   "traits": [
+    "long",
+    "high"
+   ]
+  },
+  {
+   "key": "dorado",
+   "name": "Dorado",
+   "mode": "escort",
+   "traits": [
+    "long",
+    "high"
+   ]
+  },
+  {
+   "key": "havana",
+   "name": "Havana",
+   "mode": "escort",
+   "traits": [
+    "long",
+    "open"
+   ]
+  },
+  {
+   "key": "junkertown",
+   "name": "Junkertown",
+   "mode": "escort",
+   "traits": [
+    "long",
+    "open"
+   ]
+  },
+  {
+   "key": "rialto",
+   "name": "Rialto",
+   "mode": "escort",
+   "traits": [
+    "close",
+    "edges"
+   ]
+  },
+  {
+   "key": "route-66",
+   "name": "Route 66",
+   "mode": "escort",
+   "traits": [
+    "long",
+    "open"
+   ]
+  },
+  {
+   "key": "shambali-monastery",
+   "name": "Shambali Monastery",
+   "mode": "escort",
+   "traits": [
+    "close"
+   ]
+  },
+  {
+   "key": "watchpoint-gibraltar",
+   "name": "Watchpoint: Gibraltar",
+   "mode": "escort",
+   "traits": [
+    "high",
+    "long"
+   ]
+  },
+  {
+   "key": "watchpoint-grimsvotn",
+   "name": "Watchpoint: Grimsvotn",
+   "mode": "escort",
+   "traits": []
+  },
+  {
+   "key": "blizzard-world",
+   "name": "Blizzard World",
+   "mode": "hybrid",
+   "traits": [
+    "close",
+    "high"
+   ]
+  },
+  {
+   "key": "eichenwalde",
+   "name": "Eichenwalde",
+   "mode": "hybrid",
+   "traits": [
+    "close"
+   ]
+  },
+  {
+   "key": "hollywood",
+   "name": "Hollywood",
+   "mode": "hybrid",
+   "traits": [
+    "close",
+    "high"
+   ]
+  },
+  {
+   "key": "kings-row",
+   "name": "King’s Row",
+   "mode": "hybrid",
+   "traits": [
+    "close",
+    "high"
+   ]
+  },
+  {
+   "key": "midtown",
+   "name": "Midtown",
+   "mode": "hybrid",
+   "traits": [
+    "open",
+    "long"
+   ]
+  },
+  {
+   "key": "neon-junction",
+   "name": "Neon Junction",
+   "mode": "hybrid",
+   "traits": []
+  },
+  {
+   "key": "numbani",
+   "name": "Numbani",
+   "mode": "hybrid",
+   "traits": [
+    "high",
+    "open"
+   ]
+  },
+  {
+   "key": "paraiso",
+   "name": "Paraíso",
+   "mode": "hybrid",
+   "traits": [
+    "open",
+    "high"
+   ]
+  },
+  {
+   "key": "colosseo",
+   "name": "Colosseo",
+   "mode": "push",
+   "traits": [
+    "open",
+    "long"
+   ]
+  },
+  {
+   "key": "esperanca",
+   "name": "Esperança",
+   "mode": "push",
+   "traits": [
+    "open"
+   ]
+  },
+  {
+   "key": "new-queen-street",
+   "name": "New Queen Street",
+   "mode": "push",
+   "traits": [
+    "close"
+   ]
+  },
+  {
+   "key": "place-lacroix",
+   "name": "Place Lacroix",
+   "mode": "push",
+   "traits": []
+  },
+  {
+   "key": "redwood-dam",
+   "name": "Redwood Dam",
+   "mode": "push",
+   "traits": []
+  },
+  {
+   "key": "runasapi",
+   "name": "Runasapi",
+   "mode": "push",
+   "traits": [
+    "high"
+   ]
+  },
+  {
+   "key": "aatlis",
+   "name": "Aatlis",
+   "mode": "flashpoint",
+   "traits": []
+  },
+  {
+   "key": "new-junk-city",
+   "name": "New Junk City",
+   "mode": "flashpoint",
+   "traits": [
+    "open"
+   ]
+  },
+  {
+   "key": "suravasa",
+   "name": "Suravasa",
+   "mode": "flashpoint",
+   "traits": [
+    "open"
+   ]
+  },
+  {
+   "key": "hanaoka",
+   "name": "Hanaoka",
+   "mode": "clash",
+   "traits": [
+    "close"
+   ]
+  },
+  {
+   "key": "throne-of-anubis",
+   "name": "Throne of Anubis",
+   "mode": "clash",
+   "traits": [
+    "close"
+   ]
+  }
+ ]
+}
