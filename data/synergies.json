@@ -1,0 +1,338 @@
+{
+ "styles": {
+  "dva": [
+   "dive"
+  ],
+  "doomfist": [
+   "dive"
+  ],
+  "winston": [
+   "dive"
+  ],
+  "wrecking-ball": [
+   "dive"
+  ],
+  "hazard": [
+   "dive",
+   "brawl"
+  ],
+  "reinhardt": [
+   "brawl"
+  ],
+  "junker-queen": [
+   "brawl"
+  ],
+  "mauga": [
+   "brawl"
+  ],
+  "roadhog": [
+   "brawl"
+  ],
+  "ramattra": [
+   "brawl"
+  ],
+  "orisa": [
+   "brawl",
+   "poke"
+  ],
+  "zarya": [
+   "brawl",
+   "dive"
+  ],
+  "dmon": [
+   "brawl"
+  ],
+  "sigma": [
+   "poke"
+  ],
+  "domina": [
+   "poke"
+  ],
+  "genji": [
+   "dive"
+  ],
+  "tracer": [
+   "dive"
+  ],
+  "echo": [
+   "dive",
+   "poke"
+  ],
+  "venture": [
+   "dive",
+   "brawl"
+  ],
+  "anran": [
+   "dive"
+  ],
+  "shion": [
+   "dive"
+  ],
+  "vendetta": [
+   "dive"
+  ],
+  "reaper": [
+   "brawl"
+  ],
+  "mei": [
+   "brawl"
+  ],
+  "symmetra": [
+   "brawl"
+  ],
+  "torbjorn": [
+   "brawl"
+  ],
+  "bastion": [
+   "brawl",
+   "poke"
+  ],
+  "cassidy": [
+   "poke",
+   "brawl"
+  ],
+  "soldier-76": [
+   "poke",
+   "brawl"
+  ],
+  "ashe": [
+   "poke"
+  ],
+  "widowmaker": [
+   "poke"
+  ],
+  "hanzo": [
+   "poke"
+  ],
+  "junkrat": [
+   "poke"
+  ],
+  "pharah": [
+   "poke"
+  ],
+  "sojourn": [
+   "poke",
+   "dive"
+  ],
+  "freja": [
+   "poke"
+  ],
+  "emre": [
+   "poke"
+  ],
+  "sierra": [
+   "poke"
+  ],
+  "kiriko": [
+   "dive",
+   "brawl"
+  ],
+  "juno": [
+   "dive",
+   "brawl"
+  ],
+  "sombra": [
+   "dive"
+  ],
+  "jetpack-cat": [
+   "dive"
+  ],
+  "lucio": [
+   "brawl"
+  ],
+  "brigitte": [
+   "brawl"
+  ],
+  "moira": [
+   "brawl"
+  ],
+  "doctrine": [
+   "brawl"
+  ],
+  "mizuki": [
+   "brawl"
+  ],
+  "ana": [
+   "poke",
+   "brawl"
+  ],
+  "baptiste": [
+   "poke",
+   "brawl"
+  ],
+  "mercy": [
+   "poke",
+   "dive"
+  ],
+  "zenyatta": [
+   "poke"
+  ],
+  "illari": [
+   "poke"
+  ],
+  "lifeweaver": [
+   "poke"
+  ],
+  "wuyang": [
+   "poke"
+  ]
+ },
+ "pairs": [
+  {
+   "a": "ana",
+   "b": "genji",
+   "r": "Nano Blade: Nano Boost na Dragonblade",
+   "s": 2
+  },
+  {
+   "a": "ana",
+   "b": "reinhardt",
+   "r": "Nano Boost pošle Reina do Earthshatteru nebo Charge",
+   "s": 1
+  },
+  {
+   "a": "ana",
+   "b": "winston",
+   "r": "Nano Boost udrží Winstona naživu v Primal Rage",
+   "s": 1
+  },
+  {
+   "a": "mercy",
+   "b": "pharah",
+   "r": "Pharmercy: Mercy drží Pharah ve vzduchu a zesiluje Barrage",
+   "s": 2
+  },
+  {
+   "a": "mercy",
+   "b": "echo",
+   "r": "Mercy létá za Echo a zesiluje její poškození",
+   "s": 1
+  },
+  {
+   "a": "mercy",
+   "b": "ashe",
+   "r": "Damage Boost na Ashe z výšky",
+   "s": 1
+  },
+  {
+   "a": "mercy",
+   "b": "sojourn",
+   "r": "Damage Boost na nabitý railgun",
+   "s": 1
+  },
+  {
+   "a": "zarya",
+   "b": "hanzo",
+   "r": "Graviton Surge stáhne nepřátele pod Dragonstrike",
+   "s": 2
+  },
+  {
+   "a": "zarya",
+   "b": "genji",
+   "r": "Graviton Surge podrží cíle pro Dragonblade",
+   "s": 1
+  },
+  {
+   "a": "zarya",
+   "b": "junkrat",
+   "r": "Graviton Surge a RIP-Tire nebo granáty do shluku",
+   "s": 1
+  },
+  {
+   "a": "zarya",
+   "b": "pharah",
+   "r": "Graviton Surge a Barrage shora",
+   "s": 1
+  },
+  {
+   "a": "zarya",
+   "b": "cassidy",
+   "r": "Graviton Surge podrží cíle pro Deadeye",
+   "s": 1
+  },
+  {
+   "a": "zarya",
+   "b": "reinhardt",
+   "r": "Bubliny drží Reinhardta vepředu",
+   "s": 1
+  },
+  {
+   "a": "lucio",
+   "b": "reinhardt",
+   "r": "Speed Boost a Reinhardt: klasický rush",
+   "s": 2
+  },
+  {
+   "a": "lucio",
+   "b": "junker-queen",
+   "r": "Speed Boost a Rampage: rychlý brawl zblízka",
+   "s": 2
+  },
+  {
+   "a": "lucio",
+   "b": "mauga",
+   "r": "Speed Boost dotáhne Maugu do boje zblízka",
+   "s": 1
+  },
+  {
+   "a": "brigitte",
+   "b": "reinhardt",
+   "r": "Inspire a Repair Pack drží Reina vepředu",
+   "s": 1
+  },
+  {
+   "a": "kiriko",
+   "b": "genji",
+   "r": "Kitsune Rush zrychlí Dragonblade",
+   "s": 1
+  },
+  {
+   "a": "kiriko",
+   "b": "winston",
+   "r": "Kitsune Rush zrychlí skok do backline",
+   "s": 1
+  },
+  {
+   "a": "mei",
+   "b": "reinhardt",
+   "r": "Blizzard zastaví nepřátele pro Earthshatter",
+   "s": 1
+  },
+  {
+   "a": "junkrat",
+   "b": "roadhog",
+   "r": "Hák a Steel Trap: kdo se chytí, nepřežije",
+   "s": 1
+  },
+  {
+   "a": "baptiste",
+   "b": "bastion",
+   "r": "Amplification Matrix zdvojí palbu Bastiona",
+   "s": 1
+  },
+  {
+   "a": "baptiste",
+   "b": "soldier-76",
+   "r": "Amplification Matrix a Tactical Visor",
+   "s": 1
+  },
+  {
+   "a": "sigma",
+   "b": "widowmaker",
+   "r": "Bariéra kryje snipera při poke",
+   "s": 1
+  },
+  {
+   "a": "dva",
+   "b": "winston",
+   "r": "Dvojitý dive tank na stejný cíl",
+   "s": 1
+  },
+  {
+   "a": "tracer",
+   "b": "genji",
+   "r": "Dva flankeři rozbijí backline z různých stran",
+   "s": 1
+  }
+ ]
+}
