@@ -226,6 +226,12 @@
    ]
   },
   {
+   "key": "grimsvotn",
+   "name": "Grímsvötn",
+   "mode": "escort",
+   "traits": []
+  },
+  {
    "key": "havana",
    "name": "Havana",
    "mode": "escort",
