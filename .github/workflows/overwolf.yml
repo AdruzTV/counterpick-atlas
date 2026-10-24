@@ -1,0 +1,38 @@
+name: Overwolf app
+
+# Packs the Overwolf app (manifest.json in the repo root) into counterpick-atlas.opk whenever the app changes,
+# downloadable from the run's artifacts. Overwolf installs it only for whitelisted developers until the app is in
+# the Overwolf store, so there is no public release yet; the Windows app (desktop.yml) is the one to hand out.
+on:
+  push:
+    branches: [main]
+    paths:
+      - manifest.json
+      - index.html
+      - 'js/**'
+      - 'overlay/**'
+      - 'overwolf/**'
+      - .github/workflows/overwolf.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Read version
+        id: meta
+        run: echo "version=$(python3 -c "import json; print(json.load(open('manifest.json'))['meta']['version'])")" >> "$GITHUB_OUTPUT"
+
+      - name: Pack
+        run: zip -r -9 -q counterpick-atlas.opk manifest.json index.html js data art p overlay overwolf
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: counterpick-atlas-overwolf-${{ steps.meta.outputs.version }}
+          path: counterpick-atlas.opk

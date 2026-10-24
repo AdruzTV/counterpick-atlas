@@ -1,0 +1,64 @@
+name: Desktop app
+
+# Builds the Windows app in desktop/ (installer and portable .exe) whenever the app or the pages it shows change.
+# Both files are downloadable from the run's artifacts; when "version" in desktop/package.json is new, they are
+# also published as GitHub release desktop-v<version>. Data (patch notes, counters, maps) needs no new build:
+# the app loads it from GitHub Pages.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'desktop/**'
+      - index.html
+      - 'js/**'
+      - 'overlay/**'
+      - .github/workflows/desktop.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: desktop-app
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: desktop
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+
+      - run: npm ci
+
+      - name: Build
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npm run dist
+
+      - name: Read version
+        id: meta
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: counterpick-atlas-desktop-${{ steps.meta.outputs.version }}
+          path: desktop/dist/*.exe
+
+      - name: Release new version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: desktop-v${{ steps.meta.outputs.version }}
+        run: |
+          gh release view "$VERSION" > /dev/null 2>&1 && exit 0
+          gh release create "$VERSION" dist/*.exe --title "Counterpick Atlas pro Windows $VERSION" \
+            --notes "Instalátor (Setup) nebo přenosná verze (portable), stačí jedno z nich. Ovládání: README, sekce Aplikace pro Windows."

@@ -1,0 +1,62 @@
+{
+  "manifest_version": 1,
+  "type": "WebApp",
+  "meta": {
+    "name": "Counterpick Atlas",
+    "author": "AdruzTV",
+    "version": "0.1.0",
+    "minimum-overwolf-version": "0.250.0",
+    "description": "Neoficiální český průvodce k Overwatch: countery, patch notes a doporučení hrdiny přímo ve hře podle screenshotu scoreboardu.",
+    "dock_button_title": "Counterpick",
+    "icon": "overwolf/icons/icon.png",
+    "icon_gray": "overwolf/icons/icon_gray.png",
+    "launcher_icon": "overwolf/icons/launcher.ico",
+    "window_icon": "overwolf/icons/window_icon.png"
+  },
+  "permissions": ["Hotkeys", "GameInfo", "Media", "Clipboard"],
+  "data": {
+    "start_window": "background",
+    "game_targeting": { "type": "dedicated", "game_ids": [10844] },
+    "game_events": [10844],
+    "launch_events": [
+      { "event": "GameLaunch", "event_data": { "game_ids": [10844] }, "start_minimized": true }
+    ],
+    "hotkeys": {
+      "cpa_scan": { "title": "Naskenovat scoreboard (drž Tab)", "action-type": "custom", "default": "Alt+C" },
+      "cpa_toggle": { "title": "Zobrazit / skrýt Counterpick", "action-type": "custom", "default": "Alt+X" }
+    },
+    "windows": {
+      "background": {
+        "file": "overwolf/background.html",
+        "is_background_page": true
+      },
+      "desktop": {
+        "file": "index.html",
+        "desktop_only": true,
+        "native_window": true,
+        "resizable": true,
+        "size": { "width": 1280, "height": 820 },
+        "min_size": { "width": 900, "height": 600 },
+        "keep_window_location": true
+      },
+      "ingame": {
+        "file": "overlay/ingame.html",
+        "in_game_only": true,
+        "transparent": true,
+        "resizable": true,
+        "size": { "width": 470, "height": 780 },
+        "min_size": { "width": 380, "height": 420 },
+        "start_position": { "top": 60, "left": 60 },
+        "focus_game_takeover": "ReleaseOnHidden",
+        "keep_window_location": true
+      },
+      "calibrate": {
+        "file": "overlay/calibrate.html",
+        "resizable": true,
+        "size": { "width": 1240, "height": 780 },
+        "min_size": { "width": 900, "height": 560 },
+        "focus_game_takeover": "ReleaseOnHidden"
+      }
+    }
+  }
+}

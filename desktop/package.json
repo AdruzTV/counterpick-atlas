@@ -1,0 +1,53 @@
+{
+  "name": "counterpick-atlas-desktop",
+  "productName": "Counterpick Atlas",
+  "version": "0.1.2",
+  "description": "Counterpick Atlas pro Windows: web a overlay do Overwatch bez Overwolfu",
+  "author": "AdruzTV",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis portable --publish never"
+  },
+  "build": {
+    "appId": "io.github.adruztv.counterpickatlas",
+    "productName": "Counterpick Atlas",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "..",
+        "to": "site",
+        "filter": [
+          "index.html",
+          "js/**",
+          "data/**",
+          "art/**",
+          "p/**",
+          "overlay/**",
+          "overwolf/icons/**"
+        ]
+      }
+    ],
+    "win": {
+      "icon": "../overwolf/icons/icon.png"
+    },
+    "nsis": {
+      "artifactName": "Counterpick-Atlas-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Counterpick-Atlas-${version}-portable.${ext}"
+    }
+  },
+  "devDependencies": {
+    "electron": "45.0.0",
+    "electron-builder": "26.15.3"
+  }
+}

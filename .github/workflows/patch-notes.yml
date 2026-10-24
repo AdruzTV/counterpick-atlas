@@ -1,11 +1,17 @@
 name: Patch notes
 
-# Every 12 hours: copy Blizzard's patch notes into data/ so the site can read them (see scripts/mirror_patch_notes.py)
-# and add new maps from OverFast API to data/maps.json (scripts/update_maps.py).
+# Every 12 hours: copy Blizzard's patch notes into data/ so the site can read them (see scripts/mirror_patch_notes.py),
+# add new maps from OverFast API to data/maps.json (scripts/update_maps.py) and new heroes to data/heroes.json,
+# data/icons.json, p/ and art/ (scripts/update_heroes.py).
 on:
   schedule:
     - cron: '17 4,16 * * *'
   workflow_dispatch:
+    inputs:
+      test_hero:
+        description: 'Test only, nothing of it is committed: add this existing hero (e.g. ana) again into a copy of the data'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -26,11 +32,42 @@ jobs:
       - name: Update map list
         run: python3 scripts/update_maps.py
 
+      # Pillow resizes the new hero's images. Without it the script only warns, and the commit still runs.
+      - name: Add new heroes
+        continue-on-error: true
+        env:
+          PIP_BREAK_SYSTEM_PACKAGES: '1'
+        run: |
+          python3 -m pip install --quiet --disable-pip-version-check pillow || echo '::warning::Pillow not installed'
+          python3 scripts/update_heroes.py
+
       - name: Commit
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/blizzard-patch-notes.html data/status.json data/maps.json
+          git add data/blizzard-patch-notes.html data/status.json data/maps.json data/heroes.json data/icons.json p art
           git diff --cached --quiet && exit 0
-          git commit -m 'Automatická kontrola patch notes a map'
+          git commit -m 'Automatická kontrola patch notes, map a hrdinů'
           git push
+
+      # Run by hand with test_hero: the hero is added again into a copy of the site in the runner's temp folder and
+      # compared with its record (see the log); the copy's data and images are in the run's artifacts.
+      - name: Test adding a hero
+        if: inputs.test_hero
+        env:
+          HERO: ${{ inputs.test_hero }}
+        run: |
+          mkdir "$RUNNER_TEMP/site"
+          cp -r data p art "$RUNNER_TEMP/site/"
+          python3 scripts/update_heroes.py --root "$RUNNER_TEMP/site" --readd "$HERO"
+
+      - uses: actions/upload-artifact@v4
+        if: inputs.test_hero
+        with:
+          name: hero-test-${{ inputs.test_hero }}
+          path: |
+            ${{ runner.temp }}/site/data/heroes.json
+            ${{ runner.temp }}/site/data/icons.json
+            ${{ runner.temp }}/site/data/status.json
+            ${{ runner.temp }}/site/p/${{ inputs.test_hero }}.jpg
+            ${{ runner.temp }}/site/art/${{ inputs.test_hero }}.jpg

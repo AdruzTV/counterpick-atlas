@@ -5,7 +5,8 @@
 (function ($) {
   'use strict';
 
-  const SOURCE = 'data/blizzard-patch-notes.html';
+  // In the Overwolf app js/counterpick-core.js points data files at GitHub Pages; on the site REMOTE is ''.
+  const SOURCE = ((window.CounterpickCore && CounterpickCore.REMOTE) || '') + 'data/blizzard-patch-notes.html';
   const BASE = 'https://overwatch.blizzard.com/en-us/news/patch-notes/';
   const TTL = 12 * 60 * 60 * 1000;
   const STORE = 'cpa:blizzard-patches:v1';

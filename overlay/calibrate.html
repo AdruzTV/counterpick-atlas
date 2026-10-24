@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="../">
+<title>Counterpick · kalibrace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="overlay/css/overlay.css">
+<style>
+.cal { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg); }
+.cal-main { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 330px; }
+.stage { position: relative; min-width: 0; min-height: 0; background: #070b13; display: grid; place-items: center; overflow: hidden; }
+.stage canvas { max-width: 100%; max-height: 100%; cursor: grab; }
+.stage canvas.dragging { cursor: grabbing; }
+.stage .empty-msg { max-width: 46ch; }
+.side { border-left: 1px solid var(--line); overflow-y: auto; padding: 4px 14px 16px; }
+.steps { margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 14px; display: grid; gap: 6px; }
+.steps b { color: var(--fg); font-weight: 600; }
+.range { display: grid; grid-template-columns: 1fr 64px; gap: 4px 10px; align-items: center; }
+.range input[type=range] { width: 100%; accent-color: var(--accent); }
+.range output { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px; text-align: right; }
+.btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.prev { display: grid; grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); gap: 4px; }
+.prev div { display: grid; justify-items: center; gap: 3px; background: var(--panel); padding: 5px 2px; border-top: 2px solid var(--blue); min-width: 0; }
+.prev.enemy div { border-top-color: var(--bad); }
+.prev img { width: 44px; height: 44px; }
+.prev span { font: 700 11px/1.05 var(--f-display); text-transform: uppercase; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); }
+.prev .sure span { color: var(--fg); }
+.small { color: var(--dim); font-size: 13px; margin: 8px 0 0; }
+</style>
+</head>
+<body class="page">
+<div class="cal">
+  <header class="head" id="drag">
+    <span class="brand-mark" aria-hidden="true">CA</span>
+    <strong>Kalibrace <span>scoreboardu</span></strong>
+    <span class="status" id="status"></span>
+    <button type="button" class="ic x" data-act="close" title="Zavřít" aria-label="Zavřít">×</button>
+  </header>
+  <div class="cal-main">
+    <div class="stage" id="stage"><p class="empty-msg">Načítám…</p></div>
+    <aside class="side" id="side"></aside>
+  </div>
+  <div class="grip" id="grip" aria-hidden="true"></div>
+</div>
+<script src="js/counterpick-core.js"></script>
+<script src="js/scoreboard.js"></script>
+<script src="overlay/js/app.js"></script>
+<script src="overlay/js/calibrate.js"></script>
+</body>
+</html>
