@@ -22,8 +22,8 @@
       { "event": "GameLaunch", "event_data": { "game_ids": [10844] }, "start_minimized": true }
     ],
     "hotkeys": {
-      "cpa_scan": { "title": "Naskenovat scoreboard (drž Tab)", "action-type": "custom", "default": "Alt+C" },
-      "cpa_toggle": { "title": "Zobrazit / skrýt Counterpick", "action-type": "custom", "default": "Alt+X" }
+      "cpa_scan": { "title": "Scan the scoreboard (hold Tab)", "action-type": "custom", "default": "Alt+C" },
+      "cpa_toggle": { "title": "Show / hide Counterpick", "action-type": "custom", "default": "Alt+X" }
     },
     "windows": {
       "background": {
