@@ -1,6 +1,8 @@
 /* Patch notes scraped from the official Overwatch site with jQuery.
    Blizzard sends no CORS headers, so a GitHub Action copies its pages into data/blizzard-patch-notes.html
    every 12 hours (scripts/mirror_patch_notes.py). Parsed patches are cached in localStorage for 12 hours.
+   They are parsed in the language chosen in js/i18n.js: in Czech stat names and units are translated, in English
+   they stay as Blizzard wrote them. Each language has its own cache.
    Exposes window.BlizzardPatches.load(heroes, version). */
 (function ($) {
   'use strict';
@@ -12,6 +14,8 @@
   const STORE = 'cpa:blizzard-patches:v1';
   const MAX_HIGHLIGHTS = 8;
   const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+  const t = (key, params) => I18n.t(key, params);
+  const cs = () => I18n.lang === 'cs';
 
   // English stat names from the patch notes -> Czech. Unknown stats stay in English.
   const STATS = {
@@ -39,11 +43,12 @@
   };
   // For these stats a smaller number is better for the hero.
   const LOWER_BETTER = /cooldown|cast time|recovery|reload time|spread|ultimate cost|wind-?up|delay|time to|charge time|self[- ]damage|damage taken|hit volume|experience required/i;
+  // Section titles -> short tags, update titles -> headings (texts in js/i18n.js).
   const SECTION_TAGS = {
-    'general updates': 'Obecné', 'core game updates': 'Systém', 'competitive play updates': 'Ranked',
-    'stadium updates': 'Stadium', 'hero updates': 'Hrdinové', 'map updates': 'Mapa', 'bug fixes': 'Opravy',
+    'general updates': 'bp.general', 'core game updates': 'bp.core', 'competitive play updates': 'bp.competitive',
+    'stadium updates': 'bp.stadium', 'hero updates': 'bp.heroes', 'map updates': 'bp.map', 'bug fixes': 'bp.fixes',
   };
-  const UPDATE_TITLES = { 'general': 'Obecné změny', 'general changes': 'Obecné změny', 'item changes': 'Změny itemů' };
+  const UPDATE_TITLES = { 'general': 'bp.generalChanges', 'general changes': 'bp.generalChanges', 'item changes': 'bp.itemChanges' };
   const GENERIC_SECTIONS = /^(general updates|hotfix update|hero updates|hero reworks|tank|damage|support|bug fixes|core game updates|competitive play updates|stadium updates|map updates)$/i;
 
   const clean = s => String(s || '').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim();
@@ -52,27 +57,29 @@
   const cut = (s, n) => s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s;
 
   /* ---------- cache ---------- */
+  const storeKey = () => cs() ? STORE : `${STORE}:${I18n.lang}`;
   function readCache() {
     try {
-      const c = JSON.parse(localStorage.getItem(STORE));
+      const c = JSON.parse(localStorage.getItem(storeKey()));
       return c && typeof c.t === 'number' && Array.isArray(c.patches) ? c : null;
     } catch (e) { return null; }
   }
   function writeCache(c) {
-    try { localStorage.setItem(STORE, JSON.stringify(c)); } catch (e) { /* private mode or full storage */ }
+    try { localStorage.setItem(storeKey(), JSON.stringify(c)); } catch (e) { /* private mode or full storage */ }
   }
 
   /* ---------- values ---------- */
-  // "6 seconds" -> "6 s", "1.25" -> "1,25", "35%" -> "35 %"
+  // "6 seconds" -> "6 s"; in Czech also "1.25" -> "1,25", "35%" -> "35 %"
   function fmtVal(v) {
-    return clean(v)
+    const short = clean(v)
       .replace(/\s*meters per second\b/gi, ' m/s').replace(/\s*per second\b/gi, '/s')
-      .replace(/\s*seconds?\b/gi, ' s').replace(/\s*meters?\b/gi, ' m').replace(/\s*degrees?\b/gi, '°')
-      .replace(/\s*shots\b/gi, ' střel').replace(/\s*of current health\b/gi, ' aktuálního zdraví')
+      .replace(/\s*seconds?\b/gi, ' s').replace(/\s*meters?\b/gi, ' m').replace(/\s*degrees?\b/gi, '°');
+    if (!cs()) return short;
+    return short.replace(/\s*shots\b/gi, ' střel').replace(/\s*of current health\b/gi, ' aktuálního zdraví')
       .replace(/\s*of max(?:imum)? health\b/gi, ' max. zdraví')
       .replace(/(\d)\s*%/g, '$1 %').replace(/(\d)\.(\d)/g, '$1,$2');
   }
-  const statCs = s => STATS[clean(s).toLowerCase()] || clean(s);
+  const statCs = s => (cs() && STATS[clean(s).toLowerCase()]) || clean(s);
   const isBuff = (stat, up) => LOWER_BETTER.test(stat) ? !up : up;
 
   // One <li> of the patch notes -> { a, t, from?, to? } plus a buff/nerf guess.
@@ -99,8 +106,8 @@
       const up = /increased|raised/i.test(m[2]);
       return { change: { a, t: `${statCs(m[1])} ${up ? '+' : '−'}${fmtVal(m[3])}` }, effect: isBuff(m[1], up) ? 'buff' : 'nerf' };
     }
-    if (/^removed$/i.test(line)) return { change: { a, t: 'odstraněno' }, effect: null };
-    if (/^new(\.| minor perk| major perk| passive)?$/i.test(line)) return { change: { a, t: 'novinka' }, effect: null };
+    if (/^removed$/i.test(line)) return { change: { a, t: t('bp.removed') }, effect: null };
+    if (/^new(\.| minor perk| major perk| passive)?$/i.test(line)) return { change: { a, t: t('bp.new') }, effect: null };
     return { change: { a, t: line }, effect: null };
   }
 
@@ -120,11 +127,11 @@
       const $el = $(this), txt = clean($el.text());
       if ($el.is('p')) {
         if ($el.closest('li').length || !txt || txt.length > 60) return;
-        label = txt.replace(/\s*[–-]\s*minor perk$/i, ' (malý perk)').replace(/\s*[–-]\s*major perk$/i, ' (velký perk)');
-      } else out.push(parseChange(label || 'Obecné', txt));
+        label = txt.replace(/\s*[–-]\s*minor perk$/i, t('bp.minorPerk')).replace(/\s*[–-]\s*major perk$/i, t('bp.majorPerk'));
+      } else out.push(parseChange(label || t('bp.general'), txt));
     });
     $h.find('.PatchNotesAbilityUpdate').each(function () {
-      const a = clean($(this).find('.PatchNotesAbilityUpdate-name').first().text()) || 'Obecné';
+      const a = clean($(this).find('.PatchNotesAbilityUpdate-name').first().text()) || t('bp.general');
       texts($(this).find('.PatchNotesAbilityUpdate-detailList'), 'li').each(function () {
         out.push(parseChange(a, $(this).text()));
       });
@@ -152,15 +159,16 @@
       const title = clean($s.find('.PatchNotes-sectionTitle').first().text());
       const $heroes = $s.find('.PatchNotesHeroUpdate');
       titles.push(title);
-      const tag = SECTION_TAGS[title.toLowerCase()] || ($s.find('.PatchNotesMapUpdate').length ? 'Mapa' : /season \d+/i.test(title) ? 'Sezóna' : title);
+      const section = SECTION_TAGS[title.toLowerCase()];
+      const tag = section ? t(section) : $s.find('.PatchNotesMapUpdate').length ? t('bp.map') : /season \d+/i.test(title) ? t('bp.season') : title;
 
       if (/bug fix/i.test(title)) {
         const n = texts($s, 'li').length;
-        if (n) highlights.push({ tag: 'Opravy', title: 'Opravy chyb', text: `${n} opravených chyb, celý seznam je v oficiálním znění.` });
+        if (n) highlights.push({ tag: t('bp.fixes'), title: t('bp.fixesTitle'), text: t('bp.fixesText', { n }) });
         return;
       }
       if (/hit volume/i.test(title)) {
-        highlights.push({ tag: 'Hitboxy', title, text: `Upravené zásahové zóny u ${$heroes.length} hrdinů.` });
+        highlights.push({ tag: t('bp.hitboxes'), title, text: t('bp.hitboxText', { n: $heroes.length }) });
         return;
       }
 
@@ -180,7 +188,8 @@
         const $g = $(this);
         const text = clean(texts($g, 'p, li').first().text());
         const name = clean($g.find('.PatchNotesGeneralUpdate-title').first().text()) || title;
-        if (text) highlights.push({ tag, title: UPDATE_TITLES[name.toLowerCase()] || name, text: cut(text, 220) });
+        const heading = UPDATE_TITLES[name.toLowerCase()];
+        if (text) highlights.push({ tag, title: heading ? t(heading) : name, text: cut(text, 220) });
       });
       if (!$heroes.length && !$s.find('.PatchNotesGeneralUpdate').length && !/hotfix/i.test(title)) {
         const text = clean(texts($s, 'li, p').first().text());
@@ -194,20 +203,19 @@
       return { changes: h.changes, key, verdict };
     });
     const count = v => list.filter(h => h.verdict === v).length;
-    const tally = [['buff', 'buff'], ['nerf', 'nerf'], ['rework', 'rework'], ['mixed', 'smíšené']]
+    const tally = [['buff', 'buff'], ['nerf', 'nerf'], ['rework', 'rework'], ['mixed', t('bp.mixed')]]
       .filter(([v]) => count(v)).map(([v, label]) => `${label} ${count(v)}`).join(', ');
     const season = titles.join(' ').match(/season (\d+)/i);
-    const kind = titles.some(t => /hotfix/i.test(t)) ? 'Hotfix' : season ? `Sezóna ${season[1]}` : 'Patch';
-    const special = titles.find(t => t && !GENERIC_SECTIONS.test(t) && !/hit volume/i.test(t));
+    const kind = titles.some(s => /hotfix/i.test(s)) ? 'Hotfix' : season ? t('bp.seasonN', { n: season[1] }) : 'Patch';
+    const special = titles.find(s => s && !GENERIC_SECTIONS.test(s) && !/hit volume/i.test(s));
 
     return {
       date: when.date,
       heroes: list,
       highlights: highlights.slice(0, MAX_HIGHLIGHTS),
       kind,
-      summary: 'Automaticky staženo z oficiálních patch notes, popisy změn jsou v angličtině.' +
-        (list.length ? ` Změny u ${list.length} ${list.length === 1 ? 'hrdiny' : 'hrdinů'} (${tally}).` : ''),
-      title: special || (kind === 'Hotfix' ? 'Hotfix' : 'Aktualizace hry'),
+      summary: t('bp.summary') + (list.length ? t('bp.summaryHeroes', { n: list.length, tally }) : ''),
+      title: special || (kind === 'Hotfix' ? 'Hotfix' : t('bp.update')),
       url: `${pageUrl}#patch-${when.id}`,
       id: when.id,
       auto: true,

@@ -1,6 +1,7 @@
 /* The site (index.html) as the Overwolf desktop window. index.html loads this only when window.overwolf exists.
    Adds a title bar to drag, minimise, maximise and close the frameless window, opens outside links in the real
-   browser, and loads hero images that this app version doesn't ship (heroes added later) from GitHub Pages. */
+   browser, and loads hero images that this app version doesn't ship (heroes added later) from GitHub Pages.
+   Its texts follow the site's language (js/i18n.js). */
 (() => {
   const SITE = (window.CounterpickCore && CounterpickCore.SITE) || 'https://adruztv.github.io/counterpick-atlas/';
   const BAR = 32;
@@ -21,14 +22,16 @@
       background: linear-gradient(135deg, transparent 50%, var(--line) 50%); }
   </style>`);
 
+  // data-i18n: I18n.apply() words them again when the language changes.
   document.body.insertAdjacentHTML('afterbegin', `<div class="ow-bar" id="ow-bar">
       <span class="t">Counterpick <span>Atlas</span></span>
-      <span class="h">Ve hře podrž <b>Tab</b> a zmáčkni <b>Alt+C</b> · <b>Alt+X</b> skryje overlay</span>
-      <button type="button" data-ow="calib" title="Kalibrace scoreboardu">Kalibrace</button>
-      <button type="button" data-ow="min" title="Minimalizovat" aria-label="Minimalizovat">–</button>
-      <button type="button" data-ow="max" title="Maximalizovat" aria-label="Maximalizovat">□</button>
-      <button type="button" class="x" data-ow="close" title="Zavřít" aria-label="Zavřít">×</button>
+      <span class="h" data-i18n="ow.hint"></span>
+      <button type="button" data-ow="calib" data-i18n="ow.calib" data-i18n-attr="title:ov.calib"></button>
+      <button type="button" data-ow="min" data-i18n-attr="title:ow.min; aria-label:ow.min">–</button>
+      <button type="button" data-ow="max" data-i18n-attr="title:ow.max; aria-label:ow.max">□</button>
+      <button type="button" class="x" data-ow="close" data-i18n-attr="title:ov.close; aria-label:ov.close">×</button>
     </div><div class="ow-grip" id="ow-grip" aria-hidden="true"></div>`);
+  I18n.apply(document.getElementById('ow-bar'));
 
   const current = cb => overwolf.windows.getCurrentWindow(r => r && r.success && cb(r.window));
   const api = () => overwolf.windows.getMainWindow().CPA_api;

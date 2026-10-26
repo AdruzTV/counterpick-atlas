@@ -3,6 +3,7 @@
 Neoficiální český fanouškovský průvodce ke hře Overwatch: patch notes, countery, schopnosti a perky všech hrdinů.
 
 - `index.html` – celá stránka
+- `js/i18n.js` – texty rozhraní česky a anglicky (web, overlay, kalibrace, Overwolf lišta i menu aplikace pro Windows)
 - `js/counterpick-core.js` – výpočet doporučení pro stránku Counterpick (countery, komba, styl týmu, tipy k mapě); sdílí ho web i overlay ve hře, takže doporučují stejně
 - `data/patches.json` – česká shrnutí patch notes (nejnovější nahoře)
 - `js/blizzard-patches.js` – jQuery scraper oficiálních patch notes; patche novější než poslední české shrnutí se načtou při návštěvě a drží se 12 h v cache prohlížeče
@@ -21,6 +22,10 @@ Countery jsou orientační odhady podle schopností, ne statistiky zápasů.
 Stránka **Counterpick** (`#counterpick`) doporučí hrdinu podle toho, koho zadáš do svého a nepřátelského týmu. Za každého nepřítele, kterého kandidát counteruje, dostane body (tvrdý counter víc), za každého, kdo counteruje jeho, body ztratí. Body přidá i kombo se spoluhráčem a styl, který sedí ke zbytku týmu; v 6v6 navíc chybějící role. Mapa a nepovinná volba útok / obrana (jen na mapách Escort a Hybrid, nebo když mapa není vybraná) body nepřidávají, jsou jen tip: stránka ukáže, kteří hrdinové z tvé role se na mapu a stranu hodí (na útoku dive a rychlý engage, na obraně poke a hrdinové, kteří drží průchod), a u doporučených hrdinů je označí ✓.
 
 Není spojeno s Blizzard Entertainment. Obrázky hrdinů, názvy a popisy schopností © Blizzard Entertainment.
+
+## Jazyk
+
+Web, overlay i aplikace jsou česky a anglicky. Přepíná se tlačítky **CZ / EN** v liště webu; volba se pamatuje v prohlížeči (`localStorage`) a overlay s kalibrací se na stejném webu nebo v aplikaci přepnou hned s ním. Dokud nikdo nevybral, rozhoduje jazyk systému: čeština pro češtinu a slovenštinu, jinak angličtina. Texty rozhraní jsou v `js/i18n.js`, u každého česká a anglická verze vedle sebe; když anglická chybí, ukáže se česká. Doporučení na stránce Counterpick vychází v obou jazycích stejně, jazyk mění jen slova.
 
 ## Automatické patch notes
 
@@ -66,6 +71,7 @@ Samostatná aplikace (Electron), Overwolf nepotřebuje. Ke stažení je v Releas
 - **Alt+C** vyfotí obrazovku, na které je myš, a ukáže overlay. Myš přitom zůstane ve hře, takže hraješ dál.
 - **Alt+X** přesune myš do overlaye (opravy, role, mapa), druhým stiskem ho schová. Esc ho schová taky.
 - Zavřením hlavního okna aplikace neskončí, zůstane jako ikona v oznamovací oblasti, aby zkratky ve hře fungovaly. Ukončíš ji přes tuto ikonu.
+- Jazyk přepneš tlačítky CZ / EN v hlavním okně, nebo v menu ikony v oznamovací oblasti (Jazyk / Language). Obojí drží spolu, overlay i kalibrace se přepnou hned a aplikace si volbu pamatuje v `settings.json`.
 - Zkratky jdou změnit v `%APPDATA%\Counterpick Atlas\settings.json` (`keys.scan`, `keys.toggle`, třeba `"Ctrl+Shift+C"`), pak aplikaci spusť znovu.
 - Aplikace jen fotí obrazovku jako OBS nebo Discord, do hry nijak nezasahuje.
 

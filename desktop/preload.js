@@ -1,11 +1,17 @@
 /* Bridge between the pages and the app (desktop/main.js). overlay/js/app.js finds window.cpaDesktop and takes its
-   screenshots and window controls from here instead of from Overwolf. */
+   screenshots and window controls from here instead of from Overwolf; js/i18n.js keeps the language in step with
+   the tray menu through lang, setLang and onLang. */
 const { contextBridge, ipcRenderer } = require('electron');
 
 const SITE = 'https://adruztv.github.io/counterpick-atlas/';
+const LANG = ipcRenderer.sendSync('lang');
 
 contextBridge.exposeInMainWorld('cpaDesktop', {
   keys: ipcRenderer.sendSync('keys'),
+  lang: LANG.lang,              // the player's choice, null until there is one
+  systemLang: LANG.system,      // from Windows' language, until then
+  setLang: l => ipcRenderer.send('set-lang', l),
+  onLang: cb => ipcRenderer.on('lang', (e, l) => cb(l)),
   onScan: cb => ipcRenderer.on('scan', (e, result) => cb(result)),
   lastScan: () => ipcRenderer.invoke('last-scan'),
   hideOverlay: () => ipcRenderer.send('hide-overlay'),

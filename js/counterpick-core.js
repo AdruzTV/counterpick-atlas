@@ -2,8 +2,10 @@
    An Atlas indexes the data files, then ranks heroes for a pick state { mode, role, team, enemy, map, side }.
    Inside the apps (Overwolf, or the desktop app in desktop/ which serves its files as cpa://) the data files load
    from GitHub Pages first, so the apps stay current without an update; the copies shipped with them are the
-   fallback. Exposes window.CounterpickCore. */
+   fallback. The reasons are worded in the chosen language (js/i18n.js, loaded before this file), the data files'
+   texts too where they have English (<field>_en); the scores never depend on it. Exposes window.CounterpickCore. */
 (() => {
+  const t = (key, params) => I18n.t(key, params), pick = (obj, field) => I18n.pick(obj, field);
   const SITE = 'https://adruztv.github.io/counterpick-atlas/';
   const REMOTE = typeof window.CPA_REMOTE === 'string' ? window.CPA_REMOTE
     : ['overwolf-extension:', 'cpa:'].includes(location.protocol) ? SITE : '';
@@ -30,11 +32,6 @@
     freja: ['freya'], vendetta: ['vend'], doctrine: ['doc'], lucio: ['lucio'], moira: ['moi'],
   };
   const COMP_5V5 = { tank: 1, damage: 2, support: 2 };
-  const STYLE_INFO = {
-    dive: 'rychlé skoky na zadní linii soupeře',
-    brawl: 'tlačení dopředu a boj zblízka',
-    poke: 'střelba z dálky zpoza krytu',
-  };
   // Points per reason: [unused, normal, hard/signature].
   const W = { counter: [0, 2, 3], pair: [0, 1.5, 2.5], fit: 1.5, misfit: 1, role: 2 };
   const MAP_MODES = [['control', 'Control'], ['escort', 'Escort'], ['hybrid', 'Hybrid'], ['push', 'Push'], ['flashpoint', 'Flashpoint'], ['clash', 'Clash']];
@@ -71,12 +68,14 @@
       const BY = {}, VS = {}, REVIEW = {}, HM = this.HM;
       for (const d of arr(docs)) {
         if (!d || !HM[d.key]) continue;
-        if (d.review && d.review.reason) REVIEW[d.key] = { reason: String(d.review.reason), since: isDate(d.review.since) ? d.review.since : null };
+        if (d.review && d.review.reason) {
+          REVIEW[d.key] = { reason: String(d.review.reason), reason_en: String(d.review.reason_en || ''), since: isDate(d.review.since) ? d.review.since : null };
+        }
         for (const e of arr(d.goodVs)) {
           if (!e || !HM[e.k] || e.k === d.key) continue;
-          const s = e.s === 2 ? 2 : 1, r = String(e.r || '');
-          (VS[d.key] ||= []).push({ k: e.k, s, r });
-          (BY[e.k] ||= []).push({ k: d.key, s, r });
+          const s = e.s === 2 ? 2 : 1, r = String(e.r || ''), r_en = String(e.r_en || '');
+          (VS[d.key] ||= []).push({ k: e.k, s, r, r_en });
+          (BY[e.k] ||= []).push({ k: d.key, s, r, r_en });
         }
       }
       Object.assign(this, { BY, VS, REVIEW });
@@ -85,7 +84,7 @@
     indexSynergies(d) {
       this.STYLES = d && d.styles && typeof d.styles === 'object' ? d.styles : {};
       this.PAIRS = {};
-      for (const p of arr(d && d.pairs)) if (p && p.a && p.b) this.PAIRS[pairKey(p.a, p.b)] = { s: p.s === 2 ? 2 : 1, r: String(p.r || '') };
+      for (const p of arr(d && d.pairs)) if (p && p.a && p.b) this.PAIRS[pairKey(p.a, p.b)] = { s: p.s === 2 ? 2 : 1, r: String(p.r || ''), r_en: String(p.r_en || '') };
     }
 
     // data/maps.json: what each map trait and each side (attack / defense) favours, hero tags and the maps with their traits.
@@ -160,11 +159,11 @@
     mapTips(h, map, side) {
       const out = [];
       for (const key of map ? map.traits : []) {
-        const t = this.MAP_TRAITS[key];
-        if (this.heroHits(h, t.good)) out.push({ v: 0, tip: 'good', t: `Mapa: ${t.label}`, r: `${map.name} – ${t.desc}` });
-        else if (this.heroHits(h, t.bad)) out.push({ v: 0, tip: 'bad', t: `Mapa: ${t.label}`, r: `${map.name} – ${t.badDesc || t.desc}` });
+        const tr = this.MAP_TRAITS[key], label = t('why.map', { label: pick(tr, 'label') });
+        if (this.heroHits(h, tr.good)) out.push({ v: 0, tip: 'good', t: label, r: `${map.name} – ${pick(tr, 'desc')}` });
+        else if (this.heroHits(h, tr.bad)) out.push({ v: 0, tip: 'bad', t: label, r: `${map.name} – ${pick(tr, 'badDesc') || pick(tr, 'desc')}` });
       }
-      if (side && this.heroHits(h, side.good)) out.push({ v: 0, tip: 'good', t: side.label, r: side.desc });
+      if (side && this.heroHits(h, side.good)) out.push({ v: 0, tip: 'good', t: pick(side, 'label'), r: pick(side, 'desc') });
       return out;
     }
 
@@ -178,26 +177,27 @@
       const HM = this.HM, why = [];
       for (const e of enemy) {
         const win = arr(this.VS[h.key]).find(x => x.k === e);
-        if (win) why.push({ v: W.counter[win.s], t: `${win.s === 2 ? 'Tvrdý counter na' : 'Silný proti'} ${HM[e].name}`, r: win.r });
+        if (win) why.push({ v: W.counter[win.s], t: t(win.s === 2 ? 'why.hardCounter' : 'why.strongVs', { name: HM[e].name }), r: pick(win, 'r') });
         const loss = arr(this.VS[e]).find(x => x.k === h.key);
-        if (loss) why.push({ v: -W.counter[loss.s], t: `${HM[e].name} ${loss.s === 2 ? 'tě tvrdě counteruje' : 'tě counteruje'}`, r: loss.r });
+        if (loss) why.push({ v: -W.counter[loss.s], t: t(loss.s === 2 ? 'why.hardCountered' : 'why.countered', { name: HM[e].name }), r: pick(loss, 'r') });
       }
-      for (const t of team) {
-        const p = this.PAIRS[pairKey(h.key, t)];
-        if (p) why.push({ v: W.pair[p.s], t: `Kombo s ${HM[t].name}`, r: p.r });
+      for (const k of team) {
+        const p = this.PAIRS[pairKey(h.key, k)];
+        if (p) why.push({ v: W.pair[p.s], t: t('why.combo', { name: HM[k].name }), r: pick(p, 'r') });
       }
       if (style) {
         const own = arr(this.STYLES[h.key]);
         const names = style.heroes.map(k => HM[k].name).join(', ');
-        if (own.includes(style.style)) why.push({ v: W.fit, t: `Sedí do stylu týmu: ${style.style}`, r: `${names} hrají ${style.style} (${STYLE_INFO[style.style]}).` });
-        else if (own.length) why.push({ v: -W.misfit, t: `Tým hraje ${style.style}, ${h.name} spíš ${own.join(' / ')}`, r: `${names} hrají ${style.style} (${STYLE_INFO[style.style]}).` });
+        const r = t('why.styleWhy', { names, style: style.style, info: t('style.' + style.style) });
+        if (own.includes(style.style)) why.push({ v: W.fit, t: t('why.style', { style: style.style }), r });
+        else if (own.length) why.push({ v: -W.misfit, t: t('why.styleOff', { style: style.style, name: h.name, own: own.join(' / ') }), r });
       }
       // 6v6 is usually played 2-2-2: fill the role the team is short of.
       if (mode === '6v6' && team.length >= 3) {
-        const same = team.filter(k => HM[k].role === h.role).length;
-        if (same === 0) why.push({ v: W.role, t: `V týmu chybí ${ROLE_LABEL[h.role]}`, r: '' });
-        else if (same === 1) why.push({ v: W.role / 2, t: `V týmu je jen 1× ${ROLE_LABEL[h.role]}`, r: '' });
-        else why.push({ v: -W.role, t: `Tým už má ${same}× ${ROLE_LABEL[h.role]}`, r: '' });
+        const same = team.filter(k => HM[k].role === h.role).length, role = ROLE_LABEL[h.role];
+        if (same === 0) why.push({ v: W.role, t: t('why.roleMissing', { role }), r: '' });
+        else if (same === 1) why.push({ v: W.role / 2, t: t('why.roleOne', { role }), r: '' });
+        else why.push({ v: -W.role, t: t('why.roleMany', { n: same, role }), r: '' });
       }
       why.sort((a, b) => Math.abs(b.v) - Math.abs(a.v) || b.v - a.v);
       why.push(...this.mapTips(h, map, side));
@@ -221,7 +221,7 @@
   }
 
   window.CounterpickCore = {
-    SITE, REMOTE, ROLES, ROLE_LABEL, ROLE_ORDER, ROLE_SVG, COMP_5V5, STYLE_INFO, W, MAP_MODES, SIDED_MODES,
+    SITE, REMOTE, ROLES, ROLE_LABEL, ROLE_ORDER, ROLE_SVG, COMP_5V5, W, MAP_MODES, SIDED_MODES,
     arr, isDate, norm, loadJSON, Atlas,
   };
 })();

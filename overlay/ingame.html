@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <base href="../">
-<title>Counterpick · overlay</title>
+<title data-i18n="ov.title">Counterpick · overlay</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=Barlow:wght@400;500;600&display=swap">
@@ -15,18 +15,19 @@
   <header class="head" id="drag">
     <span class="brand-mark" aria-hidden="true">CA</span>
     <strong>Counter<span>pick</span></strong>
-    <span class="status" id="status" aria-live="polite">Načítám data…</span>
-    <button type="button" class="ic" data-act="calib" title="Kalibrace scoreboardu" aria-label="Kalibrace scoreboardu">⚙</button>
-    <button type="button" class="ic x" data-act="close" title="Skrýt" aria-label="Skrýt">×</button>
+    <span class="status" id="status" aria-live="polite" data-i18n="ov.loading">Načítám data…</span>
+    <button type="button" class="ic" data-act="calib" title="Kalibrace scoreboardu" aria-label="Kalibrace scoreboardu" data-i18n-attr="title:ov.calib; aria-label:ov.calib">⚙</button>
+    <button type="button" class="ic x" data-act="close" title="Skrýt" aria-label="Skrýt" data-i18n-attr="title:ov.hide; aria-label:ov.hide">×</button>
   </header>
   <div class="body" id="body"></div>
   <footer class="foot">
-    <button type="button" class="btn go" data-act="confirm" id="confirm" disabled>✓ Sedí, uložit</button>
+    <button type="button" class="btn go" data-act="confirm" id="confirm" disabled data-i18n="ov.confirm">✓ Sedí, uložit</button>
     <span class="hint" id="keys"></span>
   </footer>
   <div class="picker" id="picker" hidden></div>
   <div class="grip" id="grip" aria-hidden="true"></div>
 </div>
+<script src="js/i18n.js"></script>
 <script src="js/counterpick-core.js"></script>
 <script src="js/scoreboard.js"></script>
 <script src="overlay/js/app.js"></script>

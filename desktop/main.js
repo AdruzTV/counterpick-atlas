@@ -8,6 +8,8 @@
    - Alt+X moves the mouse into the overlay; pressed again it hides the overlay
    Files are served as cpa://atlas/..., so the pages run as on the web and js/counterpick-core.js loads data/*.json
    from GitHub Pages first. Closing the site window leaves the app in the tray so the hotkeys keep working.
+   Czech or English: the pages switch with the CZ / EN buttons on the site, the tray menu has the same choice. Both
+   ends tell each other (desktop/preload.js) and settings.json keeps it; the texts are js/i18n.js, shared with the pages.
    `electron . --smoke=<image>` is a developer check: shows the image full screen, scans it, saves pictures of the
    windows next to the image and prints what the overlay read. */
 const {
@@ -19,6 +21,7 @@ const path = require('path');
 const { pathToFileURL } = require('url');
 
 const SITE_DIR = path.resolve(app.isPackaged ? path.join(process.resourcesPath, 'site') : path.join(__dirname, '..'));
+const I18N = require(path.join(SITE_DIR, 'js', 'i18n.js'));
 const ORIGIN = 'cpa://atlas/';
 const ICON = path.join(SITE_DIR, 'overwolf', 'icons', 'icon.png');
 const MAX_HEIGHT = 1080;          // screenshots are scaled down to this; recognition works in screen heights anyway
@@ -26,7 +29,7 @@ const SMOKE = (process.argv.find(a => a.startsWith('--smoke=')) || '').slice('--
 // The developer check runs on its own throw-away profile: next to the player's running app, without its samples.
 if (SMOKE) app.setPath('userData', path.join(app.getPath('temp'), 'counterpick-atlas-smoke'));
 const SETTINGS = path.join(app.getPath('userData'), 'settings.json');
-const DEFAULTS = { keys: { scan: 'Alt+C', toggle: 'Alt+X' }, overlay: null, trayHintShown: false };
+const DEFAULTS = { keys: { scan: 'Alt+C', toggle: 'Alt+X' }, overlay: null, trayHintShown: false, lang: null };
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'cpa', privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true } },
@@ -44,6 +47,19 @@ function readSettings() {
 }
 function saveSettings() {
   try { fs.mkdirSync(path.dirname(SETTINGS), { recursive: true }); fs.writeFileSync(SETTINGS, JSON.stringify(settings, null, 1)); } catch (e) { /* read-only profile */ }
+}
+
+/* ---------- language ---------- */
+// Until the player chooses: Czech on a Czech or Slovak Windows, else English (like the pages).
+const lang = () => I18N.LANGS.includes(settings.lang) ? settings.lang : I18N.systemLang(app.getLocale());
+const t = (key, params) => I18N.translate(lang(), key, params);
+
+// Chosen on a page (`from` is its webContents) or in the tray menu: remembered, the menu redrawn, the other pages told.
+function setLang(l, from) {
+  if (!I18N.LANGS.includes(l)) return;
+  if (settings.lang !== l) { settings.lang = l; saveSettings(); }
+  trayMenu();
+  for (const w of [main, overlay, calib]) if (w && !w.isDestroyed() && w.webContents !== from) w.webContents.send('lang', l);
 }
 
 /* ---------- files as cpa://atlas/ ---------- */
@@ -86,8 +102,7 @@ function createMain() {
     e.preventDefault();
     main.hide();
     if (!settings.trayHintShown && tray) {
-      tray.displayBalloon({ iconType: 'info', title: 'Counterpick Atlas běží dál',
-        content: `Zkratky ve hře fungují dál (${settings.keys.scan}). Aplikaci ukončíš přes tuhle ikonu.` });
+      tray.displayBalloon({ iconType: 'info', title: t('app.trayTitle'), content: t('app.trayText', { key: settings.keys.scan }) });
       settings.trayHintShown = true;
       saveSettings();
     }
@@ -130,7 +145,7 @@ function openCalibration() {
   if (calib) { calib.show(); calib.focus(); return; }
   calib = new BrowserWindow({
     width: 1240, height: 780, minWidth: 900, minHeight: 560, frame: false,
-    title: 'Counterpick · kalibrace', icon: ICON, backgroundColor: '#0d1320', webPreferences: prefs(),
+    title: t('cal.title'), icon: ICON, backgroundColor: '#0d1320', webPreferences: prefs(),
   });
   keepLinksOutside(calib);
   calib.loadURL(ORIGIN + 'overlay/calibrate.html');
@@ -152,7 +167,7 @@ async function capture() {
   const thumbnailSize = { width: Math.round(full.width * k), height: Math.round(full.height * k) };
   const sources = await desktopCapturer.getSources({ types: ['screen'], thumbnailSize });
   const src = sources.find(s => s.display_id === String(display.id)) || sources[0];
-  if (!src || src.thumbnail.isEmpty()) throw new Error('obrazovku se nepodařilo vyfotit');
+  if (!src || src.thumbnail.isEmpty()) throw new Error(t('app.captureFail'));
   const { width, height } = src.thumbnail.getSize();
   const bgra = src.thumbnail.toBitmap(), data = new Uint8Array(bgra.length);
   for (let i = 0; i < bgra.length; i += 4) { data[i] = bgra[i + 2]; data[i + 1] = bgra[i + 1]; data[i + 2] = bgra[i]; data[i + 3] = 255; }
@@ -182,27 +197,40 @@ function registerKeys() {
   if (failed.length && !SMOKE) {
     dialog.showMessageBox(main, {
       type: 'warning', title: 'Counterpick Atlas',
-      message: `Zkratku ${failed.join(' a ')} nejde použít, nejspíš ji má jiná aplikace.`,
-      detail: `Nastav jinou v souboru ${SETTINGS} (keys.scan a keys.toggle, třeba "Ctrl+Shift+C") a aplikaci spusť znovu.`,
+      message: t('app.keysTaken', { keys: failed.join(t('app.keysAnd')) }),
+      detail: t('app.keysHow', { file: SETTINGS }),
     });
   }
 }
 
 function createTray() {
   tray = new Tray(nativeImage.createFromPath(ICON).resize({ width: 16, height: 16 }));
-  tray.setToolTip(`Counterpick Atlas · ${settings.keys.scan} ve hře naskenuje scoreboard`);
-  tray.setContextMenu(Menu.buildFromTemplate([
-    { label: 'Otevřít Counterpick Atlas', click: showMain },
-    { label: 'Ukázat nebo skrýt overlay', click: toggleOverlay },
-    { label: 'Kalibrace scoreboardu', click: openCalibration },
-    { type: 'separator' },
-    { label: 'Ukončit', click: () => app.quit() },
-  ]));
+  trayMenu();
   tray.on('click', showMain);
+}
+
+// The tray menu in the current language, with the language choice in it.
+function trayMenu() {
+  if (!tray) return;
+  tray.setToolTip(t('app.tooltip', { key: settings.keys.scan }));
+  tray.setContextMenu(Menu.buildFromTemplate([
+    { label: t('app.open'), click: showMain },
+    { label: t('app.toggle'), click: toggleOverlay },
+    { label: t('ov.calib'), click: openCalibration },
+    { type: 'separator' },
+    { label: t('lang.label'), submenu: I18N.LANGS.map(l => ({
+      label: I18N.translate(l, 'lang.name'), type: 'radio', checked: l === lang(), click: () => setLang(l),
+    })) },
+    { type: 'separator' },
+    { label: t('app.quit'), click: () => app.quit() },
+  ]));
 }
 
 /* ---------- pages ---------- */
 ipcMain.on('keys', e => { e.returnValue = settings.keys; });
+// The pages' language: the player's choice (null until there is one) and the system's.
+ipcMain.on('lang', e => { e.returnValue = { lang: settings.lang, system: I18N.systemLang(app.getLocale()) }; });
+ipcMain.on('set-lang', (e, l) => setLang(l, e.sender));
 ipcMain.handle('last-scan', () => lastScan);
 ipcMain.on('hide-overlay', () => overlay && overlay.hide());
 ipcMain.on('open-calibration', () => openCalibration());
@@ -224,6 +252,7 @@ async function smoke(image) {
     scan: lastScan && (lastScan.error || `${lastScan.frame.width}x${lastScan.frame.height}`),
     status: (await read('#status'))[0], ally: await read('.slots:not(.enemy) .slot'), enemy: await read('.slots.enemy .slot'),
     recs: await read('.rc strong'), keys: globalShortcut.isRegistered(settings.keys.scan),
+    lang: lang(), hint: (await read('#keys'))[0],
   };
   fs.writeFileSync(image + '.overlay.png', (await overlay.webContents.capturePage()).toPNG());
   shot.close();

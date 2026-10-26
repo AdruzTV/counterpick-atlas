@@ -6,7 +6,7 @@
     "author": "AdruzTV",
     "version": "0.1.0",
     "minimum-overwolf-version": "0.250.0",
-    "description": "Neoficiální český průvodce k Overwatch: countery, patch notes a doporučení hrdiny přímo ve hře podle screenshotu scoreboardu.",
+    "description": "Unofficial Overwatch fan guide in English and Czech: counters, patch notes and in-game hero picks based on a screenshot of the scoreboard.",
     "dock_button_title": "Counterpick",
     "icon": "overwolf/icons/icon.png",
     "icon_gray": "overwolf/icons/icon_gray.png",

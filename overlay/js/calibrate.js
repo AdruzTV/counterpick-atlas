@@ -1,9 +1,11 @@
 /* Calibration: shows where js/scoreboard.js cuts the portraits on a real screenshot. The scoreboard is found
    automatically; if that ever misses, drag the blue boxes onto the teammates' portraits and the red ones onto the
    enemies' (the sliders set portrait size and row spacing), which switches to this hand-placed layout. Changes save
-   at once. Also manages learned samples: copy them out to share them in data/scoreboard-refs.json, or wipe them. */
+   at once. Also manages learned samples: copy them out to share them in data/scoreboard-refs.json, or wipe them.
+   Texts come from js/i18n.js and follow the language chosen on the site at once. */
 (() => {
   const { esc, HOST, KEYS } = CPApp;
+  const { t } = I18n;
   const IN_APP = HOST !== 'browser';
   const stage = document.getElementById('stage');
   const side = document.getElementById('side');
@@ -19,13 +21,19 @@
   };
   let canvas = null, ctx = null;
 
-  const say = (text, cls = '') => { statusEl.textContent = text; statusEl.className = 'status' + (cls ? ' ' + cls : ''); };
+  // The status line, kept as a text key so that a language switch can word it again.
+  let said = null;
+  const say = (key, cls = '', params) => {
+    said = { key, cls, params };
+    statusEl.textContent = t(key, params);
+    statusEl.className = 'status' + (cls ? ' ' + cls : '');
+  };
 
   /* ---------- frame and view ---------- */
   function setFrame(f) {
     S.frame = { width: f.width, height: f.height, data: new Uint8ClampedArray(f.data) };
     S.src = Scoreboard.frameCanvas(S.frame);
-    stage.innerHTML = '<canvas id="cv" tabindex="0" aria-label="Screenshot s rámečky portrétů. Táhni rámečky myší, šipky je posouvají po pixelu."></canvas>';
+    stage.innerHTML = `<canvas id="cv" tabindex="0" aria-label="${t('cal.canvas')}"></canvas>`;
     canvas = stage.querySelector('canvas');
     ctx = canvas.getContext('2d');
     canvas.addEventListener('mousedown', down);
@@ -124,10 +132,10 @@
     draw();
     renderSide();
     if (!S.result) return;
-    if (S.auto && S.found) say('Scoreboard nalezen automaticky.');
-    else if (S.auto) say('Scoreboard se automaticky najít nepodařilo: posuň rámečky na portréty ručně, nebo naskenuj znovu s Tab.', 'warn');
-    else if (!S.result.scoreboard) say('Řádky nemají barvy scoreboardu: posuň rámečky na portréty, nebo naskenuj znovu s Tab.', 'warn');
-    else say('Ruční rozložení, změny se ukládají hned.');
+    if (S.auto && S.found) say('cal.found');
+    else if (S.auto) say('cal.notFound', 'warn');
+    else if (!S.result.scoreboard) say('cal.noColours', 'warn');
+    else say('cal.manual');
   }
 
   let saveTimer = 0;
@@ -184,7 +192,7 @@
     if (!S.result || !S.src) return '';
     return `<div class="prev${sideKey === 'enemy' ? ' enemy' : ''}" style="--n:${S.rows}">${S.result[sideKey].map(s => {
       const h = s.key && S.atlas.HM[s.key];
-      return `<div class="${s.sure ? 'sure' : ''}"><img src="${Scoreboard.cropURL(S.src, s.box, 44)}" alt=""><span>${s.empty ? 'prázdné' : h ? esc(h.name) + (s.sure ? '' : ' ?') : ''}</span></div>`;
+      return `<div class="${s.sure ? 'sure' : ''}"><img src="${Scoreboard.cropURL(S.src, s.box, 44)}" alt=""><span>${s.empty ? t('cal.emptyRow') : h ? esc(h.name) + (s.sure ? '' : ' ?') : ''}</span></div>`;
     }).join('')}</div>`;
   }
 
@@ -192,31 +200,31 @@
     const st = S.matcher ? S.matcher.stats() : null, l = S.layout;
     side.innerHTML = `
       <ol class="steps">
-        <li>${IN_APP ? `Ve hře podrž <b>Tab</b> a zmáčkni <b>${KEYS.scan}</b>. Screenshot se tu objeví sám.` :'Vlož screenshot scoreboardu (<kbd>Ctrl+V</kbd>), přetáhni ho sem, nebo <label class="test" style="padding:0;border:0;background:none"><u>vyber soubor</u><input type="file" accept="image/*" data-shot hidden></label>.'}</li>
-        <li>Scoreboard se na screenshotu hledá sám, rámečky ukazují, kde ho našel. Když sedí na portrétech, nic dalšího není potřeba.</li>
-        <li>Když nesedí, táhni <b style="color:var(--blue)">modré</b> rámečky na portréty spoluhráčů a <b style="color:var(--bad)">červené</b> na portréty nepřátel (šipky posouvají po pixelu, se Shiftem po pěti) a posuvníky dolaď velikost a rozestup. Tím přepneš na ruční rozložení.</li>
+        <li>${IN_APP ? t('cal.step1App', { key: KEYS.scan }) : t('cal.step1Browser')}</li>
+        <li>${t('cal.step2')}</li>
+        <li>${t('cal.step3')}</li>
       </ol>
-      <span class="lbl">Hledání scoreboardu</span>
-      <div class="seg">${seg('findmode', 'auto', 'Automaticky', S.auto)}${seg('findmode', 'manual', 'Ručně', !S.auto)}</div>
-      <span class="lbl">Hráčů v týmu</span>
+      <span class="lbl">${t('cal.find')}</span>
+      <div class="seg">${seg('findmode', 'auto', t('cal.auto'), S.auto)}${seg('findmode', 'manual', t('cal.byHand'), !S.auto)}</div>
+      <span class="lbl">${t('cal.rows')}</span>
       <div class="seg">${seg('rows', 5, '5v5', S.rows === 5)}${seg('rows', 6, '6v6', S.rows === 6)}</div>
-      <span class="lbl">Velikost portrétu</span>
+      <span class="lbl">${t('cal.size')}</span>
       <div class="range"><input type="range" id="size" min="0.02" max="0.1" step="0.0005" value="${l.size}"><output>${px(l.size)}</output></div>
-      <span class="lbl">Rozestup řádků</span>
+      <span class="lbl">${t('cal.pitch')}</span>
       <div class="range"><input type="range" id="pitch" min="0.03" max="0.1" step="0.0005" value="${l.pitch}"><output>${px(l.pitch)}</output></div>
       <div class="btns">
-        <button type="button" class="btn" data-act="zoom">${S.zoom ? 'Celá obrazovka' : 'Přiblížit scoreboard'}</button>
-        <button type="button" class="btn" data-act="reset">Výchozí rozložení</button>
+        <button type="button" class="btn" data-act="zoom">${t(S.zoom ? 'cal.whole' : 'cal.zoom')}</button>
+        <button type="button" class="btn" data-act="reset">${t('cal.reset')}</button>
       </div>
-      ${S.result ? `<span class="lbl">Co rámečky vidí</span>${previews('ally')}<div style="height:4px"></div>${previews('enemy')}
-        <p class="small">Opravy hrdinů dělej v overlayi (klik na hrdinu). Každá oprava se uloží jako vzorek.</p>` : ''}
-      <span class="lbl">Naučené vzorky</span>
-      ${st ? `<p class="small" style="margin-top:0">Poznám ${st.heroes} z ${st.total} hrdinů · tvých vzorků ${st.own}, ze sdíleného balíčku ${st.pack}.</p>` : ''}
+      ${S.result ? `<span class="lbl">${t('cal.seen')}</span>${previews('ally')}<div style="height:4px"></div>${previews('enemy')}
+        <p class="small">${t('cal.fixInOverlay')}</p>` : ''}
+      <span class="lbl">${t('cal.samples')}</span>
+      ${st ? `<p class="small" style="margin-top:0">${t('cal.stats', st)}</p>` : ''}
       <div class="btns">
-        <button type="button" class="btn" data-act="export">Kopírovat vzorky</button>
-        <button type="button" class="btn" data-act="wipe">${S.wipeArmed ? 'Opravdu smazat?' : 'Smazat moje vzorky'}</button>
+        <button type="button" class="btn" data-act="export">${t('cal.export')}</button>
+        <button type="button" class="btn" data-act="wipe">${t(S.wipeArmed ? 'cal.wipeSure' : 'cal.wipe')}</button>
       </div>
-      <p class="small">Zkopírované vzorky vlož do <code>data/scoreboard-refs.json</code> v repozitáři a po nahrání na GitHub je dostanou všichni hráči.</p>`;
+      <p class="small">${t('cal.share')}</p>`;
   }
 
   side.addEventListener('input', e => {
@@ -241,19 +249,19 @@
     else if (act === 'reset') { S.layout = { ...Scoreboard.DEFAULT_LAYOUT }; fitView(); changed(); }
     else if (act === 'export') {
       const json = S.matcher.exportPack();
-      CPApp.copyText(json).then(() => say('Vzorky jsou ve schránce: vlož je do data/scoreboard-refs.json.'), () => {
+      CPApp.copyText(json).then(() => say('cal.copied'), () => {
         // No clipboard (a browser without permission): save the file instead.
         const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([json], { type: 'application/json' })), download: 'scoreboard-refs.json' });
         a.click();
         setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-        say('Vzorky jsou uložené jako scoreboard-refs.json: nahraď jím data/scoreboard-refs.json.');
+        say('cal.downloaded');
       });
     } else if (act === 'wipe') {
       if (!S.wipeArmed) { S.wipeArmed = true; renderSide(); return; }
       S.wipeArmed = false;
       S.matcher.forget();
       update();
-      say('Tvoje vzorky jsou smazané.');
+      say('cal.wiped');
     } else if (b.dataset.rows) { manual(); S.rows = Number(b.dataset.rows); fitView(); update(); }
     else if (b.dataset.findmode === 'auto') {
       S.auto = true;
@@ -274,13 +282,22 @@
   CPApp.dragBy(document.getElementById('drag'));
   CPApp.resizeBy(document.getElementById('grip'));
 
+  const noShot = () => `<p class="empty-msg">${IN_APP ? t('cal.noShotApp', { key: KEYS.scan }) : t('cal.noShotBrowser')}</p>`;
+  // The language was switched on the site (or in the desktop app's tray menu).
+  I18n.onChange(() => {
+    if (said) say(said.key, said.cls, said.params);
+    if (!S.matcher) return;
+    renderSide();
+    if (canvas) canvas.setAttribute('aria-label', t('cal.canvas'));
+    else stage.innerHTML = noShot();
+  });
+
   CPApp.loadAtlas()
     .then(atlas => { S.atlas = atlas; S.matcher = new Scoreboard.Matcher(atlas); return S.matcher.ready; })
     .then(() => {
       renderSide();
-      stage.innerHTML = IN_APP ? `<p class="empty-msg">Zatím žádný screenshot. Ve hře podrž <kbd>Tab</kbd> a zmáčkni <kbd>${KEYS.scan}</kbd>.</p>`
-        : '<p class="empty-msg">Vlož screenshot scoreboardu (<kbd>Ctrl+V</kbd>) nebo ho sem přetáhni.</p>';
-      CPApp.onScan(setFrame, message => say(`Screenshot se nepovedl${message ? ': ' + message : ''}.`, 'err'));
+      stage.innerHTML = noShot();
+      CPApp.onScan(setFrame, message => say('ov.shotFail', 'err', { msg: message || '' }));
     })
-    .catch(e => say('Data se nepodařilo načíst: ' + (e && e.message || e), 'err'));
+    .catch(e => say('ov.dataFail', 'err', { msg: String(e && e.message || e) }));
 })();

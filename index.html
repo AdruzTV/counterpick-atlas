@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Counterpick Atlas</title>
-<meta name="description" content="Neoficiální český průvodce k Overwatch: patch notes, countery, schopnosti a perky všech hrdinů.">
+<meta name="description" content="Neoficiální český průvodce k Overwatch: patch notes, countery, schopnosti a perky všech hrdinů." data-i18n-attr="content:site.metaDesc">
 <meta name="theme-color" content="#0d1320">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M9 4h23l-9 24H0z' fill='%23f99e1a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,6 +70,10 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
 .sugg .s-role { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
 .sugg .empty { color: var(--muted); cursor: default; }
 .role-ic { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+.lang { display: flex; gap: 3px; flex-shrink: 0; }
+.lang button { font: 700 14px/1 var(--f-display); letter-spacing: .06em; color: var(--muted); background: var(--panel); border: 0; padding: 8px 9px 8px 10px; cursor: pointer; clip-path: polygon(5px 0, 100% 0, calc(100% - 5px) 100%, 0 100%); }
+.lang button:hover { color: var(--fg); background: var(--panel-hi); }
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
 @media (max-width: 640px) {
   .bar .wrap { flex-wrap: wrap; gap: 10px; }
   .nav { margin-left: auto; }
@@ -344,35 +348,41 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
 
 <header class="bar">
   <div class="wrap">
-    <a class="brand" href="#" aria-label="Counterpick Atlas – přehled">
+    <a class="brand" href="#" aria-label="Counterpick Atlas – přehled" data-i18n-attr="aria-label:site.home">
       <span class="brand-mark" aria-hidden="true">CA</span>
       <span class="brand-name">Counterpick <span>Atlas</span></span>
     </a>
     <div class="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
       <input id="q" type="text" placeholder="Najdi hrdinu… třeba Genji nebo Rein" autocomplete="off" spellcheck="false"
-             role="combobox" aria-label="Najdi hrdinu" aria-autocomplete="list" aria-controls="sugg" aria-expanded="false">
+             role="combobox" aria-label="Najdi hrdinu" aria-autocomplete="list" aria-controls="sugg" aria-expanded="false"
+             data-i18n-attr="placeholder:site.searchPh; aria-label:site.searchLabel">
       <kbd aria-hidden="true">/</kbd>
       <ul id="sugg" class="sugg" role="listbox" hidden></ul>
     </div>
-    <nav class="nav" aria-label="Sekce">
-      <a href="#patch">Patch notes</a>
-      <a href="#hrdinove">Hrdinové</a>
-      <a href="#counterpick">Counterpick</a>
+    <nav class="nav" aria-label="Sekce" data-i18n-attr="aria-label:site.nav">
+      <a href="#patch" data-i18n="nav.patch">Patch notes</a>
+      <a href="#hrdinove" data-i18n="nav.heroes">Hrdinové</a>
+      <a href="#counterpick" data-i18n="nav.counterpick">Counterpick</a>
     </nav>
+    <div class="lang" id="lang" role="group" aria-label="Jazyk" data-i18n-attr="aria-label:lang.label">
+      <button type="button" data-lang="cs" aria-pressed="true" title="Čeština" lang="cs">CZ</button>
+      <button type="button" data-lang="en" aria-pressed="false" title="English" lang="en">EN</button>
+    </div>
   </div>
 </header>
 
-<main id="app"><div class="wrap state">Načítám hrdiny…</div></main>
+<main id="app"><div class="wrap state" data-i18n="site.loadingHeroes">Načítám hrdiny…</div></main>
 
 <footer class="foot">
   <div class="wrap">
-    <p>Neoficiální fanouškovský projekt, není spojený s Blizzard Entertainment. Obrázky hrdinů, názvy a anglické popisy schopností © Blizzard Entertainment.</p>
-    <p>Data hrdinů z OverFast API. Patch notes jsou česká shrnutí oficiálních poznámek; nejnovější patche se stahují automaticky z webu Blizzardu (v angličtině). Countery jsou orientační: vychází ze schopností hrdinů, ne ze statistik zápasů.</p>
+    <p data-i18n="site.foot1">Neoficiální fanouškovský projekt, není spojený s Blizzard Entertainment. Obrázky hrdinů, názvy a anglické popisy schopností © Blizzard Entertainment.</p>
+    <p data-i18n="site.foot2">Data hrdinů z OverFast API. Patch notes jsou česká shrnutí oficiálních poznámek; nejnovější patche se stahují automaticky z webu Blizzardu (v angličtině). Countery jsou orientační: vychází ze schopností hrdinů, ne ze statistik zápasů.</p>
   </div>
 </footer>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="js/i18n.js"></script>
 <script src="js/counterpick-core.js"></script>
 <script src="js/blizzard-patches.js"></script>
 <script>if (window.overwolf) document.write('<script src="overwolf/js/shell.js"><\/script>');</script>
@@ -385,24 +395,17 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
   const OFFICIAL = 'https://overwatch.blizzard.com/en-us/news/patch-notes/';
   // Scoring and data indexing live in js/counterpick-core.js, shared with the Overwolf overlay.
   const { ROLES, ROLE_LABEL, ROLE_ORDER: roleOrder, ROLE_SVG, MAP_MODES, SIDED_MODES, arr, isDate, norm } = CounterpickCore;
+  // Texts in Czech and English (js/i18n.js); the CZ / EN buttons in the bar switch between them.
+  const { t, pick: inLang } = I18n;
   const atlas = new CounterpickCore.Atlas();
-  const VERDICT = {
-    buff: { label: 'Buff', sym: '▲' },
-    nerf: { label: 'Nerf', sym: '▼' },
-    rework: { label: 'Rework', sym: '◆' },
-    mixed: { label: 'Buff i nerf', sym: '◆' },
-  };
+  const VERDICT = { buff: { sym: '▲' }, nerf: { sym: '▼' }, rework: { sym: '◆' }, mixed: { sym: '◆' } };
+  const verdictLabel = v => t('verdict.' + v);
   const ANY_SVG = '<svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3h3v7.5H21v3h-7.5V21h-3v-7.5H3v-3h7.5V3Z"/></svg>';
   const SHOWN_PATCHES = 3;          // newest patches shown in full, older ones fold away
   const FLAG_PATCHES = 2;           // roster corner flags cover this many newest patches
 
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const fmtDate = iso => { const [y, m, d] = String(iso).slice(0, 10).split('-').map(Number); return `${d}. ${m}. ${y}`; };
-  const fmtStamp = iso => {
-    const t = new Date(iso);
-    if (isNaN(t)) return '';
-    return `${t.getDate()}. ${t.getMonth() + 1}. ${t.getFullYear()} v ${t.getHours()}:${String(t.getMinutes()).padStart(2, '0')}`;
-  };
+  const fmtDate = I18n.date, fmtStamp = I18n.stamp;
   const safeUrl = u => typeof u === 'string' && /^https:\/\//.test(u) ? u : OFFICIAL;
 
   let HEROES = [], HM = {}, ICONS = null;
@@ -417,8 +420,8 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
 
   // Opened straight from disk, browsers refuse to load the data files next to the page.
   if (location.protocol === 'file:') {
-    app.innerHTML = `<div class="wrap state"><div class="empty-box"><strong>Tohle je zdrojový soubor webu.</strong>
-      <p>Stránku otevři na její webové adrese. Prohlížeč ze souboru na disku nenačte data hrdinů.</p></div></div>`;
+    app.innerHTML = `<div class="wrap state"><div class="empty-box"><strong data-i18n="site.fileTitle">${t('site.fileTitle')}</strong>
+      <p data-i18n="site.fileText">${t('site.fileText')}</p></div></div>`;
     return;
   }
 
@@ -431,7 +434,7 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
       getJSON('data/icons.json').then(icons => { ICONS = icons; fillIcons(); }).catch(() => {});
     })
     .catch(() => {
-      app.innerHTML = '<div class="wrap state">Data hrdinů se nepodařilo načíst. Zkus stránku obnovit.</div>';
+      app.innerHTML = `<div class="wrap state" data-i18n="site.heroesFail">${t('site.heroesFail')}</div>`;
     });
 
   /* ---------- patch notes (Czech data file + live scrape), counters, last check ---------- */
@@ -450,9 +453,15 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
       refresh();
     }).catch(() => { MATCH = 'off'; refresh(); });
     // status.json says when the Action last brought new patch notes; the scraper's cache keys on that.
-    fresh('data/status.json').then(st => { STATUS = st; refresh(); return st && st.patchNotesUpdated; }, () => null)
-      .then(version => window.BlizzardPatches && BlizzardPatches.load(HEROES, version))
-      .then(res => { if (res) { LIVE = res; mergePatches(); } })
+    fresh('data/status.json').then(st => { STATUS = st; refresh(); }, () => {}).then(loadLive);
+  }
+
+  // Patches scraped from Blizzard come parsed in the current language; a switch meanwhile parses them again.
+  function loadLive() {
+    if (!window.BlizzardPatches) return;
+    const lang = I18n.lang;
+    BlizzardPatches.load(HEROES, STATUS && STATUS.patchNotesUpdated)
+      .then(res => { if (lang !== I18n.lang) loadLive(); else if (res) { LIVE = res; mergePatches(); } })
       .catch(() => {});
   }
 
@@ -468,21 +477,27 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     refresh();
   }
 
-  // Keep only well-formed fields; everything is escaped on render.
+  // Keep only well-formed fields, in the current language (English from <field>_en where data/patches.json has it).
+  // Everything is escaped on render.
   function cleanPatch(id, d) {
     if (!d || !isDate(d.date)) return null;
+    // Czech numbers in English: "6,5" -> "6.5", "35 %" -> "35%"
+    const val = v => v && I18n.lang === 'en' ? String(v).replace(/(\d),(\d)/g, '$1.$2').replace(/(\d) %/g, '$1%') : v;
     return {
       id: 'p-' + String(id).replace(/[^a-zA-Z0-9_-]/g, ''),
       date: d.date,
-      kind: String(d.kind || 'Patch'),
-      title: String(d.title || 'Patch notes'),
-      summary: String(d.summary || ''),
+      kind: String(inLang(d, 'kind') || 'Patch'),
+      title: String(inLang(d, 'title') || t('patch.title')),
+      summary: String(inLang(d, 'summary') || ''),
       url: safeUrl(d.url),
       auto: d.auto === true,
-      highlights: arr(d.highlights).filter(h => h && h.title),
+      highlights: arr(d.highlights).filter(h => h && h.title).map(h => ({ tag: inLang(h, 'tag'), title: inLang(h, 'title'), text: inLang(h, 'text') })),
       heroes: arr(d.heroes)
         .filter(c => c && HM[c.key])
-        .map(c => ({ key: c.key, verdict: VERDICT[c.verdict] ? c.verdict : 'mixed', changes: arr(c.changes).filter(ch => ch && ch.a) })),
+        .map(c => ({
+          key: c.key, verdict: VERDICT[c.verdict] ? c.verdict : 'mixed',
+          changes: arr(c.changes).filter(ch => ch && ch.a).map(ch => ({ a: inLang(ch, 'a'), t: inLang(ch, 't'), from: val(inLang(ch, 'from')), to: val(inLang(ch, 'to')) })),
+        })),
     };
   }
 
@@ -506,11 +521,12 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
 
   /* ---------- routing ---------- */
   window.addEventListener('hashchange', () => route(false));
+  // isRefresh: true when new data came, 'lang' when the language changed (the Counterpick page then redraws whole).
   function route(isRefresh) {
     if (!HEROES.length) return;
     const id = decodeURIComponent(location.hash.slice(1));
     if (id === 'counterpick') {
-      if (isRefresh && app.querySelector('.cp')) updateCpResults(); else renderCounterpick();
+      if (isRefresh === true && app.querySelector('.cp')) updateCpResults(); else renderCounterpick();
       if (!isRefresh) window.scrollTo(0, 0);
       document.title = 'Counterpick · Counterpick Atlas';
       return;
@@ -532,7 +548,7 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
   }
 
   /* ---------- small renderers ---------- */
-  const pill = (v, extra = '') => `<span class="pill ${v} ${extra}">${VERDICT[v].sym} ${VERDICT[v].label}</span>`;
+  const pill = (v, extra = '') => `<span class="pill ${v} ${extra}">${VERDICT[v].sym} ${verdictLabel(v)}</span>`;
   const roleTag = h => `<span class="tag accent">${ROLE_SVG[h.role]}${ROLE_LABEL[h.role]}</span>` +
     (h.subrole ? `<span class="tag">${esc(h.subrole)}</span>` : '') +
     (h.stadium ? '<span class="tag">Stadium</span>' : '');
@@ -560,14 +576,14 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
       <div class="patch-head">
         <span class="date">${fmtDate(p.date)}</span>
         <span class="tag">${esc(p.kind)}</span>
-        ${i === 0 ? '<span class="tag accent">Nejnovější</span>' : ''}
-        ${p.auto ? '<span class="tag" title="Staženo automaticky z oficiálních patch notes, bez českého shrnutí">Auto · EN</span>' : ''}
-        <a class="aside src" href="${esc(p.url)}" target="_blank" rel="noopener">Oficiální znění ↗</a>
+        ${i === 0 ? `<span class="tag accent">${t('patch.newest')}</span>` : ''}
+        ${p.auto ? `<span class="tag" title="${t('patch.autoTitle')}">${t('patch.auto')}</span>` : ''}
+        <a class="aside src" href="${esc(p.url)}" target="_blank" rel="noopener">${t('patch.official')}</a>
       </div>
       <h3>${esc(p.title)}</h3>
       ${p.summary ? `<p class="summary">${esc(p.summary)}</p>` : ''}
       ${hl}
-      ${p.heroes.length ? `<h4 class="sub">Změny hrdinů · ${p.heroes.length}</h4>
+      ${p.heroes.length ? `<h4 class="sub">${t('patch.heroChanges', { n: p.heroes.length })}</h4>
       <div class="changes">${p.heroes.map(heroChange).join('')}</div>` : ''}
     </article>`;
   }
@@ -582,24 +598,24 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
   function patchesSection() {
     if (PATCHES === null) return `<div class="placeholder" aria-busy="true">
         <span class="ph ph-date"></span><span class="ph ph-title"></span><span class="ph ph-line"></span><span class="ph ph-line short"></span>
-        <p>Načítám patch notes…</p></div>`;
-    if (PATCHES === 'off') return `<div class="empty-box"><strong>Patch notes se teď nepodařilo načíst.</strong>
-        <p>Zkus stránku obnovit, nebo se podívej na <a href="${OFFICIAL}" target="_blank" rel="noopener">oficiální patch notes ↗</a>.</p></div>`;
-    if (!PATCHES.length) return `<div class="empty-box"><strong>Zatím tu nejsou žádné patch notes.</strong>
-        <p>Mezitím je najdeš v <a href="${OFFICIAL}" target="_blank" rel="noopener">oficiálních patch notes ↗</a>.</p></div>`;
+        <p>${t('patch.loading')}</p></div>`;
+    if (PATCHES === 'off') return `<div class="empty-box"><strong>${t('patch.failTitle')}</strong>
+        <p>${t('patch.failText', { url: OFFICIAL })}</p></div>`;
+    if (!PATCHES.length) return `<div class="empty-box"><strong>${t('patch.noneTitle')}</strong>
+        <p>${t('patch.noneText', { url: OFFICIAL })}</p></div>`;
     const shown = PATCHES.slice(0, SHOWN_PATCHES), older = PATCHES.slice(SHOWN_PATCHES);
     return shown.map(patchBlock).join('') +
-      (older.length ? `<h4 class="sub">Starší patche · ${older.length}</h4><div class="older-list">${older.map(olderPatch).join('')}</div>` : '');
+      (older.length ? `<h4 class="sub">${t('patch.older', { n: older.length })}</h4><div class="older-list">${older.map(olderPatch).join('')}</div>` : '');
   }
 
   function statusLine() {
     const stamp = STATUS && STATUS.lastCheck ? fmtStamp(STATUS.lastCheck) : '';
-    return stamp ? `<p class="status-line"><span class="dot" aria-hidden="true"></span>Data naposledy zkontrolována: ${esc(stamp)}</p>` : '';
+    return stamp ? `<p class="status-line"><span class="dot" aria-hidden="true"></span>${t('patch.checked', { when: esc(stamp) })}</p>` : '';
   }
 
   function tile(h) {
     const l = LATEST[h.key];
-    const flag = l ? `<span class="pill flag ${l.change.verdict}" title="${VERDICT[l.change.verdict].label} ${fmtDate(l.patch.date)}">${VERDICT[l.change.verdict].sym}</span>` : '';
+    const flag = l ? `<span class="pill flag ${l.change.verdict}" title="${verdictLabel(l.change.verdict)} ${fmtDate(l.patch.date)}">${VERDICT[l.change.verdict].sym}</span>` : '';
     return `<a class="tile" href="#${h.key}"><img src="p/${h.key}.jpg" alt="" loading="lazy" width="160" height="160">${flag}<span>${esc(h.name)}</span></a>`;
   }
 
@@ -612,13 +628,13 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     }).join('');
     app.innerHTML = `<div class="home">
       <section class="sec wrap" id="patch">
-        <div class="sec-head"><h2>Patch notes</h2>
-          <a class="aside" href="${OFFICIAL}" target="_blank" rel="noopener">Všechny patche v angličtině ↗</a></div>
+        <div class="sec-head"><h2>${t('nav.patch')}</h2>
+          <a class="aside" href="${OFFICIAL}" target="_blank" rel="noopener">${t('home.allPatches')}</a></div>
         ${statusLine()}
         ${patchesSection()}
       </section>
       <section class="sec wrap" id="hrdinove">
-        <div class="sec-head"><h2>Hrdinové</h2><span class="aside">${HEROES.length} hrdinů · značka v rohu = změna v posledních patchích</span></div>
+        <div class="sec-head"><h2>${t('nav.heroes')}</h2><span class="aside">${t('home.heroesAside', { n: HEROES.length })}</span></div>
         ${groups}
       </section>
     </div>`;
@@ -632,9 +648,9 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     return `<div class="hp">
       <div class="hp-pips" aria-hidden="true">${pips.join('')}</div>
       <div class="hp-legend"><strong>${hp.total}</strong> HP
-        <span class="lg h">${hp.health} zdraví</span>
-        ${hp.armor ? `<span class="lg a">${hp.armor} zbroj</span>` : ''}
-        ${hp.shields ? `<span class="lg s">${hp.shields} štíty</span>` : ''}</div>
+        <span class="lg h">${t('hp.health', { n: hp.health })}</span>
+        ${hp.armor ? `<span class="lg a">${t('hp.armor', { n: hp.armor })}</span>` : ''}
+        ${hp.shields ? `<span class="lg s">${t('hp.shields', { n: hp.shields })}</span>` : ''}</div>
     </div>`;
   }
 
@@ -646,15 +662,15 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     return `<a class="mu" href="#${e.k}">
       <img src="p/${e.k}.jpg" alt="" width="54" height="54" loading="lazy">
       <div class="mu-txt">
-        <div class="mu-name">${esc(h.name)} ${ROLE_SVG[h.role]}${e.s === 2 ? '<span class="hard">Tvrdý counter</span>' : ''}${REVIEW[e.k] ? '<span class="tag rv">Ke kontrole</span>' : ''}</div>
-        <p>${esc(e.r)}</p>
+        <div class="mu-name">${esc(h.name)} ${ROLE_SVG[h.role]}${e.s === 2 ? `<span class="hard">${t('mu.hard')}</span>` : ''}${REVIEW[e.k] ? `<span class="tag rv">${t('mu.review')}</span>` : ''}</div>
+        <p>${esc(inLang(e, 'r'))}</p>
       </div>
     </a>`;
   }
 
   function muList(list, emptyText) {
-    if (MATCH === null) return '<div class="mu-wait" aria-busy="true"><span class="ph"></span><span class="ph"></span><span class="ph"></span><p>Načítám countery…</p></div>';
-    if (MATCH === 'off') return '<p class="mu-empty">Countery se teď nepodařilo načíst. Zkus stránku obnovit.</p>';
+    if (MATCH === null) return `<div class="mu-wait" aria-busy="true"><span class="ph"></span><span class="ph"></span><span class="ph"></span><p>${t('mu.loading')}</p></div>`;
+    if (MATCH === 'off') return `<p class="mu-empty">${t('mu.fail')}</p>`;
     if (!list.length) return `<p class="mu-empty">${emptyText}</p>`;
     return `<div class="mu-list">${list.map(muRow).join('')}</div>`;
   }
@@ -672,42 +688,42 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     const by = sortEdges(BY[k]), vs = sortEdges(VS[k]);
     const changes = Array.isArray(PATCHES) ? PATCHES.flatMap(p => p.heroes.filter(c => c.key === k).map(c => ({ p, c }))) : [];
     const flagLine = changes.length ? `<div class="patch-flags">${changes.slice(0, 3).map(({ p, c }) =>
-      `<a href="#${p.id}" title="Otevřít patch">${pill(c.verdict)}</a><span class="tag">${fmtDate(p.date)}</span>`).join('')}</div>` : '';
+      `<a href="#${p.id}" title="${t('hero.openPatch')}">${pill(c.verdict)}</a><span class="tag">${fmtDate(p.date)}</span>`).join('')}</div>` : '';
     const rv = REVIEW[k];
     const reviewBox = rv ? `<div class="review wrap"><div class="review-in">
-        <span class="tag rv">Countery ke kontrole${rv.since ? ' · od ' + fmtDate(rv.since) : ''}</span>
-        <p>${esc(rv.reason)}</p></div></div>` : '';
+        <span class="tag rv">${t('hero.review')}${rv.since ? t('hero.reviewSince', { date: fmtDate(rv.since) }) : ''}</span>
+        <p>${esc(inLang(rv, 'reason'))}</p></div></div>` : '';
 
     const patchSec = changes.length ? `<section class="h-sec wrap">
-        <h2>V posledních patchích</h2>
-        <p class="hint">Co se s hrdinou nedávno změnilo.</p>
+        <h2>${t('hero.recent')}</h2>
+        <p class="hint">${t('hero.recentHint')}</p>
         <div class="changes">${changes.map(({ p, c }) => `<div class="hc v-${c.verdict}">
           <div class="hc-top"><a class="hc-who" href="#${p.id}"><span>${fmtDate(p.date)}</span></a><span class="tag">${esc(p.kind)}</span>${pill(c.verdict)}</div>
           <ul>${c.changes.map(changeItem).join('')}</ul></div>`).join('')}</div>
       </section>` : '';
 
     const perks = h.perks && (h.perks.minor.length || h.perks.major.length) ? `<section class="h-sec wrap">
-        <h2>Perky</h2>
-        <p class="hint">Během zápasu si vybíráš jeden minor a později jeden major perk.</p>
+        <h2>${t('hero.perks')}</h2>
+        <p class="hint">${t('hero.perksHint')}</p>
         <div class="perk-cols">
-          <div><h3>Minor perky</h3><div class="ab-grid">${h.perks.minor.map(abCard).join('')}</div></div>
-          <div class="major"><h3>Major perky</h3><div class="ab-grid">${h.perks.major.map(abCard).join('')}</div></div>
+          <div><h3>${t('hero.minor')}</h3><div class="ab-grid">${h.perks.minor.map(abCard).join('')}</div></div>
+          <div class="major"><h3>${t('hero.major')}</h3><div class="ab-grid">${h.perks.major.map(abCard).join('')}</div></div>
         </div>
       </section>` : '';
 
     app.innerHTML = `<article class="hero" data-role="${h.role}">
       <div class="banner">
-        <div class="art-box"><img src="art/${k}.jpg" alt="${esc(h.name)} – artwork" width="1280" height="608"></div>
-        <a class="back back-m" href="#hrdinove">← Hrdinové</a>
+        <div class="art-box"><img src="art/${k}.jpg" alt="${t('hero.artAlt', { name: esc(h.name) })}" width="1280" height="608"></div>
+        <a class="back back-m" href="#hrdinove">${t('hero.backShort')}</a>
         <div class="banner-body wrap">
-          <a class="back" href="#hrdinove">← Všichni hrdinové</a>
+          <a class="back" href="#hrdinove">${t('hero.back')}</a>
           <div class="banner-inner">
             <div class="role-line">${roleTag(h)}</div>
             <h1>${esc(h.name)}</h1>
             <p class="lore">${esc(h.desc)}</p>
             <dl class="facts">
-              ${h.location ? `<div><dt>Původ</dt><dd>${esc(h.location)}</dd></div>` : ''}
-              ${h.age ? `<div><dt>Věk</dt><dd>${esc(h.age)}</dd></div>` : ''}
+              ${h.location ? `<div><dt>${t('hero.origin')}</dt><dd>${esc(h.location)}</dd></div>` : ''}
+              ${h.age ? `<div><dt>${t('hero.age')}</dt><dd>${esc(h.age)}</dd></div>` : ''}
             </dl>
             ${hpBar(h.hp)}
             ${flagLine}
@@ -717,25 +733,25 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
 
       ${reviewBox}
 
-      <section class="matchups wrap" aria-label="Countery">
+      <section class="matchups wrap" aria-label="${t('hero.counters')}">
         <div class="mu-col bad">
-          <h2>Má problém s <span class="n">${MATCH === 'ready' ? by.length : ''}</span></h2>
-          <p class="hint">Tyhle hrdiny si vyber, když soupeř hraje ${esc(h.name)}.</p>
-          ${muList(by, 'Zatím tu nejsou žádné countery.')}
+          <h2>${t('hero.by')} <span class="n">${MATCH === 'ready' ? by.length : ''}</span></h2>
+          <p class="hint">${t('hero.byHint', { name: esc(h.name) })}</p>
+          ${muList(by, t('hero.byEmpty'))}
         </div>
         <div class="mu-col good">
-          <h2>Silný proti <span class="n">${MATCH === 'ready' ? vs.length : ''}</span></h2>
-          <p class="hint">Proti těmhle hrdinům je ${esc(h.name)} dobrá volba.</p>
-          ${muList(vs, 'Zatím tu nejsou žádné matchupy.')}
+          <h2>${t('hero.vs')} <span class="n">${MATCH === 'ready' ? vs.length : ''}</span></h2>
+          <p class="hint">${t('hero.vsHint', { name: esc(h.name) })}</p>
+          ${muList(vs, t('hero.vsEmpty'))}
         </div>
-        <p class="note">Orientační přehled podle schopností hrdinů. Hodně záleží na mapě, složení týmu a skillu hráče.</p>
+        <p class="note">${t('hero.note')}</p>
       </section>
 
       ${patchSec}
 
       <section class="h-sec wrap">
-        <h2>Schopnosti</h2>
-        <p class="hint">Popisy jsou v angličtině, stejně jako ve hře.</p>
+        <h2>${t('hero.abilities')}</h2>
+        <p class="hint">${t('hero.abilitiesHint')}</p>
         <div class="ab-grid">${h.abilities.map(abCard).join('')}</div>
       </section>
 
@@ -779,25 +795,25 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
   const rankPicks = () => atlas.rankPicks(CP);
 
   /* rendering */
-  const fmtPts = v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toLocaleString('cs-CZ', { maximumFractionDigits: 1 });
+  const fmtPts = v => (v > 0 ? '+' : v < 0 ? '−' : '') + I18n.num(Math.abs(v));
   const scoreCls = v => v > 0 ? 'score' : v < 0 ? 'score neg' : 'score zero';
-  const players = n => `${n} ${n === 1 ? 'hráč' : n < 5 ? 'hráči' : 'hráčů'}`;
+  const players = n => t('cp.players', n);
 
   function slotHtml(side, i, role, key) {
     const h = key && HM[key];
     if (h) return `<div class="slot" data-side="${side}" data-i="${i}"><div class="chip">
         <img src="p/${h.key}.jpg" alt="" width="36" height="36"><span>${esc(h.name)}</span>
-        <button type="button" class="chip-x" data-clear aria-label="Odebrat ${esc(h.name)}">×</button></div></div>`;
-    const who = side === 'team' ? 'Spoluhráč' : 'Nepřítel';
+        <button type="button" class="chip-x" data-clear aria-label="${t('cp.remove', { name: esc(h.name) })}">×</button></div></div>`;
+    const who = t(side === 'team' ? 'cp.mate' : 'cp.enemy');
     return `<div class="slot" data-side="${side}" data-i="${i}">${role ? ROLE_SVG[role] : ANY_SVG}
-      <input class="slot-in" type="text" placeholder="${role ? ROLE_LABEL[role] : 'Hrdina'}…" autocomplete="off" spellcheck="false"
+      <input class="slot-in" type="text" placeholder="${role ? ROLE_LABEL[role] : t('cp.hero')}…" autocomplete="off" spellcheck="false"
         role="combobox" aria-autocomplete="list" aria-expanded="false" aria-label="${who}${role ? ' – ' + ROLE_LABEL[role] : ''}"></div>`;
   }
 
   function teamPanel(side) {
     const roles = slotRoles(side);
     return `<div class="team ${side}">
-      <h3>${side === 'team' ? 'Tvůj tým' : 'Nepřátelé'} <small>${side === 'team' ? 'bez tebe · ' : ''}${players(roles.length)}</small></h3>
+      <h3>${t(side === 'team' ? 'cp.team' : 'cp.enemies')} <small>${side === 'team' ? t('cp.withoutYou') : ''}${players(roles.length)}</small></h3>
       <div class="slots">${roles.map((r, i) => slotHtml(side, i, r, CP[side][i])).join('')}</div>
     </div>`;
   }
@@ -806,13 +822,13 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     const h = c.h;
     const why = c.why.length ? c.why.map(w => `<li class="${w.tip ? 'tip-' + w.tip : w.v > 0 ? 'up' : 'down'}"><b>${w.tip ? (w.tip === 'bad' ? '!' : '✓') : fmtPts(w.v)}</b>
         <div>${esc(w.t)}${w.r ? `<span>${esc(w.r)}</span>` : ''}</div></li>`).join('')
-      : '<li><span class="none">Žádný counter ani kombo, neutrální volba.</span></li>';
+      : `<li><span class="none">${t('cp.neutral')}</span></li>`;
     return `<article class="rec">
       <div class="rec-top">
         <a class="rec-who" href="#${h.key}"><img src="p/${h.key}.jpg" alt="" width="64" height="64">
           <div><span class="rank">#${i + 1}</span><strong>${esc(h.name)}</strong>
             <span class="rec-meta">${ROLE_SVG[h.role]}${ROLE_LABEL[h.role]}</span></div></a>
-        <span class="${scoreCls(c.score)}" title="Skóre">${fmtPts(c.score)}</span>
+        <span class="${scoreCls(c.score)}" title="${t('cp.score')}">${fmtPts(c.score)}</span>
       </div>
       <ul class="why">${why}</ul>
     </article>`;
@@ -828,52 +844,53 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
   // Which of your candidates suit the chosen map and side. Separate from the ranking on purpose, shown below it.
   function mapTipsHtml() {
     const map = MAP_BY[CP.map], side = activeSide();
-    const rows = (map ? map.traits : []).map(k => MAP_TRAITS[k]).map(t =>
-      ({ label: `Mapa: ${t.label}`, desc: t.desc + (t.badDesc ? ' ' + t.badDesc : ''), good: t.good, bad: t.bad }));
-    if (side) rows.push({ label: side.label, desc: side.desc, good: side.good });
-    if (!rows.length) return map ? `<h4 class="sub">Tip k mapě</h4><p class="mu-empty">${esc(map.name)} zatím nemá popsané vlastnosti, tip k ní proto není.</p>` : '';
+    const rows = (map ? map.traits : []).map(k => MAP_TRAITS[k]).map(tr => ({
+      label: t('why.map', { label: inLang(tr, 'label') }), desc: inLang(tr, 'desc') + (tr.badDesc ? ' ' + inLang(tr, 'badDesc') : ''), good: tr.good, bad: tr.bad,
+    }));
+    if (side) rows.push({ label: inLang(side, 'label'), desc: inLang(side, 'desc'), good: side.good });
+    if (!rows.length) return map ? `<h4 class="sub">${t('cp.mapTip')}</h4><p class="mu-empty">${t('cp.mapUnrated', { map: esc(map.name) })}</p>` : '';
     const pool = candidates();
     const chips = (rule, cls, label) => {
       const list = rule ? pool.filter(h => heroHits(h, rule)) : [];
       return list.length ? `<div class="tip-heroes ${cls}"><span class="tip-k">${label}</span>${list.map(h =>
         `<a class="tip-hero" href="#${h.key}"><img src="p/${h.key}.jpg" alt="" width="28" height="28" loading="lazy">${esc(h.name)}</a>`).join('')}</div>` : '';
     };
-    const title = [map && map.name, side && (CP.side === 'attack' ? 'útok' : 'obrana')].filter(Boolean).join(' · ');
-    return `<h4 class="sub">Tip: ${esc(title)}</h4>
+    const title = [map && map.name, side && t(CP.side === 'attack' ? 'cp.attackTip' : 'cp.defenseTip')].filter(Boolean).join(' · ');
+    return `<h4 class="sub">${t('cp.tip', { what: esc(title) })}</h4>
       <div class="tips">${rows.map(r => `<div class="tip"><strong>${esc(r.label)}</strong><p>${esc(r.desc)}</p>
-        ${chips(r.good, '', 'Hodí se')}${chips(r.bad, 'bad', 'Spíš ne')}</div>`).join('')}</div>`;
+        ${chips(r.good, '', t('cp.fits'))}${chips(r.bad, 'bad', t('cp.misfits'))}</div>`).join('')}</div>`;
   }
 
   function resultsHtml() {
     if (CP.mode === '5v5' && !CP.role) return '';
-    if (MATCH === null || SYN === null) return `<div class="mu-wait" aria-busy="true"><span class="ph"></span><span class="ph"></span><p>Načítám countery…</p></div>`;
-    if (MATCH === 'off') return '<p class="mu-empty">Countery se teď nepodařilo načíst. Zkus stránku obnovit.</p>';
+    if (MATCH === null || SYN === null) return `<div class="mu-wait" aria-busy="true"><span class="ph"></span><span class="ph"></span><p>${t('cp.loading')}</p></div>`;
+    if (MATCH === 'off') return `<p class="mu-empty">${t('mu.fail')}</p>`;
     const tips = mapTipsHtml();
     const ranked = rankPicks();
-    if (!ranked) return '<p class="cp-hint">Doplň aspoň jednoho nepřítele nebo spoluhráče a ukážu ti, koho si vybrat.</p>' + tips;
-    if (!ranked.length) return '<p class="mu-empty">Pro tuhle roli už nezbývá žádný hrdina.</p>';
-    if (!ranked.some(c => c.why.some(w => !w.tip))) return '<p class="cp-hint">U zadaných hrdinů zatím nemám žádný counter ani kombo. Doplň další hrdiny.</p>' + tips;
+    if (!ranked) return `<p class="cp-hint">${t('cp.hint')}</p>` + tips;
+    if (!ranked.length) return `<p class="mu-empty">${t('cp.noneLeft')}</p>`;
+    if (!ranked.some(c => c.why.some(w => !w.tip))) return `<p class="cp-hint">${t('cp.nothing')}</p>` + tips;
 
     const top = ranked.slice(0, 3);
     const more = ranked.slice(3, 8).filter(c => c.score >= 0);
     const avoid = ranked.filter(c => c.score < 0 && !top.includes(c)).slice(-3).reverse();
-    return `<div class="sec-head"><h2>Doporučení</h2>
-        <span class="aside">${CP.mode === '5v5' ? ROLE_LABEL[CP.role] + ' · ' : '6v6 · '}porovnáno ${ranked.length} hrdinů</span></div>
+    return `<div class="sec-head"><h2>${t('cp.recs')}</h2>
+        <span class="aside">${CP.mode === '5v5' ? ROLE_LABEL[CP.role] + ' · ' : '6v6 · '}${t('cp.compared', { n: ranked.length })}</span></div>
       <div class="recs">${top.map(recCard).join('')}</div>
-      ${more.length ? `<h4 class="sub">Další možnosti</h4><div class="rec-list">${more.map(c => recRow(c, why => why.find(w => w.v > 0))).join('')}</div>` : ''}
-      ${avoid.length ? `<h4 class="sub">Raději ne</h4><div class="rec-list">${avoid.map(c => recRow(c, why => why.find(w => w.v < 0))).join('')}</div>` : ''}
+      ${more.length ? `<h4 class="sub">${t('cp.more')}</h4><div class="rec-list">${more.map(c => recRow(c, why => why.find(w => w.v > 0))).join('')}</div>` : ''}
+      ${avoid.length ? `<h4 class="sub">${t('cp.avoid')}</h4><div class="rec-list">${avoid.map(c => recRow(c, why => why.find(w => w.v < 0))).join('')}</div>` : ''}
       ${tips}
-      <p class="note">Pořadí určují countery, známá komba a styl týmu. Mapa a strana jsou jen tip, body nepřidávají. Rozhoduje i to, na kom jsi dobrý.</p>`;
+      <p class="note">${t('cp.note')}</p>`;
   }
 
   function mapSelect() {
     if (!Array.isArray(MAPS) || !MAPS.length) return '';
     const groups = MAP_MODES.map(([mode, label]) => {
       const list = MAPS.filter(m => m.mode === mode);
-      return list.length ? `<optgroup label="${label}">${list.map(m => `<option value="${esc(m.key)}"${m.key === CP.map ? ' selected' : ''}>${esc(m.name)}${m.traits.length ? '' : ' (bez hodnocení)'}</option>`).join('')}</optgroup>` : '';
+      return list.length ? `<optgroup label="${label}">${list.map(m => `<option value="${esc(m.key)}"${m.key === CP.map ? ' selected' : ''}>${esc(m.name)}${m.traits.length ? '' : t('cp.unrated')}</option>`).join('')}</optgroup>` : '';
     }).join('');
-    return `<div class="cp-opt"><label class="cp-label" for="cp-map">Mapa</label>
-      <select id="cp-map" class="cp-select"><option value="">Neřešit mapu</option>${groups}</select></div>`;
+    return `<div class="cp-opt"><label class="cp-label" for="cp-map">${t('cp.map')}</label>
+      <select id="cp-map" class="cp-select"><option value="">${t('cp.anyMap')}</option>${groups}</select></div>`;
   }
 
   // Attack / defense, optional: clicking the pressed button again clears it. Hidden on maps without sides.
@@ -881,8 +898,8 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     const map = MAP_BY[CP.map];
     if (!Object.keys(SIDES).length || (map && !SIDED_MODES.includes(map.mode))) return '';
     const btn = (key, label) => `<button type="button" class="seg-btn" data-sidepick="${key}" aria-pressed="${CP.side === key}">${label}</button>`;
-    return `<div class="cp-opt"><span class="cp-label">Strana · nepovinné</span>
-      <div class="seg" role="group" aria-label="Útok nebo obrana">${btn('attack', 'Útok')}${btn('defense', 'Obrana')}</div></div>`;
+    return `<div class="cp-opt"><span class="cp-label">${t('cp.side')}</span>
+      <div class="seg" role="group" aria-label="${t('cp.attackOrDefense')}">${btn('attack', t('cp.attack'))}${btn('defense', t('cp.defense'))}</div></div>`;
   }
 
   function updateCpResults() {
@@ -898,16 +915,16 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     const seg = (attr, value, label, on) => `<button type="button" class="seg-btn" data-${attr}="${value}" aria-pressed="${on}">${label}</button>`;
     app.innerHTML = `<div class="cp wrap">
       <section class="sec">
-        <div class="sec-head"><h2>Counterpick</h2><span class="aside">Zadej, kdo hraje s tebou a kdo proti tobě. Poradím, koho si vybrat.</span></div>
+        <div class="sec-head"><h2>${t('nav.counterpick')}</h2><span class="aside">${t('cp.intro')}</span></div>
         <div class="cp-opts">
-          <div class="cp-opt"><span class="cp-label">Mód</span>
-            <div class="seg" role="group" aria-label="Mód">${seg('mode', '5v5', '5v5', CP.mode === '5v5')}${seg('mode', '6v6', '6v6', CP.mode === '6v6')}</div></div>
-          ${CP.mode === '5v5' ? `<div class="cp-opt"><span class="cp-label">Hraju za</span>
-            <div class="seg" role="group" aria-label="Tvoje role">${ROLES.map(r => seg('role', r.key, ROLE_SVG[r.key] + r.label, CP.role === r.key)).join('')}</div></div>` : ''}
+          <div class="cp-opt"><span class="cp-label">${t('cp.mode')}</span>
+            <div class="seg" role="group" aria-label="${t('cp.mode')}">${seg('mode', '5v5', '5v5', CP.mode === '5v5')}${seg('mode', '6v6', '6v6', CP.mode === '6v6')}</div></div>
+          ${CP.mode === '5v5' ? `<div class="cp-opt"><span class="cp-label">${t('cp.playAs')}</span>
+            <div class="seg" role="group" aria-label="${t('cp.yourRole')}">${ROLES.map(r => seg('role', r.key, ROLE_SVG[r.key] + r.label, CP.role === r.key)).join('')}</div></div>` : ''}
           <div class="cp-map-slot">${mapSelect()}${sidePicker()}</div>
-          <button type="button" class="cp-reset" data-reset>Nová hra</button>
+          <button type="button" class="cp-reset" data-reset>${t('cp.reset')}</button>
         </div>
-        ${CP.mode === '5v5' && !CP.role ? '<p class="cp-hint">Vyber, za jakou roli hraješ. Doporučím ti hrdinu z ní.</p>'
+        ${CP.mode === '5v5' && !CP.role ? `<p class="cp-hint">${t('cp.pickRole')}</p>`
           : `<div class="teams">${teamPanel('team')}${teamPanel('enemy')}</div>`}
       </section>
       <section class="sec cp-results" aria-live="polite">${resultsHtml()}</section>
@@ -929,7 +946,7 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     el.setAttribute('role', 'listbox');
     el.innerHTML = list.length ? list.map((h, j) => `<li role="option" data-key="${h.key}" aria-selected="${j === 0}">
         <img src="p/${h.key}.jpg" alt="" width="48" height="48" loading="lazy"><span>${esc(h.name)}</span></li>`).join('')
-      : '<li class="empty" aria-disabled="true">Nikdo takový tu není.</li>';
+      : `<li class="empty" aria-disabled="true">${t('cp.nobody')}</li>`;
     drop = { el, input, side, i, list, active: 0 };
     input.setAttribute('aria-expanded', 'true');
   }
@@ -1013,7 +1030,7 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
       <li role="option" id="opt-${h.key}" data-key="${h.key}" aria-selected="${i === active}">
         <img src="p/${h.key}.jpg" alt=""><span class="s-name">${esc(h.name)}</span>
         <span class="s-role">${ROLE_SVG[h.role]}${ROLE_LABEL[h.role]}</span>
-      </li>`).join('') : '<li class="empty" role="option" aria-disabled="true">Žádný hrdina neodpovídá. Zkus jiný název.</li>';
+      </li>`).join('') : `<li class="empty" role="option" aria-disabled="true">${t('search.none')}</li>`;
     sugg.hidden = false;
     q.setAttribute('aria-expanded', 'true');
     q.setAttribute('aria-activedescendant', results[0] ? 'opt-' + results[0].key : '');
@@ -1046,6 +1063,23 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
     if ((e.key === '/' && !typing) || (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey))) {
       e.preventDefault(); q.focus(); q.select();
     }
+  });
+
+  /* ---------- language ---------- */
+  const langBar = document.getElementById('lang');
+  const showLang = () => langBar.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === I18n.lang));
+  langBar.addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (b) I18n.set(b.dataset.lang); });
+  showLang();
+  // Chosen here, in another window of the app or in its tray menu: everything is drawn again in that language.
+  I18n.onChange(() => {
+    showLang();
+    closeSugg();
+    if (!HEROES.length) return;
+    if (CURATED !== null) mergePatches();
+    if (LIVE) loadLive();
+    const y = window.scrollY;
+    route('lang');
+    window.scrollTo(0, y);
   });
 })();
 </script>

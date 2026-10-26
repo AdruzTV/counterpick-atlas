@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <base href="../">
-<title>Counterpick · kalibrace</title>
+<title data-i18n="cal.title">Counterpick · kalibrace</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=Barlow:wght@400;500;600&display=swap">
@@ -36,16 +36,17 @@
 <div class="cal">
   <header class="head" id="drag">
     <span class="brand-mark" aria-hidden="true">CA</span>
-    <strong>Kalibrace <span>scoreboardu</span></strong>
+    <strong data-i18n="cal.head">Kalibrace <span>scoreboardu</span></strong>
     <span class="status" id="status"></span>
-    <button type="button" class="ic x" data-act="close" title="Zavřít" aria-label="Zavřít">×</button>
+    <button type="button" class="ic x" data-act="close" title="Zavřít" aria-label="Zavřít" data-i18n-attr="title:ov.close; aria-label:ov.close">×</button>
   </header>
   <div class="cal-main">
-    <div class="stage" id="stage"><p class="empty-msg">Načítám…</p></div>
+    <div class="stage" id="stage"><p class="empty-msg" data-i18n="cal.loading">Načítám…</p></div>
     <aside class="side" id="side"></aside>
   </div>
   <div class="grip" id="grip" aria-hidden="true"></div>
 </div>
+<script src="js/i18n.js"></script>
 <script src="js/counterpick-core.js"></script>
 <script src="js/scoreboard.js"></script>
 <script src="overlay/js/app.js"></script>
