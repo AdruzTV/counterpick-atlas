@@ -134,7 +134,7 @@
     if (!S.result) return;
     if (S.auto && S.found) say('cal.found');
     else if (S.auto) say('cal.notFound', 'warn');
-    else if (!S.result.scoreboard) say('cal.noColours', 'warn');
+    else if (!S.result.scoreboard) say('cal.noColors', 'warn');
     else say('cal.manual');
   }
 

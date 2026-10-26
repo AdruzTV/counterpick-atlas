@@ -241,7 +241,7 @@
     body.innerHTML = `
       ${IN_APP ? '' : `<div class="test">${t('ov.test')}</div>`}
       ${S.error ? `<p class="note err">${esc(errorText())}</p>` : ''}
-      ${S.scannedAt && !S.scoreboardOk ? `<p class="note">${t('ov.noColours', { key: KEYS.scan })}</p>` : ''}
+      ${S.scannedAt && !S.scoreboardOk ? `<p class="note">${t('ov.noColors', { key: KEYS.scan })}</p>` : ''}
       <div class="opts">
         <div class="seg" role="group" aria-label="${t('cp.mode')}">${seg('mode', '5v5', '5v5', S.mode === '5v5')}${seg('mode', '6v6', '6v6', S.mode === '6v6')}</div>
         ${S.mode === '5v5' ? `<div class="seg" role="group" aria-label="${t('cp.yourRole')}">${ROLES.map(r => seg('role', r.key, ROLE_SVG[r.key] + r.label, S.role === r.key)).join('')}</div>` : ''}

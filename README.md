@@ -27,6 +27,8 @@ Není spojeno s Blizzard Entertainment. Obrázky hrdinů, názvy a popisy schopn
 
 Web, overlay i aplikace jsou česky a anglicky. Přepíná se tlačítky **CZ / EN** v liště webu; volba se pamatuje v prohlížeči (`localStorage`) a overlay s kalibrací se na stejném webu nebo v aplikaci přepnou hned s ním. Dokud nikdo nevybral, rozhoduje jazyk systému: čeština pro češtinu a slovenštinu, jinak angličtina. Texty rozhraní jsou v `js/i18n.js`, u každého česká a anglická verze vedle sebe; když anglická chybí, ukáže se česká. Doporučení na stránce Counterpick vychází v obou jazycích stejně, jazyk mění jen slova.
 
+Anglické texty dat jsou ve stejných souborech hned za českými, v poli s příponou `_en`: důvody counterů a komb `r_en` (`data/matchups.json`, `data/synergies.json`), poznámka `review.reason_en`, vlastnosti map a strany `label_en`, `desc_en`, `badDesc_en` (`data/maps.json`) a u českých shrnutí patchů `title_en`, `summary_en`, `kind_en`, u zajímavostí `tag_en`, `title_en`, `text_en` a u změn `a_en`, `t_en` (`data/patches.json`; čísla jako „6,5“ nebo „35 %“ se v angličtině převedou samy). Kde `_en` chybí, ukáže se čeština, takže nový counter nebo patch jde napsat nejdřív jen česky. GitHub Actions tato pole nechávají beze změny. Automaticky stažené patch notes jsou v angličtině rovnou.
+
 ## Automatické patch notes
 
 Prohlížeč nesmí stáhnout stránku Blizzardu napřímo (chybí CORS), proto ji každých 12 hodin zkopíruje GitHub Action do `data/blizzard-patch-notes.html` a commitne jen tehdy, když se něco změnilo. Web si kopii při návštěvě rozparsuje přes jQuery a podrží v cache prohlížeče 12 hodin. Když Action přinese novou verzi, cache se zahodí hned.

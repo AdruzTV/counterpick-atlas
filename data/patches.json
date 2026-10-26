@@ -8,12 +8,14 @@
       "a": "Eternal Scepter",
       "from": "60",
       "t": "poškození a léčení",
+      "t_en": "damage and healing",
       "to": "55"
      },
      {
       "a": "Invigorating Drones",
       "from": "6 s",
       "t": "trvání",
+      "t_en": "duration",
       "to": "5 s"
      }
     ],
@@ -26,12 +28,14 @@
       "a": "Machine Pistol",
       "from": "7",
       "t": "poškození",
+      "t_en": "damage",
       "to": "6,5"
      },
      {
       "a": "Cyberspace",
       "from": "40",
       "t": "poškození výbuchu",
+      "t_en": "explosion damage",
       "to": "20"
      },
      {
@@ -50,6 +54,7 @@
       "a": "Scrap Gun",
       "from": "34",
       "t": "středový projektil",
+      "t_en": "center projectile damage",
       "to": "40"
      },
      {
@@ -62,12 +67,14 @@
       "a": "Take a Breather",
       "from": "35 %",
       "t": "redukce poškození",
+      "t_en": "damage reduction",
       "to": "40 %"
      },
      {
       "a": "Take a Breather",
       "from": "2 s",
       "t": "maximální trvání",
+      "t_en": "max duration",
       "to": "2,5 s"
      }
     ],
@@ -78,8 +85,10 @@
     "changes": [
      {
       "a": "Zdraví",
+      "a_en": "Health",
       "from": "225",
       "t": "základní zdraví",
+      "t_en": "base health",
       "to": "250"
      }
     ],
@@ -90,8 +99,10 @@
     "changes": [
      {
       "a": "Zbroj",
+      "a_en": "Armor",
       "from": "275",
       "t": "základní zbroj",
+      "t_en": "base armor",
       "to": "250"
      }
     ],
@@ -102,7 +113,9 @@
   "highlights": [],
   "kind": "Hotfix",
   "summary": "Rychlé doladění po startu sezóny 5. Nový Doctrine a přepracovaná Sombra jdou dolů, přepracovaný Roadhog a Kiriko nahoru.",
+  "summary_en": "Quick tuning after the start of Season 5. The new Doctrine and the reworked Sombra go down, the reworked Roadhog and Kiriko go up.",
   "title": "Hotfix týden po startu sezóny",
+  "title_en": "Hotfix a week after the season start",
   "url": "https://overwatch.blizzard.com/en-us/news/patch-notes/",
   "id": "2026-10-13"
  },
@@ -115,35 +128,42 @@
       "a": "Role",
       "from": "Damage",
       "t": "přesun z Damage do Support",
+      "t_en": "moved from Damage to Support",
       "to": "Support"
      },
      {
       "a": "Hack",
-      "t": "schopnost odstraněna"
+      "t": "schopnost odstraněna",
+      "t_en": "ability removed"
      },
      {
       "a": "Hotfix",
-      "t": "nová schopnost: 65 léčení hned + 25/s, 2 nabití, umí hacknout lékárničky a nepřátelské objekty"
+      "t": "nová schopnost: 65 léčení hned + 25/s, 2 nabití, umí hacknout lékárničky a nepřátelské objekty",
+      "t_en": "new ability: 65 healing at once + 25/s, 2 charges, can hack health packs and enemy objects"
      },
      {
       "a": "Cyberspace",
-      "t": "nová schopnost: zóna, která léčí spojence a oslabuje nepřátele na 50 % poškození i léčení"
+      "t": "nová schopnost: zóna, která léčí spojence a oslabuje nepřátele na 50 % poškození i léčení",
+      "t_en": "new ability: a zone that heals allies and weakens enemies to 50% damage and healing"
      },
      {
       "a": "Translocator",
       "from": "5 s",
       "t": "trvání stealthu",
+      "t_en": "stealth duration",
       "to": "6,5 s"
      },
      {
       "a": "EMP",
       "from": "25 %",
       "t": "poškození z aktuálního zdraví",
+      "t_en": "current health damage",
       "to": "20 %"
      },
      {
       "a": "Conspirator",
-      "t": "nová pasivka: vidíš, kdo z nepřátel má nabitou ultimátku"
+      "t": "nová pasivka: vidíš, kdo z nepřátel má nabitou ultimátku",
+      "t_en": "new passive: see which enemies have their ultimate ready"
      }
     ],
     "key": "sombra",
@@ -155,16 +175,19 @@
       "a": "Scrap Gun",
       "from": "6",
       "t": "střílí ve dvou dávkách, nábojů",
+      "t_en": "fires in two bursts, ammo",
       "to": "12"
      },
      {
       "a": "Trash Compactor",
-      "t": "nová schopnost: 2 s pohlcuje projektily, pak vystřelí výbuch za 75–200"
+      "t": "nová schopnost: 2 s pohlcuje projektily, pak vystřelí výbuch za 75–200",
+      "t_en": "new ability: absorbs projectiles for 2 s, then fires an explosion for 75–200"
      },
      {
       "a": "Chain Hook",
       "from": "0,4 s",
       "t": "omráčení po přitažení",
+      "t_en": "stun after the pull",
       "to": "0,3 s"
      },
      {
@@ -177,6 +200,7 @@
       "a": "Take a Breather",
       "from": "150",
       "t": "léčení za sekundu",
+      "t_en": "healing per second",
       "to": "200"
      }
     ],
@@ -187,20 +211,24 @@
     "changes": [
      {
       "a": "Ultimátka",
+      "a_en": "Ultimate",
       "from": "100 %",
       "t": "cena ultimátky",
+      "t_en": "ultimate cost",
       "to": "108 %"
      },
      {
       "a": "Invigorating Drones",
       "from": "35 %",
       "t": "rychlost útoku",
+      "t_en": "attack speed",
       "to": "30 %"
      },
      {
       "a": "Shrouded Momentum",
       "from": "50 %",
       "t": "redukce poškození",
+      "t_en": "damage reduction",
       "to": "40 %"
      },
      {
@@ -213,6 +241,7 @@
       "a": "Deliverance",
       "from": "8 s",
       "t": "trvání overhealth a debuffu",
+      "t_en": "overhealth and debuff duration",
       "to": "6 s"
      }
     ],
@@ -225,18 +254,21 @@
       "a": "Swift Strike",
       "from": "50",
       "t": "poškození",
+      "t_en": "damage",
       "to": "60"
      },
      {
       "a": "Dragonblade",
       "from": "110",
       "t": "poškození",
+      "t_en": "damage",
       "to": "100"
      },
      {
       "a": "Dragonblade",
       "from": "100 %",
       "t": "rychlost švihu",
+      "t_en": "swing speed",
       "to": "115 %"
      }
     ],
@@ -249,6 +281,7 @@
       "a": "Micro Missiles",
       "from": "11",
       "t": "střel za sekundu",
+      "t_en": "shots per second",
       "to": "14"
      }
     ],
@@ -267,6 +300,7 @@
       "a": "Reconstruction",
       "from": "75 %",
       "t": "lifesteal ze schopností",
+      "t_en": "ability lifesteal",
       "to": "100 %"
      }
     ],
@@ -291,6 +325,7 @@
       "a": "Sound Barrier",
       "from": "5 s",
       "t": "trvání",
+      "t_en": "duration",
       "to": "6 s"
      }
     ],
@@ -301,7 +336,8 @@
     "changes": [
      {
       "a": "Local Anesthetic",
-      "t": "nový minor perk: Sleep Dart po zásahu vybuchne, zpomalí okolí a dá 45 poškození za 3 s"
+      "t": "nový minor perk: Sleep Dart po zásahu vybuchne, zpomalí okolí a dá 45 poškození za 3 s",
+      "t_en": "new minor perk: Sleep Dart explodes on hit, slows those nearby and deals 45 damage over 3 s"
      }
     ],
     "key": "ana",
@@ -311,7 +347,8 @@
     "changes": [
      {
       "a": "Survival Instinct",
-      "t": "nový minor perk: overhealth z Evade vydrží o 1 s déle"
+      "t": "nový minor perk: overhealth z Evade vydrží o 1 s déle",
+      "t_en": "new minor perk: the overhealth from Evade lasts 1 s longer"
      }
     ],
     "key": "shion",
@@ -323,6 +360,7 @@
       "a": "Reconfigure",
       "from": "6 s",
       "t": "trvání",
+      "t_en": "duration",
       "to": "5 s"
      }
     ],
@@ -333,7 +371,8 @@
     "changes": [
      {
       "a": "Deadeye",
-      "t": "během Deadeye se už nejde připojit na Lifeline od Jetpack Cat"
+      "t": "během Deadeye se už nejde připojit na Lifeline od Jetpack Cat",
+      "t_en": "during Deadeye Jetpack Cat’s Lifeline can no longer attach to him"
      }
     ],
     "key": "cassidy",
@@ -343,52 +382,73 @@
   "highlights": [
    {
     "tag": "Nový hrdina",
+    "tag_en": "New hero",
     "text": "Support, který posílá roje dronů. Léčí spojence, zrychluje jim útok a ultimátkou Deliverance snižuje nepřátelům maximální zdraví.",
+    "text_en": "A support who sends out swarms of drones: heals allies, speeds up their attacks, and the ultimate Deliverance lowers the enemies’ max health.",
     "title": "Doctrine"
    },
    {
     "tag": "Rework",
     "text": "Hack zmizel. Místo něj léčí přes Hotfix a zóna Cyberspace oslabuje nepřátele (poloviční poškození i léčení).",
-    "title": "Sombra je support"
+    "text_en": "Hack is gone. Instead she heals with Hotfix, and the Cyberspace zone weakens enemies (half damage and healing).",
+    "title": "Sombra je support",
+    "title_en": "Sombra is a support"
    },
    {
     "tag": "Rework",
     "text": "Hák už není jistá smrt. Nová schopnost Trash Compactor pohltí nepřátelské projektily a vrátí je jako výbuch.",
+    "text_en": "The hook is no longer a sure kill. The new ability Trash Compactor absorbs enemy projectiles and fires them back as an explosion.",
     "title": "Roadhog"
    },
    {
     "tag": "Event",
     "text": "Čtyřtýdenní halloweenský mód: 5v5 se složením 1-2-2 a po každé smrti si vybíráš nové schopnosti (Powers).",
+    "text_en": "A four-week Halloween mode: 5v5 in a 1-2-2 lineup, and after every death you pick new abilities (Powers).",
     "title": "Mystery Madness: Graveyard Games"
    },
    {
     "tag": "Mapa",
+    "tag_en": "Map",
     "text": "Nová escort mapa s vězením pro nejnebezpečnější zločince. Halloweenské verze Hollywoodu, Lijiang Tower a Château Guillard platí do 3. 11.",
+    "text_en": "A new Escort map with a prison for the most dangerous criminals. Halloween versions of Hollywood, Lijiang Tower and Château Guillard run until Nov 3.",
     "title": "Grímsvötn"
    },
    {
     "tag": "Systém",
+    "tag_en": "Core game",
     "text": "Battle passy z minulých sezón jde plnit souběžně s aktuálním. Najdeš je v menu Battle Passes → Legacy Pass.",
-    "title": "Starší Battle Passy"
+    "text_en": "Battle Passes from past seasons can be progressed alongside the current one. Find them under Battle Passes → Legacy Pass.",
+    "title": "Starší Battle Passy",
+    "title_en": "Legacy Battle Passes"
    },
    {
     "tag": "Ranked",
+    "tag_en": "Competitive",
     "text": "Žebříček se teď řadí podle skutečného ranku, ne podle počtu odehraných her (Challenger Score).",
-    "title": "Top 500 podle ranku"
+    "text_en": "The leaderboard is now ordered by actual rank, not by the number of games played (Challenger Score).",
+    "title": "Top 500 podle ranku",
+    "title_en": "Top 500 by rank"
    },
    {
     "tag": "Hitboxy",
+    "tag_en": "Hitboxes",
     "text": "Většina hrdinů má upravené zásahové zóny a hitscan střely jsou menší. Míření by mělo být konzistentnější.",
-    "title": "Sjednocené hitboxy"
+    "text_en": "Most heroes have adjusted hit volumes and hitscan shots are smaller. Aiming should be more consistent.",
+    "title": "Sjednocené hitboxy",
+    "title_en": "Unified hitboxes"
    },
    {
     "tag": "Stadium",
     "text": "Quick Play ve Stadiu je open queue (1 tank, 2 DPS, 3 supporti), pasivní zdraví z měny kleslo o polovinu a anti-heal itemy jsou silnější.",
-    "title": "Méně výdrže"
+    "text_en": "Stadium Quick Play is open queue (1 tank, 2 DPS, 3 supports), passive health from cash is halved and anti-heal items are stronger.",
+    "title": "Méně výdrže",
+    "title_en": "Less staying power"
    }
   ],
   "kind": "Sezóna 5",
+  "kind_en": "Season 5",
   "summary": "Start páté sezóny: nový support Doctrine, Sombra se stěhuje do role supportu, Roadhog dostal rework a k tomu halloweenský event a nová mapa.",
+  "summary_en": "Season 5 begins: Doctrine is the new support, Sombra moves to the support role, Roadhog gets a rework, and there is a Halloween event and a new map.",
   "title": "Reign of Talon – A Grim Doctrine",
   "url": "https://overwatch.blizzard.com/en-us/news/patch-notes/",
   "id": "2026-10-06"

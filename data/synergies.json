@@ -182,156 +182,182 @@
    "a": "ana",
    "b": "genji",
    "r": "Nano Blade: Nano Boost na Dragonblade",
+   "r_en": "Nano Blade: Nano Boost on Dragonblade",
    "s": 2
   },
   {
    "a": "ana",
    "b": "reinhardt",
    "r": "Nano Boost pošle Reina do Earthshatteru nebo Charge",
+   "r_en": "Nano Boost sends Rein into Earthshatter or Charge",
    "s": 1
   },
   {
    "a": "ana",
    "b": "winston",
    "r": "Nano Boost udrží Winstona naživu v Primal Rage",
+   "r_en": "Nano Boost keeps Winston alive in Primal Rage",
    "s": 1
   },
   {
    "a": "mercy",
    "b": "pharah",
    "r": "Pharmercy: Mercy drží Pharah ve vzduchu a zesiluje Barrage",
+   "r_en": "Pharmercy: Mercy keeps Pharah in the air and boosts Barrage",
    "s": 2
   },
   {
    "a": "mercy",
    "b": "echo",
    "r": "Mercy létá za Echo a zesiluje její poškození",
+   "r_en": "Mercy flies with Echo and boosts her damage",
    "s": 1
   },
   {
    "a": "mercy",
    "b": "ashe",
    "r": "Damage Boost na Ashe z výšky",
+   "r_en": "Damage Boost on Ashe from high ground",
    "s": 1
   },
   {
    "a": "mercy",
    "b": "sojourn",
    "r": "Damage Boost na nabitý railgun",
+   "r_en": "Damage Boost on a charged railgun",
    "s": 1
   },
   {
    "a": "zarya",
    "b": "hanzo",
    "r": "Graviton Surge stáhne nepřátele pod Dragonstrike",
+   "r_en": "Graviton Surge pulls enemies under Dragonstrike",
    "s": 2
   },
   {
    "a": "zarya",
    "b": "genji",
    "r": "Graviton Surge podrží cíle pro Dragonblade",
+   "r_en": "Graviton Surge holds targets for Dragonblade",
    "s": 1
   },
   {
    "a": "zarya",
    "b": "junkrat",
    "r": "Graviton Surge a RIP-Tire nebo granáty do shluku",
+   "r_en": "Graviton Surge plus RIP-Tire or grenades into the clump",
    "s": 1
   },
   {
    "a": "zarya",
    "b": "pharah",
    "r": "Graviton Surge a Barrage shora",
+   "r_en": "Graviton Surge and Barrage from above",
    "s": 1
   },
   {
    "a": "zarya",
    "b": "cassidy",
    "r": "Graviton Surge podrží cíle pro Deadeye",
+   "r_en": "Graviton Surge holds targets for Deadeye",
    "s": 1
   },
   {
    "a": "zarya",
    "b": "reinhardt",
    "r": "Bubliny drží Reinhardta vepředu",
+   "r_en": "Bubbles keep Reinhardt in front",
    "s": 1
   },
   {
    "a": "lucio",
    "b": "reinhardt",
    "r": "Speed Boost a Reinhardt: klasický rush",
+   "r_en": "Speed Boost and Reinhardt: the classic rush",
    "s": 2
   },
   {
    "a": "lucio",
    "b": "junker-queen",
    "r": "Speed Boost a Rampage: rychlý brawl zblízka",
+   "r_en": "Speed Boost and Rampage: a fast close-range brawl",
    "s": 2
   },
   {
    "a": "lucio",
    "b": "mauga",
    "r": "Speed Boost dotáhne Maugu do boje zblízka",
+   "r_en": "Speed Boost brings Mauga into close combat",
    "s": 1
   },
   {
    "a": "brigitte",
    "b": "reinhardt",
    "r": "Inspire a Repair Pack drží Reina vepředu",
+   "r_en": "Inspire and Repair Pack keep Rein in front",
    "s": 1
   },
   {
    "a": "kiriko",
    "b": "genji",
    "r": "Kitsune Rush zrychlí Dragonblade",
+   "r_en": "Kitsune Rush speeds up Dragonblade",
    "s": 1
   },
   {
    "a": "kiriko",
    "b": "winston",
    "r": "Kitsune Rush zrychlí skok do backline",
+   "r_en": "Kitsune Rush speeds up the jump into the backline",
    "s": 1
   },
   {
    "a": "mei",
    "b": "reinhardt",
    "r": "Blizzard zastaví nepřátele pro Earthshatter",
+   "r_en": "Blizzard holds enemies in place for Earthshatter",
    "s": 1
   },
   {
    "a": "junkrat",
    "b": "roadhog",
    "r": "Hák a Steel Trap: kdo se chytí, nepřežije",
+   "r_en": "Hook and Steel Trap: whoever gets caught won’t survive",
    "s": 1
   },
   {
    "a": "baptiste",
    "b": "bastion",
    "r": "Amplification Matrix zdvojí palbu Bastiona",
+   "r_en": "Amplification Matrix doubles Bastion’s fire",
    "s": 1
   },
   {
    "a": "baptiste",
    "b": "soldier-76",
    "r": "Amplification Matrix a Tactical Visor",
+   "r_en": "Amplification Matrix and Tactical Visor",
    "s": 1
   },
   {
    "a": "sigma",
    "b": "widowmaker",
    "r": "Bariéra kryje snipera při poke",
+   "r_en": "The barrier covers the sniper while poking",
    "s": 1
   },
   {
    "a": "dva",
    "b": "winston",
    "r": "Dvojitý dive tank na stejný cíl",
+   "r_en": "Double dive tanks on the same target",
    "s": 1
   },
   {
    "a": "tracer",
    "b": "genji",
    "r": "Dva flankeři rozbijí backline z různých stran",
+   "r_en": "Two flankers break the backline from different sides",
    "s": 1
   }
  ]
