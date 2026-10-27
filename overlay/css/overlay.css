@@ -83,6 +83,8 @@ img { display: block; }
 .rc > img { width: 50px; height: 50px; object-fit: cover; }
 .rc strong { display: block; font: italic 800 21px/1 var(--f-display); text-transform: uppercase; }
 .rc .rank { font: 800 12px/1 var(--f-display); letter-spacing: .08em; color: var(--accent); }
+.rc.own { border-left-color: var(--blue); margin-bottom: 4px; }
+.own-note { margin: 3px 0 0; font-size: 13px; color: var(--fg); }
 .score { font: italic 800 21px/1 var(--f-display); font-variant-numeric: tabular-nums; color: var(--good); white-space: nowrap; }
 .score.neg { color: var(--bad); }
 .score.zero { color: var(--muted); }

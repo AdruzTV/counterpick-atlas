@@ -189,12 +189,29 @@
     return main.concat(tips).map(li).join('');
   }
 
+  // The hero the player already plays (their row on the scoreboard), scored like the recommendations, with its
+  // place among them. Nothing while the player hasn't picked or isn't known.
+  function ownHtml(ranked) {
+    const me = S.self !== null && S.ally[S.self], key = me && me.key, A = S.atlas, h = key && A.HM[key];
+    if (!h) return '';
+    const pick = pickState();
+    const c = A.scoreHero(h, pick.team, pick.enemy, A.teamStyle(pick.team), A.MAP_BY[pick.map], A.activeSide(pick), pick.mode);
+    const pos = ranked.findIndex(x => x.h.key === key), best = ranked[0];
+    const note = pos < 0 ? t('ov.ownOtherRole') : pos === 0 ? t('ov.ownBest')
+      : best.score > c.score ? t('ov.ownBehind', { name: esc(best.h.name), n: I18n.num(best.score - c.score) }) : '';
+    const why = whyList(c, 3) || `<li><span>${t('cp.neutral')}</span></li>`;
+    return `<span class="lbl">${t('ov.ownPick')}${pos >= 0 ? ` <small>· ${t('ov.ownRank', { pos: pos + 1, n: ranked.length })}</small>` : ''}</span>
+      <article class="rc own"><img src="p/${h.key}.jpg" alt="">
+        <div><strong>${esc(h.name)}</strong>${note ? `<p class="own-note">${note}</p>` : ''}<ul class="why">${why}</ul></div>
+        <span class="${scoreCls(c.score)}">${fmtPts(c.score)}</span></article>`;
+  }
+
   function recsHtml() {
     if (S.mode === '5v5' && !S.role) return `<p class="note">${t('ov.pickRole')}</p>`;
     const ranked = S.atlas.rankPicks(pickState());
     if (!ranked) return `<p class="empty-msg">${IN_APP ? t('ov.emptyApp', { key: KEYS.scan }) : t('ov.emptyBrowser')}</p>`;
-    if (!ranked.length) return `<p class="empty-msg">${t('cp.noneLeft')}</p>`;
-    if (!ranked.some(c => c.why.some(w => !w.tip))) return `<p class="empty-msg">${t('ov.nothing')}</p>`;
+    if (!ranked.length) return ownHtml(ranked) + `<p class="empty-msg">${t('cp.noneLeft')}</p>`;
+    if (!ranked.some(c => c.why.some(w => !w.tip))) return ownHtml(ranked) + `<p class="empty-msg">${t('ov.nothing')}</p>`;
     const top = ranked.slice(0, 3);
     const more = ranked.slice(3, 6).filter(c => c.score >= 0);
     const avoid = ranked.filter(c => c.score < 0 && !top.includes(c)).slice(-2).reverse();
@@ -202,7 +219,7 @@
       const w = pickWhy(c.why);
       return `<div class="rr"><img src="p/${c.h.key}.jpg" alt=""><div><strong>${esc(c.h.name)}</strong>${w ? `<p>${esc(w.t)}</p>` : ''}</div><span class="${scoreCls(c.score)}">${fmtPts(c.score)}</span></div>`;
     };
-    return `<span class="lbl">${t('cp.recs')} <small>${S.mode === '5v5' ? ROLE_LABEL[S.role] : '6v6'} · ${t('ov.compared', { n: ranked.length })}</small></span>
+    return `${ownHtml(ranked)}<span class="lbl">${t('cp.recs')} <small>${S.mode === '5v5' ? ROLE_LABEL[S.role] : '6v6'} · ${t('ov.compared', { n: ranked.length })}</small></span>
       <div class="recs">${top.map((c, i) => `<article class="rc"><img src="p/${c.h.key}.jpg" alt="">
         <div><span class="rank">#${i + 1}</span><strong>${esc(c.h.name)}</strong><ul class="why">${whyList(c, 3)}</ul></div>
         <span class="${scoreCls(c.score)}">${fmtPts(c.score)}</span></article>`).join('')}</div>
