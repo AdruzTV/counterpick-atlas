@@ -54,11 +54,11 @@ jobs:
           name: counterpick-atlas-desktop-${{ steps.meta.outputs.version }}
           path: desktop/dist/*.exe
 
+      # The release text is desktop/release-notes.md: rewrite it together with "version" for every release.
       - name: Release new version
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: desktop-v${{ steps.meta.outputs.version }}
         run: |
           gh release view "$VERSION" > /dev/null 2>&1 && exit 0
-          gh release create "$VERSION" dist/*.exe --title "Counterpick Atlas pro Windows $VERSION" \
-            --notes "Instalátor (Setup) nebo přenosná verze (portable), stačí jedno z nich. Ovládání: README, sekce Aplikace pro Windows."
+          gh release create "$VERSION" dist/*.exe --title "Counterpick Atlas pro Windows $VERSION" --notes-file release-notes.md
