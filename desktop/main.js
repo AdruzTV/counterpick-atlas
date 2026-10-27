@@ -152,10 +152,18 @@ function openCalibration() {
   calib.on('closed', () => { calib = null; });
 }
 
+// A game started after the app puts its window into the same always-on-top layer, above the overlay, and showing
+// a window keeps its old place in that layer. So the overlay takes the top place back every time it shows.
+function raiseOverlay() {
+  overlay.setAlwaysOnTop(false);
+  overlay.setAlwaysOnTop(true, 'screen-saver');
+  overlay.moveTop();
+}
+
 // Alt+X: show the overlay with the mouse in it, give it the mouse if it only shows, else hide it.
 function toggleOverlay() {
-  if (!overlay.isVisible()) { overlay.show(); overlay.focus(); }
-  else if (!overlay.isFocused()) overlay.focus();
+  if (!overlay.isVisible()) { overlay.show(); raiseOverlay(); overlay.focus(); }
+  else if (!overlay.isFocused()) { raiseOverlay(); overlay.focus(); }
   else overlay.hide();
 }
 
@@ -187,6 +195,7 @@ async function scan() {
   }
   scanning = false;
   overlay.showInactive();   // the game keeps the mouse
+  raiseOverlay();
   for (const w of [overlay, calib]) if (w && !w.isDestroyed()) w.webContents.send('scan', lastScan);
 }
 
@@ -244,6 +253,7 @@ async function smoke(image) {
   fs.writeFileSync(page, `<body style="margin:0;background:#000"><img src="${encodeURI(path.basename(image))}" style="width:100vw;height:100vh;display:block">`);
   await shot.loadFile(page);
   shot.show();
+  shot.focus();   // like a game started after the app: full screen, always on top, with the focus
   await sleep(1500);
   await scan();
   await sleep(2500);
@@ -254,6 +264,15 @@ async function smoke(image) {
     recs: await read('.rc strong'), keys: globalShortcut.isRegistered(settings.keys.scan),
     lang: lang(), hint: (await read('#keys'))[0],
   };
+  // Is the overlay really on screen, above the full-screen "game", or only drawn somewhere behind it?
+  const b = overlay.getBounds(), d = screen.getDisplayMatching(b), k = d.scaleFactor, small = { width: 47, height: 78 };
+  const sources = await desktopCapturer.getSources({ types: ['screen'], thumbnailSize: { width: d.size.width * k, height: d.size.height * k } });
+  const screenshot = (sources.find(s => s.display_id === String(d.id)) || sources[0]).thumbnail;
+  const seen = screenshot.crop({ x: Math.round((b.x - d.bounds.x) * k), y: Math.round((b.y - d.bounds.y) * k), width: Math.round(b.width * k), height: Math.round(b.height * k) }).resize(small).toBitmap();
+  const drawn = (await overlay.webContents.capturePage()).resize(small).toBitmap();
+  let diff = 0;
+  for (let i = 0; i < drawn.length; i++) diff += Math.abs(drawn[i] - seen[i]);
+  out.overlayOnTop = diff / drawn.length < 25;
   fs.writeFileSync(image + '.overlay.png', (await overlay.webContents.capturePage()).toPNG());
   shot.close();
   main.show();
