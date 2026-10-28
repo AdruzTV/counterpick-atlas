@@ -90,6 +90,7 @@ img { display: block; }
 .score.zero { color: var(--muted); }
 .why { list-style: none; margin: 5px 0 0; padding: 0; display: grid; gap: 3px; font-size: 13px; color: var(--muted); }
 .why li { display: grid; grid-template-columns: 30px 1fr; gap: 4px; }
+.why li > span:only-child { grid-column: 1 / -1; }   /* a line without points, like "a neutral pick" */
 .why b { font: 800 13px/1.35 var(--f-display); font-variant-numeric: tabular-nums; color: var(--good); }
 .why .down b { color: var(--bad); }
 .why .tip-good b { color: var(--blue); }

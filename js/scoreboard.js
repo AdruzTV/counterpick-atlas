@@ -5,7 +5,8 @@
    heights, x measured from the horizontal centre. findLayout() finds it on every screenshot by itself (the ally
    rows are one wide block in the team colour, the enemy rows another one below; any colours, as colour filters
    change them), so a new game version that moves the scoreboard still works, in 5v5 and 6v6. A saved layout
-   (overlay/calibrate.html) or DEFAULT_LAYOUT, measured on the 2026 scoreboard, is the fallback.
+   (overlay/calibrate.html) or DEFAULT_LAYOUT, measured on the late 2026 scoreboard (level rings next to the
+   portraits), is the fallback.
 
    Every row also shows a role icon (shield, three bars, plus) left of the portrait; roleOf() reads it, so a
    tank row only considers tanks even in open queue.
@@ -28,7 +29,7 @@
   const BG_DIST2 = 48 * 48;           // squared RGB distance to the row colour that still counts as background
   const BANDS = 3;                    // horizontal colour bands of a portrait
   const STORE = 'cpa:scoreboard:samples:v1';
-  const DEFAULT_LAYOUT = { cx: -0.609, ally: 0.2204, enemy: 0.5843, pitch: 0.0574, size: 0.049 };
+  const DEFAULT_LAYOUT = { cx: -0.585, ally: 0.2065, enemy: 0.5806, pitch: 0.0609, size: 0.0518 };
   const LIMITS = { cx: [-0.9, 0.9], ally: [0, 1], enemy: [0, 1], pitch: [0.01, 0.2], size: [0.01, 0.2] };
   // Role icons as 12×12 grids of white coverage (0–9), averaged from real scoreboards (2023–2026 versions).
   const ROLE_ICONS = {
@@ -96,25 +97,30 @@
 
   /* { layout, rows } of the scoreboard on this frame, or null when none is to be seen. The ally rows are one
      wide block of a single strong colour, the enemy rows another one below it; whether a team has 5 or 6 rows
-     is settled by where the role icons line up. */
+     and where exactly the portraits sit is settled by where the role icons line up. */
   function findLayout(frame) {
     const { width: W, height: H, data: d } = frame;
     const step = Math.max(1, Math.round(H / 540)), xMax = Math.round(W * 0.75), need = W * 0.18;
     const maxGap = Math.max(2, Math.round(0.015 * H / step));   // lines between rows, a stat column, a name
-    // Per sampled line: the colour (3 neighbouring hue steps) covering most of the left part, if it covers enough.
+    // The stat columns just left of the screen centre are part of every row in every version (and any aspect
+    // ratio); a banner or the chat at the side of the screen never reaches them.
+    const c0 = Math.max(0, Math.round(W / 2 - 0.35 * H)), c1 = Math.min(W, Math.round(W / 2 + 0.1 * H));
+    // Per sampled line: the colour (3 neighbouring hue steps) covering most of the left part, if it covers enough
+    // of it and of the stat columns.
     const lines = [];
     for (let y = 0; y < H; y += step) {
-      const count = new Float32Array(HUES);
+      const count = new Float32Array(HUES), mid = new Float32Array(HUES);
       for (let x = 0; x < xMax; x += step) {
         const i = (y * W + x) * 4, h = hueOf(d[i], d[i + 1], d[i + 2]);
-        if (h >= 0) count[h] += step;
+        if (h >= 0) { count[h] += step; if (x >= c0 && x < c1) mid[h] += step; }
       }
       let hue = -1, best = 0;
       for (let c = 0; c < HUES; c++) {
         const n = count[c] + count[(c + 1) % HUES] + count[(c + HUES - 1) % HUES];
         if (n > best) { best = n; hue = c; }
       }
-      lines.push(best >= need ? hue : -1);
+      const inMid = hue < 0 ? 0 : mid[hue] + mid[(hue + 1) % HUES] + mid[(hue + HUES - 1) % HUES];
+      lines.push(best >= need && inMid >= 0.3 * (c1 - c0) ? hue : -1);
     }
     // Blocks: runs of lines in one colour. Short interruptions (the thin lines between rows, a name badge in
     // another colour) count as gaps.
@@ -129,7 +135,9 @@
       if (h >= 0 && start < 0) { start = last = k; hue = h; seen = new Array(HUES).fill(0); seen[h]++; }
     }
     const tall = blocks.filter(b => b.bottom - b.top >= 0.2 * H && b.bottom - b.top <= 0.45 * H);
-    // Left edge of a block: where its colour starts (the role icon strip), median over a few lines.
+    // Left edge of a block: where its colour starts (the role icon strip). The leftmost x on which at least two
+    // of a few lines agree: on the 2026 scoreboard the strip of a row is green for the player's party, so
+    // those rows only start in the team colour further right.
     const left = b => {
       const xs = [];
       for (let k = 0; k < 9; k++) {
@@ -141,30 +149,41 @@
         }
       }
       xs.sort((p, q) => p - q);
-      return xs.length ? xs[xs.length >> 1] : null;
+      for (let k = 0; k + 1 < xs.length; k++) if (xs[k + 1] - xs[k] <= 3) return xs[k];
+      return null;
     };
     for (let i = 0; i < tall.length; i++) for (let j = i + 1; j < tall.length; j++) {
       const a = tall[i], e = tall[j], ha = a.bottom - a.top, he = e.bottom - e.top, gap = e.top - a.bottom;
       if (Math.abs(ha - he) > 0.15 * ha || gap < 0.01 * H || gap > 0.25 * H) continue;
       const la = left(a), le = left(e);
-      if (la === null || le === null || Math.abs(la - le) > 0.02 * W) continue;
-      const layoutFor = rows => {
+      // A whole team in one party has no row starting at the edge: one team's edge is enough.
+      if (la === null || le === null || Math.abs(la - le) > 0.06 * W) continue;
+      const edge = Math.min(la, le);
+      const layoutFor = (rows, dx = 0) => {
         const row = (ha + he) / 2 / rows;
         return cleanLayout({
-          cx: ((la + le) / 2 + 0.97 * row - W / 2) / H,
+          cx: (edge + (0.95 + dx) * row - W / 2) / H,
           ally: (a.top + ha / rows / 2) / H, enemy: (e.top + he / rows / 2) / H,
           pitch: row / H, size: 0.85 * row / H,
         });
       };
-      // 5 or 6 rows: the count where the role icons sit where they should; without icons, the usual row height.
-      const iconFit = rows => {
-        const l = layoutFor(rows), bx = boxes(l, W, H, rows);
-        const fits = bx.ally.concat(bx.enemy).map(b => roleFit(frame, b, l.pitch * H)[1]);
-        return fits.reduce((s, v) => s + v, 0) / fits.length;
+      // 5 or 6 rows, and the portrait column: where the role icons fit best (the portrait sits 0.7 rows right of
+      // its icon; how far from the edge differs between versions). Without icons, the usual row heights.
+      const iconFit = (rows, dx) => {
+        const l = layoutFor(rows, dx), row = l.pitch * H;
+        const fits = Object.values(boxes(l, W, H, rows)).flat().map(b => roleFit(frame, b, row));
+        const good = fits.filter(f => f[1] >= 0.6).map(f => f[3]).sort((p, q) => p - q);
+        const shift = good.length ? good[good.length >> 1] : 0;
+        return { rows, fit: fits.reduce((s, f) => s + f[1], 0) / fits.length, layout: { ...l, cx: l.cx + shift / H } };
       };
-      const f5 = iconFit(5), f6 = iconFit(6);
-      const rows = Math.max(f5, f6) >= 0.6 ? (f6 > f5 ? 6 : 5)
-        : Math.abs(ha / 6 - 0.0523 * H) < Math.abs(ha / 5 - 0.0574 * H) ? 6 : 5;
+      let best = null;
+      for (const rows of [5, 6]) for (let dx = -0.3; dx <= 0.31; dx += 0.1) {
+        const f = iconFit(rows, dx);
+        if (!best || f.fit > best.fit) best = f;
+      }
+      if (best.fit >= 0.6) return { rows: best.rows, layout: cleanLayout(best.layout) };
+      const off = (rows, heights) => Math.min(...heights.map(h => Math.abs(ha / rows - h * H)));
+      const rows = off(6, [0.0523]) < off(5, [0.0574, 0.0609]) ? 6 : 5;
       return { rows, layout: layoutFor(rows) };
     }
     return null;
@@ -172,9 +191,19 @@
 
   /* ---------- role icons ---------- */
   const ICON_GRID = 12;
+  // Each icon also shifted by up to one cell either way, so a pixel or two off does not matter.
   const ROLE_GRIDS = Object.fromEntries(Object.entries(ROLE_ICONS).map(([r, rows]) => {
     if (rows.length !== ICON_GRID || rows.some(l => l.length !== ICON_GRID)) throw new Error(`role icon ${r} is not ${ICON_GRID}×${ICON_GRID}`);
-    return [r, Array.from(rows.join(''), Number)];
+    const t = Array.from(rows.join(''), Number), G = ICON_GRID, shifted = [];
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+      const moved = new Float32Array(G * G);
+      for (let y = 0; y < G; y++) for (let x = 0; x < G; x++) {
+        const sy = y - dy, sx = x - dx;
+        if (sy >= 0 && sy < G && sx >= 0 && sx < G) moved[y * G + x] = t[sy * G + sx];
+      }
+      shifted.push(unit(moved));
+    }
+    return [r, shifted];
   }));
 
   // 'tank' | 'damage' | 'support' from the white icon left of the portrait, or null when it isn't clear.
@@ -183,10 +212,21 @@
     return fit >= 0.75 && lead >= 0.1 ? role : null;
   }
 
-  // [best role, its fit (correlation), lead over the second one] for the icon left of the portrait.
-  // row = row height in pixels: the icon sits 0.7 rows left of the portrait centre and is 0.38 rows wide.
+  // [best role, its fit (correlation), lead over the second one, how far right of the expected place the icon
+  // is in pixels] for the icon left of the portrait. row = row height in pixels: the icon sits about 0.7 rows left
+  // of the portrait centre and is 0.3 (2026 scoreboard with level rings) to 0.38 rows wide.
   function roleFit(frame, b, row) {
-    const G = ICON_GRID, s = 0.38 * row, x0 = b.x - 0.7 * row - s / 2, y0 = b.y - s / 2, n = Math.max(G, Math.round(s));
+    let best = null;
+    for (const k of [0.3, 0.34, 0.38]) for (const dx of [-0.06, -0.03, 0, 0.03, 0.06]) {
+      const f = iconAt(frame, b.x + (dx - 0.7) * row, b.y, k * row);
+      if (!best || f[1] > best[1]) best = [...f, dx * row];
+    }
+    return best;
+  }
+
+  // [role, fit, lead] of the icon in the square of side s centred on (cx, cy).
+  function iconAt(frame, cx, cy, s) {
+    const G = ICON_GRID, x0 = cx - s / 2, y0 = cy - s / 2, n = Math.max(G, Math.round(s));
     const grid = new Float32Array(G * G), cnt = new Float32Array(G * G);
     for (let yy = 0; yy < n; yy++) for (let xx = 0; xx < n; xx++) {
       const px = Math.round(x0 + xx * s / n), py = Math.round(y0 + yy * s / n);
@@ -195,21 +235,8 @@
       cnt[c]++;
       if (Math.min(frame.data[i], frame.data[i + 1], frame.data[i + 2]) > 190) grid[c]++;
     }
-    const cells = grid.map((x, i) => cnt[i] ? x / cnt[i] : 0);
-    // Compare with each icon shifted by up to one cell either way: a pixel or two off must not matter.
-    const fit = t => {
-      let best = -1;
-      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
-        const moved = new Float32Array(G * G);
-        for (let y = 0; y < G; y++) for (let x = 0; x < G; x++) {
-          const sy = y - dy, sx = x - dx;
-          if (sy >= 0 && sy < G && sx >= 0 && sx < G) moved[y * G + x] = t[sy * G + sx];
-        }
-        best = Math.max(best, dot(unit(cells), unit(moved)));
-      }
-      return best;
-    };
-    const scored = Object.entries(ROLE_GRIDS).map(([r, t]) => [r, fit(t)]).sort((p, q) => q[1] - p[1]);
+    const cells = unit(grid.map((x, i) => cnt[i] ? x / cnt[i] : 0));
+    const scored = Object.entries(ROLE_GRIDS).map(([r, list]) => [r, Math.max(...list.map(t => dot(cells, t)))]).sort((p, q) => q[1] - p[1]);
     return [scored[0][0], scored[0][1], scored[0][1] - scored[1][1]];
   }
 
