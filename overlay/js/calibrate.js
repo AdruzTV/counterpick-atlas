@@ -117,7 +117,7 @@
         ctx.strokeStyle = 'rgba(255,255,255,.35)';
         ctx.strokeRect(sx, sy, (st[2] - st[0]) * k, (st[3] - st[1]) * k);
         const slot = S.result && S.result[sideKey][i], h = slot && slot.key && S.atlas.HM[slot.key];
-        const label = slot ? (slot.empty ? '–' : h ? h.name + (slot.sure ? '' : ' ?') : '') : '';
+        const label = slot ? (slot.empty ? '–' : slot.hidden ? t('ov.unknown') : h ? h.name + (slot.sure ? '' : ' ?') : '') : '';
         if (label) {
           const w = ctx.measureText(label).width + 8;
           ctx.fillStyle = 'rgba(13,19,32,.85)';
@@ -194,7 +194,7 @@
     if (!S.result || !S.src) return '';
     return `<div class="prev${sideKey === 'enemy' ? ' enemy' : ''}" style="--n:${S.rows}">${S.result[sideKey].map(s => {
       const h = s.key && S.atlas.HM[s.key];
-      return `<div class="${s.sure ? 'sure' : ''}"><img src="${Scoreboard.cropURL(S.src, s.box, 44)}" alt=""><span>${s.empty ? t('cal.emptyRow') : h ? esc(h.name) + (s.sure ? '' : ' ?') : ''}</span></div>`;
+      return `<div class="${s.sure ? 'sure' : ''}"><img src="${Scoreboard.cropURL(S.src, s.box, 44)}" alt=""><span>${s.empty ? t('cal.emptyRow') : s.hidden ? t('ov.unknown') : h ? esc(h.name) + (s.sure ? '' : ' ?') : ''}</span></div>`;
     }).join('')}</div>`;
   }
 

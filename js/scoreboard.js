@@ -9,7 +9,8 @@
    portraits), is the fallback.
 
    Every row also shows a role icon (shield, three bars, plus) left of the portrait; roleOf() reads it, so a
-   tank row only considers tanks even in open queue.
+   tank row only considers tanks even in open queue. Early in a match the enemy rows show a "?" silhouette and no
+   icon instead: such slots are marked hidden and get no hero.
 
    Matching: every portrait is cut with the row colour masked to grey, so a hero seen on the blue (ally) rows still
    matches on the red (enemy) rows. References per hero:
@@ -40,6 +41,14 @@
     support: ['000000000000', '000133200000', '000288600000', '000499700000', '055799965200', '189999999400',
       '189999999400', '013699842000', '000399700000', '000288500000', '000011000000', '000000000000'],
   };
+  // A player the scoreboard doesn't show yet (the enemies early in a match): a silhouette with a "?" in the team
+  // colour instead of a portrait, and no role icon. Its brightness on the 16×16 thumbnail grid (0–9), from a real
+  // scoreboard. It fits that silhouette at 0.96 or more even 4 px off, real portraits at most 0.67 in tests.
+  const HIDDEN_ICON = ['0000011111000000', '0000136886310000', '0001599999941000', '0002999999981000',
+    '0014973334993000', '0016974734994000', '0026999538993100', '0059999479993100', '0029999589996100',
+    '0016999379993000', '0012999999941000', '0002999999710000', '0001799999610000', '0001799999410000',
+    '0011899999410000', '1257999999731000'];
+  const HIDDEN_OK = 0.8;
 
   const arr = v => Array.isArray(v) ? v : [];
 
@@ -168,13 +177,15 @@
         });
       };
       // 5 or 6 rows, and the portrait column: where the role icons fit best (the portrait sits 0.7 rows right of
-      // its icon; how far from the edge differs between versions). Without icons, the usual row heights.
+      // its icon; how far from the edge differs between versions). The team whose icons fit better counts: early in
+      // a match the enemies' rows have none. Without icons, the usual row heights.
       const iconFit = (rows, dx) => {
-        const l = layoutFor(rows, dx), row = l.pitch * H;
-        const fits = Object.values(boxes(l, W, H, rows)).flat().map(b => roleFit(frame, b, row));
-        const good = fits.filter(f => f[1] >= 0.6).map(f => f[3]).sort((p, q) => p - q);
+        const l = layoutFor(rows, dx), row = l.pitch * H, bx = boxes(l, W, H, rows);
+        const fits = { ally: bx.ally.map(b => roleFit(frame, b, row)), enemy: bx.enemy.map(b => roleFit(frame, b, row)) };
+        const avg = list => list.reduce((s, f) => s + f[1], 0) / list.length;
+        const good = fits.ally.concat(fits.enemy).filter(f => f[1] >= 0.6).map(f => f[3]).sort((p, q) => p - q);
         const shift = good.length ? good[good.length >> 1] : 0;
-        return { rows, fit: fits.reduce((s, f) => s + f[1], 0) / fits.length, layout: { ...l, cx: l.cx + shift / H } };
+        return { rows, fit: Math.max(avg(fits.ally), avg(fits.enemy)), layout: { ...l, cx: l.cx + shift / H } };
       };
       let best = null;
       for (const rows of [5, 6]) for (let dx = -0.3; dx <= 0.31; dx += 0.1) {
@@ -191,20 +202,26 @@
 
   /* ---------- role icons ---------- */
   const ICON_GRID = 12;
-  // Each icon also shifted by up to one cell either way, so a pixel or two off does not matter.
-  const ROLE_GRIDS = Object.fromEntries(Object.entries(ROLE_ICONS).map(([r, rows]) => {
-    if (rows.length !== ICON_GRID || rows.some(l => l.length !== ICON_GRID)) throw new Error(`role icon ${r} is not ${ICON_GRID}×${ICON_GRID}`);
-    const t = Array.from(rows.join(''), Number), G = ICON_GRID, shifted = [];
+  // A G×G grid of digit rows as unit vectors, shifted by up to one cell either way, so a pixel or two off does not
+  // matter. What comes in at the edge: nothing (an icon on its own), or the edge itself (a picture going on).
+  function shiftedGrid(rows, G, edge) {
+    if (rows.length !== G || rows.some(l => l.length !== G)) throw new Error(`icon grid is not ${G}×${G}`);
+    const t = Array.from(rows.join(''), Number), out = [];
+    const clamp = v => Math.min(G - 1, Math.max(0, v));
     for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
       const moved = new Float32Array(G * G);
       for (let y = 0; y < G; y++) for (let x = 0; x < G; x++) {
         const sy = y - dy, sx = x - dx;
         if (sy >= 0 && sy < G && sx >= 0 && sx < G) moved[y * G + x] = t[sy * G + sx];
+        else if (edge) moved[y * G + x] = t[clamp(sy) * G + clamp(sx)];
       }
-      shifted.push(unit(moved));
+      out.push(unit(moved));
     }
-    return [r, shifted];
-  }));
+    return out;
+  }
+  const ROLE_GRIDS = Object.fromEntries(Object.entries(ROLE_ICONS).map(([r, rows]) => [r, shiftedGrid(rows, ICON_GRID, false)]));
+  const HIDDEN_GRIDS = shiftedGrid(HIDDEN_ICON, N, true);
+  const isHidden = c => Math.max(...HIDDEN_GRIDS.map(t => dot(c.lum, t))) >= HIDDEN_OK;
 
   // 'tank' | 'damage' | 'support' from the white icon left of the portrait, or null when it isn't clear.
   function roleOf(frame, b, row) {
@@ -293,12 +310,13 @@
   }
 
   // Cut one portrait: thumbnail with the row colour masked to grey, colour bands of the hero pixels, share of
-  // hero pixels (an empty slot is almost all row colour) and the row colour itself.
+  // hero pixels (an empty slot is almost all row colour), the row colour itself, and the brightness of the
+  // unmasked picture (lum, to recognise the silhouette of a hidden player whatever the team colour).
   function cut(frame, b) {
     const bg = medianRGB(frame, ...stripOf(b));
     const d = frame.data, w = frame.width, side = Math.max(4, Math.round(b.s));
     const x0 = Math.round(b.x - side / 2), y0 = Math.round(b.y - side / 2);
-    const sum = new Float32Array(N * N * 3), cnt = new Float32Array(N * N);
+    const sum = new Float32Array(N * N * 3), cnt = new Float32Array(N * N), lum = new Float32Array(N * N);
     const bands = Array.from({ length: BANDS }, () => new Float32Array(HBINS));
     let fg = 0, total = 0;
     for (let yy = 0; yy < side; yy++) {
@@ -310,17 +328,21 @@
         if (px < 0 || px >= w) continue;
         const i = (py * w + px) * 4;
         let r = d[i], g = d[i + 1], bl = d[i + 2];
+        const c = row + Math.min(N - 1, (xx * N / side) | 0);
+        lum[c] += 0.299 * r + 0.587 * g + 0.114 * bl;
         total++;
         const dr = r - bg[0], dg = g - bg[1], db = bl - bg[2];
         if (dr * dr + dg * dg + db * db < BG_DIST2) r = g = bl = 128;
         else { fg++; band[bin(r, g, bl)]++; }
-        const c = row + Math.min(N - 1, (xx * N / side) | 0);
         sum[c * 3] += r; sum[c * 3 + 1] += g; sum[c * 3 + 2] += bl; cnt[c]++;
       }
     }
     const thumb = new Uint8ClampedArray(N * N * 3);
-    for (let c = 0; c < N * N; c++) for (let k = 0; k < 3; k++) thumb[c * 3 + k] = cnt[c] ? sum[c * 3 + k] / cnt[c] : 128;
-    return { thumb, vec: unit(thumb), bands: bands.map(normHist), fg: total ? fg / total : 0, bg };
+    for (let c = 0; c < N * N; c++) {
+      for (let k = 0; k < 3; k++) thumb[c * 3 + k] = cnt[c] ? sum[c * 3 + k] / cnt[c] : 128;
+      if (cnt[c]) lum[c] /= cnt[c];
+    }
+    return { thumb, vec: unit(thumb), bands: bands.map(normHist), fg: total ? fg / total : 0, bg, lum: unit(lum) };
   }
 
   /* ---------- frames ---------- */
@@ -539,7 +561,8 @@
        is used. opts.rows = players per team when not found, opts.roles = { ally, enemy } role per row in role
        queue, opts.allowed = { ally: [keys] } to choose only among known heroes, opts.boost = { enemy: [keys] }.
        Returns { ally: [slot], enemy: [slot], scoreboard, found, layout, rows, self } where
-       slot = { box, cut, role, key, score, sure, alts, empty }. */
+       slot = { box, cut, role, key, score, sure, alts, empty, hidden }; a hidden slot (the "?" silhouette of a
+       player the scoreboard doesn't show yet) gets no hero. */
     read(frame, layout, opts = {}) {
       const found = opts.auto === false ? null : findLayout(frame);
       const rows = found ? found.rows : opts.rows || 5, use = found ? found.layout : cleanLayout(layout);
@@ -547,24 +570,24 @@
       let colourOk = 0;
       const all = {};
       for (const side of ['ally', 'enemy']) all[side] = bx[side].map((box, i) => {
-        const c = cut(frame, box);
+        const c = cut(frame, box), empty = c.fg < 0.15;
         if (hueOf(...c.bg) >= 0) colourOk++;   // rows sit on a strong team colour
-        return { box, cut: c, i, role: roleOf(frame, box, use.pitch * frame.height), empty: c.fg < 0.15, key: null, score: 0, sure: false, alts: [] };
+        return { box, cut: c, i, role: roleOf(frame, box, use.pitch * frame.height), empty, hidden: !empty && isHidden(c), key: null, score: 0, sure: false, alts: [] };
       });
       // Where the role icons are readable they decide; the role queue order is only a hint when they are not
-      // (6v6 and open queue rows are not sorted by role).
-      const icons = all.ally.concat(all.enemy).filter(s => s.role).length;
-      const order = icons < 0.6 * rows * 2 ? opts.roles : null;
+      // (6v6 and open queue rows are not sorted by role). Hidden players show no icon.
+      const shown = all.ally.concat(all.enemy).filter(s => !s.hidden);
+      const order = shown.filter(s => s.role).length < 0.6 * shown.length ? opts.roles : null;
       for (const side of ['ally', 'enemy']) {
         const slots = all[side];
         // Unique heroes per team: repeatedly take the most confident row-hero pair.
-        const ranked = slots.map(s => s.empty ? [] : this.rank(s.cut, {
+        const ranked = slots.map(s => s.empty || s.hidden ? [] : this.rank(s.cut, {
           role: s.role,
           expected: order && order[side] ? order[side][s.i] : null,
           allowed: opts.allowed && opts.allowed[side] || null,
           boost: opts.boost && opts.boost[side] || null,
         }));
-        const taken = new Set(), open = new Set(slots.filter(s => !s.empty).map(s => s.i));
+        const taken = new Set(), open = new Set(slots.filter(s => !s.empty && !s.hidden).map(s => s.i));
         while (open.size) {
           let best = null;
           for (const i of open) {

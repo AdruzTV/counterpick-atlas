@@ -30,7 +30,8 @@
     pick: null,                     // { side, i, filter, q } while the hero picker is open
   };
   const rows = () => S.mode === '6v6' ? 6 : 5;
-  const blank = () => ({ key: null, src: null, sure: false, empty: false, thumb: null, crop: '', alts: [], learned: false });
+  // hidden: the scoreboard shows a "?" silhouette there (enemies early in a match); no hero, left out of the points.
+  const blank = () => ({ key: null, src: null, sure: false, empty: false, hidden: false, thumb: null, crop: '', alts: [], learned: false });
   const savePrefs = () => CPApp.write(CPApp.PREFS, { mode: S.mode, role: S.role, map: S.map, side: S.side });
 
   function fitRows() {
@@ -60,8 +61,8 @@
     const res = S.matcher.read(f, found ? found.layout : CPApp.layout(), opts);
     const canvas = Scoreboard.frameCanvas(f);
     const slot = (s, src) => ({
-      ...blank(), key: s.key, src: s.key ? src : null, sure: s.key ? src === 'game' || s.sure : false, empty: s.empty,
-      thumb: s.empty ? null : s.cut.thumb, crop: Scoreboard.cropURL(canvas, s.box), alts: s.alts, cut: s.cut, role: s.role,
+      ...blank(), key: s.key, src: s.key ? src : null, sure: s.key ? src === 'game' || s.sure : false, empty: s.empty, hidden: s.hidden,
+      thumb: s.empty || s.hidden ? null : s.cut.thumb, crop: Scoreboard.cropURL(canvas, s.box), alts: s.alts, cut: s.cut, role: s.role,
     });
     S.ally = res.ally.map(s => slot(s, fullTeam ? 'game' : 'scan'));
     S.enemy = res.enemy.map(s => slot(s, 'scan'));
@@ -159,8 +160,8 @@
 
   function slotHtml(side, s, i) {
     const h = s.key && S.atlas.HM[s.key];
-    const pic = h ? `<img class="hero" src="p/${h.key}.jpg" alt="">` : `<span class="empty">${s.empty ? '–' : '+'}</span>`;
-    const label = h ? esc(h.name) : t(s.empty ? 'ov.nobody' : 'ov.fill');
+    const pic = h ? `<img class="hero" src="p/${h.key}.jpg" alt="">` : `<span class="empty">${s.hidden ? '?' : s.empty ? '–' : '+'}</span>`;
+    const label = h ? esc(h.name) : t(s.hidden ? 'ov.unknown' : s.empty ? 'ov.nobody' : 'ov.fill');
     const badge = side === 'ally' && i === S.self ? `<span class="badge">${t('ov.you')}</span>` : '';
     const game = s.src === 'game' ? `<span class="badge game" title="${t('ov.gameTitle')}">${t('ov.game')}</span>` : '';
     return `<button type="button" class="slot${h && !s.sure ? ' unsure' : ''}" data-slot="${side}:${i}" title="${t('ov.fix')}">
@@ -255,6 +256,7 @@
     const unsure = S.ally.concat(S.enemy).filter(s => s.key && !s.sure).length;
     const selfHint = S.self === null && S.ally.filter(s => s.key).length === rows()
       ? `<p class="note">${t('ov.whoAmI')}</p>` : '';
+    const hidden = S.enemy.filter(s => s.hidden && !s.key).length;
     body.innerHTML = `
       ${IN_APP ? '' : `<div class="test">${t('ov.test')}</div>`}
       ${S.error ? `<p class="note err">${esc(errorText())}</p>` : ''}
@@ -268,6 +270,7 @@
       <div class="slots" style="--n:${rows()}">${S.ally.map((s, i) => slotHtml('ally', s, i)).join('')}</div>
       <span class="lbl">${t('cp.enemies')} ${unsure ? `<small>${t('ov.unsure')}</small>` : ''}</span>
       <div class="slots enemy" style="--n:${rows()}">${S.enemy.map((s, i) => slotHtml('enemy', s, i)).join('')}</div>
+      ${hidden ? `<p class="note">${t('ov.hidden', { n: hidden })}</p>` : ''}
       ${selfHint}
       ${recsHtml()}`;
     confirmBtn.disabled = !S.ally.concat(S.enemy).some(s => s.thumb && s.key && !s.learned);
@@ -298,7 +301,7 @@
     picker.innerHTML = `<div class="pk-head">
         ${s.crop ? `<img src="${s.crop}" alt="${t('ov.crop')}">` : ''}
         <div><strong>${t('ov.slot', { who: t(side === 'ally' ? 'cp.mate' : 'cp.enemy'), n: i + 1 })}</strong>
-          <p>${h ? t('ov.now', { name: esc(h.name) }) : t('ov.empty')}${s.crop ? t('ov.cropHint') : ''}${s.alts.length ? t('ov.altsHint') : ''}</p></div>
+          <p>${h ? t('ov.now', { name: esc(h.name) }) : t(s.hidden ? 'ov.unknownSlot' : 'ov.empty')}${s.crop ? t('ov.cropHint') : ''}${s.alts.length ? t('ov.altsHint') : ''}</p></div>
         <button type="button" class="ic x" data-pk="close" aria-label="${t('ov.close')}">×</button></div>
       <div class="pk-tools"><input id="pk-q" type="text" placeholder="${t('ov.search')}" autocomplete="off" spellcheck="false" value="${esc(S.pick.q)}">
         <div class="seg">${tabs.map(([k, l]) => seg('pkrole', k, l, filter === k)).join('')}</div></div>
@@ -312,7 +315,7 @@
     const { side, i } = S.pick, list = S[side], s = list[i];
     const j = key ? list.findIndex((x, n) => n !== i && x.key === key) : -1;
     if (j >= 0) list[j] = { ...list[j], key: s.key, sure: false, src: s.key ? 'manual' : null };   // one hero per team: swap
-    list[i] = { ...s, key, src: key ? 'manual' : null, sure: !!key, empty: false };
+    list[i] = { ...s, key, src: key ? 'manual' : null, sure: !!key, empty: false, hidden: !key && s.hidden };
     if (s.thumb && key) { S.matcher.learn(s.thumb, key, 'u'); list[i].learned = true; flashSaved(1); }
     if (side === 'ally' && i === S.self) syncRole();
     closePicker();

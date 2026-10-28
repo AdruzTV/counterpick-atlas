@@ -52,6 +52,7 @@ Ve hře umí Counterpick Atlas ze screenshotu scoreboardu poradit, koho hrát. B
 
 **Ve hře**
 - Podrž **Tab** (scoreboard) a zmáčkni **Alt+C**. Aplikace vyfotí obrazovku, pozná hrdiny v obou týmech a ukáže doporučení. Počítá je stejně jako stránka Counterpick, `js/counterpick-core.js` je společný.
+- Na začátku zápasu scoreboard soupeře ještě neukazuje, místo portrétu je silueta s otazníkem. Overlay je označí jako **Neznámý** a do bodů je nepočítá, doporučení pak vychází jen z tvého týmu. Až se soupeři objeví, naskenuj znovu.
 - Hrdina s „?“ je tip, který si aplikace není jistá. Klikni na něj a vyber správného. Oprava se uloží jako vzorek a příště ho aplikace pozná. Když sedí všechno, uloží celý sken tlačítko **Sedí, uložit**.
 - U tvého řádku je štítek „Ty“ (aplikace ho pozná podle zvýrazněného, světlejšího řádku). Do týmu se nepočítáš a podle tvého hrdiny se nastaví role. Když tě aplikace nepozná, klikni na sebe a zvol „Tohle jsem já“.
 - Když už máš hrdinu vybraného, ukáže overlay nad doporučením kartu **Tvůj hrdina**: jeho body, pořadí mezi kandidáty a o kolik je lepší volba číslo 1. Body se počítají stejně jako u doporučení. Bez vybraného hrdiny se karta neukáže.

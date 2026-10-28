@@ -1,7 +1,7 @@
 {
   "name": "counterpick-atlas-desktop",
   "productName": "Counterpick Atlas",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Counterpick Atlas pro Windows: web a overlay do Overwatch bez Overwolfu",
   "author": "AdruzTV",
   "private": true,

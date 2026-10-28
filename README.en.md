@@ -52,6 +52,7 @@ In the game, Counterpick Atlas can tell you whom to play from a screenshot of th
 
 **In the game**
 - Hold **Tab** (scoreboard) and press **Alt+C**. The app takes a screenshot, recognises the heroes in both teams and shows its recommendations. They are worked out the same way as on the Counterpick page, `js/counterpick-core.js` is shared.
+- Early in a match the scoreboard doesn't show the enemies yet, there is a silhouette with a question mark instead of a portrait. The overlay marks them **Unknown** and leaves them out of the points, so the recommendations rest on your team alone. Scan again once the enemies show up.
 - A hero marked "?" is a guess the app isn't sure about. Click it and choose the right one. The correction is saved as a sample and the app recognises the hero next time. When everything is right, **All correct, save** saves the whole scan.
 - Your row has a "You" label (the app finds it by the highlighted, lighter row). You don't count as part of the team, and your hero sets the role. When the app doesn't find you, click yourself and choose "This is me".
 - Once you have picked a hero, the overlay shows a **Your hero** card above the recommendations: its points, its place among the candidates and how much better pick number 1 is. The points are counted the same way as for the recommendations. Without a picked hero there is no card.
