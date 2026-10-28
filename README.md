@@ -1,5 +1,7 @@
 # Counterpick Atlas
 
+**Čeština** · [English](README.en.md)
+
 Neoficiální český fanouškovský průvodce ke hře Overwatch: patch notes, countery, schopnosti a perky všech hrdinů.
 
 - `index.html` – celá stránka
