@@ -62,7 +62,7 @@ Ve hře umí Counterpick Atlas ze screenshotu scoreboardu poradit, koho hrát. B
 - Portrét porovná s portréty hrdinů z webu, které jsou stejná kresba jako ikonky ve hře, jen jinak oříznutá a někdy zrcadlová. Porovnává barvy ve třech pásech (vlasy, obličej, ramena) a tvar. Na šesti screenshotech z let 2023 až 2026 (5v5 i 6v6, různé barvy týmů) tak bez jediného vzorku trefil 53 hrdinů ze 63, se vzorky z ostatních screenshotů 59 ze 63. Na třech screenshotech z nejnovější verze hry (ikonky jsou u části hrdinů nově kreslené jinak než portréty na webu) trefil 28 z 30 bez vzorků z nich; zbylé dva měl s otazníkem a správného hrdinu hned na druhém místě. Hrdiny, u kterých si jistý není, označí „?“; hrdina bez otazníku nebyl v testech nikdy špatně.
 - Přesnější je s naučenými vzorky ze skutečných scoreboardů: každá oprava i potvrzení se uloží. `data/scoreboard-refs.json` obsahuje vzorky 43 hrdinů z testovacích screenshotů, aplikace si je stáhne sama. Vlastní vzorky jde sdílet: v kalibraci je tlačítko **Kopírovat vzorky**, obsah vlož do `data/scoreboard-refs.json` a commitni.
 
-**Kalibrace** (⚙ v overlayi) ukáže na posledním screenshotu, kde aplikace scoreboard našla a co v kterém řádku vidí. Kdyby ho někdy nenašla nebo rámečky neseděly, přetáhni je na portréty a posuvníky dolaď velikost a rozestup. Tím se přepne na ruční rozložení, zpět jde přes „Automaticky“.
+**Nastavení skenu** (⚙ v overlayi) má nahoře **klávesové zkratky**: klikni na zkratku a stiskni novou (Ctrl, Alt nebo Shift s klávesou, samotné jen F1–F24). Platí hned, „Výchozí zkratky“ vrátí Alt+C a Alt+X. Když zkratku drží jiná aplikace, nastavení ji odmítne a nechá starou. Pod zkratkami je **kalibrace**: ukáže na posledním screenshotu, kde aplikace scoreboard našla a co v kterém řádku vidí. Kdyby ho někdy nenašla nebo rámečky neseděly, přetáhni je na portréty a posuvníky dolaď velikost a rozestup. Tím se přepne na ruční rozložení, zpět jde přes „Automaticky“.
 
 **Data**: aplikace si `data/*.json` i patch notes stahují z GitHub Pages, takže se aktualizují samy, bez nové verze aplikace. Bez internetu použijí kopii, která je v nich přibalená.
 
@@ -77,7 +77,7 @@ Samostatná aplikace (Electron), Overwolf nepotřebuje. Ke stažení je v Releas
 - **Alt+X** přesune myš do overlaye (opravy, role, mapa), druhým stiskem ho schová. Esc ho schová taky.
 - Zavřením hlavního okna aplikace neskončí, zůstane jako ikona v oznamovací oblasti, aby zkratky ve hře fungovaly. Ukončíš ji přes tuto ikonu.
 - Jazyk přepneš tlačítky CZ / EN v hlavním okně, nebo v menu ikony v oznamovací oblasti (Jazyk / Language). Obojí drží spolu, overlay i kalibrace se přepnou hned a aplikace si volbu pamatuje v `settings.json`.
-- Zkratky jdou změnit v `%APPDATA%\Counterpick Atlas\settings.json` (`keys.scan`, `keys.toggle`, třeba `"Ctrl+Shift+C"`), pak aplikaci spusť znovu.
+- Zkratky změníš v nastavení skenu (⚙ v overlayi, nebo v menu ikony v oznamovací oblasti). Aplikace si je pamatuje v `%APPDATA%\Counterpick Atlas\settings.json` (`keys.scan`, `keys.toggle`).
 - Aplikace jen fotí obrazovku jako OBS nebo Discord, do hry nijak nezasahuje.
 
 **Vývoj**: ve složce `desktop/` `npm install`, pak `npm start` spustí aplikaci ze souborů repozitáře a `npm run dist` postaví oba `.exe` do `desktop/dist/`. `npx electron . --smoke=<obrázek>` je rychlá kontrola: ukáže obrázek přes celou obrazovku, naskenuje ho, uloží vedle obrázku snímky oken a vypíše, co overlay přečetl.
@@ -89,6 +89,6 @@ Samostatná aplikace (Electron), Overwolf nepotřebuje. Ke stažení je v Releas
 Celý repozitář je zároveň Overwolf aplikace (`manifest.json` v kořeni). Proti verzi pro Windows umí víc: Overwolf sám hlásí hrdiny tvého týmu a kdo z nich jsi ty (štítek „Hra“). Když nahlásí celý tým v role queue, aplikace se z jeho portrétů sama učí, protože řádky jsou seřazené tank → damage → support. Nepřátele Overwolf nehlásí, ti se čtou ze screenshotu; pomáhá i kill feed. Overlay jde v Overwolfu i mimo boj, hra nemusí být v okně.
 
 - **Schválení**: Overwolf nainstaluje aplikaci mimo svůj obchod jen schváleným vývojářům (jinak hlásí „Unauthorized App“). Na dev.overwolf.com se přihlas a pošli formulář *Submit your app idea*. Po schválení se ve stejném účtu v Overwolfu otevře Settings → About → Development options → Load unpacked extension a vybere se složka repozitáře.
-- **Zkratky**: Alt+C sken, Alt+X skrýt nebo ukázat overlay. Změnit jdou v nastavení Overwolfu (Hotkeys).
+- **Zkratky**: Alt+C sken, Alt+X skrýt nebo ukázat overlay. Změnit jdou v nastavení skenu (⚙), nebo v nastavení Overwolfu (Hotkeys); overlay ukazuje ty, které Overwolf právě má.
 - **Balíček**: `.github/workflows/overwolf.yml` při každé změně zabalí `counterpick-atlas.opk` (Actions → Overwolf app → Artifacts). Do Overwolf obchodu ho po schválení nahraje autor přes Developers Console.
 - Overwatch má v Overwolfu ID hry 10844 (`manifest.json`). Kdyby se aplikace ve hře nespustila, ověř ID v souboru gamelist v `%localappdata%\Overwolf`.

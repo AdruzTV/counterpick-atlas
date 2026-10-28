@@ -8,8 +8,10 @@
   const HOST = window.overwolf ? 'overwolf' : window.cpaDesktop ? 'desktop' : 'browser';
   const PREFS = 'cpa:overlay:v1';
   const LAYOUT = 'cpa:scoreboard:layout:v1';
-  // Hotkeys as the player knows them (the desktop app can be configured to others).
-  const KEYS = { scan: 'Alt+C', toggle: 'Alt+X', ...(HOST === 'desktop' && cpaDesktop.keys || {}) };
+  // Hotkeys as they are now: the defaults (manifest.json, desktop/main.js) unless the player changed them in the
+  // scan settings (or, in Overwolf, in Overwolf's own settings). KEYS stays the same object and is updated in place.
+  const DEFAULT_KEYS = { scan: 'Alt+C', toggle: 'Alt+X' };
+  const KEYS = { ...DEFAULT_KEYS, ...(HOST === 'desktop' && cpaDesktop.keys || {}) };
 
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch (e) { return fallback; } };
   const write = (key, v) => { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) { /* storage blocked */ } };
@@ -107,6 +109,69 @@
     return out;
   }
 
+  /* ---------- hotkeys ---------- */
+  // Keys a hotkey can end with, the same in Electron accelerators and Overwolf (with their Windows key codes).
+  const VK = { Space: 32, PageUp: 33, PageDown: 34, End: 35, Home: 36, Left: 37, Up: 38, Right: 39, Down: 40, Insert: 45, Delete: 46 };
+  const vkOf = key => /^[A-Z0-9]$/.test(key) ? key.charCodeAt(0) : /^num\d$/.test(key) ? 96 + Number(key[3])
+    : /^F\d+$/.test(key) ? 111 + Number(key.slice(1)) : VK[key] || 0;
+
+  const keyListeners = [];
+  const keysChanged = keys => { Object.assign(KEYS, keys); keyListeners.forEach(cb => cb(KEYS)); };
+  // cb(KEYS) whenever the hotkeys change, in this window or another one.
+  const onKeys = cb => keyListeners.push(cb);
+
+  // Overwolf keeps the hotkeys of manifest.json in its settings: [{ key, name, gameId, binding }] as they are now.
+  const OW_KEYS = { scan: 'cpa_scan', toggle: 'cpa_toggle' };
+  function owHotkeys() {
+    return new Promise(resolve => overwolf.settings.hotkeys.get(r => {
+      const out = [];
+      if (r && r.success) {
+        for (const h of r.globals || []) out.push({ ...h, gameId: null });
+        for (const [id, list] of Object.entries(r.games || {})) for (const h of Array.isArray(list) ? list : []) out.push({ ...h, gameId: Number(id) });
+      }
+      resolve(out);
+    }));
+  }
+  function readOwKeys() {
+    return owHotkeys().then(list => {
+      const keys = {};
+      for (const [k, name] of Object.entries(OW_KEYS)) {
+        const h = list.find(x => x && x.name === name);
+        if (h && h.binding && !h.IsUnassigned) keys[k] = h.binding;
+      }
+      keysChanged(keys);
+      return list;
+    });
+  }
+
+  /* New hotkeys { scan, toggle } (a missing one = its default) → Promise of { ok } or { ok: false, error } with
+     error 'same' (both one key), 'taken' (another app has it) or 'overwolf' (Overwolf refused, change it there). */
+  function setKeys(keys) {
+    const next = { ...DEFAULT_KEYS, ...keys };
+    if (next.scan.toLowerCase() === next.toggle.toLowerCase()) return Promise.resolve({ ok: false, error: 'same' });
+    if (HOST === 'desktop') return cpaDesktop.setKeys(next).then(r => { if (r.ok) keysChanged(r.keys); return r; });
+    if (HOST !== 'overwolf' || !overwolf.settings.hotkeys.assign) return Promise.resolve({ ok: false, error: 'overwolf' });
+    return owHotkeys().then(list => Promise.all(Object.keys(OW_KEYS).filter(k => next[k] !== KEYS[k]).map(k => new Promise(resolve => {
+      const parts = next[k].split('+'), key = parts.pop(), h = list.find(x => x && x.name === OW_KEYS[k]);
+      const hotkey = { name: OW_KEYS[k], virtualKey: vkOf(key), modifiers: { ctrl: parts.includes('Ctrl'), alt: parts.includes('Alt'), shift: parts.includes('Shift') } };
+      if (h && h.gameId) hotkey.gameId = h.gameId;
+      overwolf.settings.hotkeys.assign(hotkey, r => resolve(!!(r && r.success)));
+    }))))
+      .then(oks => readOwKeys().then(() => oks.every(Boolean) ? { ok: true } : { ok: false, error: 'overwolf' }));
+  }
+
+  // While the scan settings wait for a new hotkey, the current ones do nothing (so pressing them reaches the page).
+  function pauseKeys(on) {
+    if (HOST === 'desktop') cpaDesktop.pauseKeys(on);
+    else if (HOST === 'overwolf') { const C = bg() && bg().CPA; if (C) C.keysPaused = !!on; }
+  }
+
+  if (HOST === 'desktop' && cpaDesktop.onKeys) cpaDesktop.onKeys(keysChanged);
+  if (HOST === 'overwolf') {
+    readOwKeys();
+    if (overwolf.settings.hotkeys.onChanged) overwolf.settings.hotkeys.onChanged.addListener(() => readOwKeys());
+  }
+
   /* ---------- windows ---------- */
   function hideOverlay() {
     if (HOST === 'overwolf') bg().CPA_api.hideOverlay();
@@ -160,7 +225,7 @@
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   window.CPApp = {
-    HOST, KEYS, PREFS, read, write, bg, loadAtlas, layout, saveLayout, autoLayout, setAutoLayout,
+    HOST, KEYS, DEFAULT_KEYS, onKeys, setKeys, pauseKeys, PREFS, read, write, bg, loadAtlas, layout, saveLayout, autoLayout, setAutoLayout,
     onScan, onGame, gameInfo, hideOverlay, openCalibration, closeWindow, dragBy, resizeBy, copyText, esc,
   };
 })();

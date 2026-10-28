@@ -14,6 +14,7 @@
     scanId: 0,
     error: '',
     inGame: false,
+    keysPaused: false,                // set by the scan settings while they wait for a new hotkey
     match: newMatch(),
   };
 
@@ -176,6 +177,7 @@
   };
 
   overwolf.settings.hotkeys.onPressed.addListener(e => {
+    if (CPA.keysPaused) return;   // the scan settings are waiting for a new hotkey
     if (e.name === 'cpa_scan') scan();
     else if (e.name === 'cpa_toggle') toggleOverlay();
   });

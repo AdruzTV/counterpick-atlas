@@ -1,8 +1,9 @@
-/* Calibration: shows where js/scoreboard.js cuts the portraits on a real screenshot. The scoreboard is found
-   automatically; if that ever misses, drag the blue boxes onto the teammates' portraits and the red ones onto the
-   enemies' (the sliders set portrait size and row spacing), which switches to this hand-placed layout. Changes save
-   at once. Also manages learned samples: copy them out to share them in data/scoreboard-refs.json, or wipe them.
-   Texts come from js/i18n.js and follow the language chosen on the site at once. */
+/* Scan settings: the hotkeys (in the apps), and calibration, which shows where js/scoreboard.js cuts the portraits
+   on a real screenshot. The scoreboard is found automatically; if that ever misses, drag the blue boxes onto the
+   teammates' portraits and the red ones onto the enemies' (the sliders set portrait size and row spacing), which
+   switches to this hand-placed layout. Changes save at once. Also manages learned samples: copy them out to share
+   them in data/scoreboard-refs.json, or wipe them. Texts come from js/i18n.js and follow the language chosen on the
+   site at once. */
 (() => {
   const { esc, HOST, KEYS } = CPApp;
   const { t } = I18n;
@@ -18,6 +19,7 @@
     rows: CPApp.read(CPApp.PREFS, {}).mode === '6v6' ? 6 : 5,
     auto: CPApp.autoLayout(), found: false,
     zoom: true, view: null, active: 'ally', drag: null, wipeArmed: false,
+    capture: null, keyMsg: null,     // the hotkey waiting for new keys ('scan' | 'toggle'), the last word about it
   };
   let canvas = null, ctx = null;
 
@@ -196,9 +198,17 @@
     }).join('')}</div>`;
   }
 
+  const keyRow = (name, label) => `<div class="keyrow"><span>${label}</span>
+    <button type="button" class="btn key${S.capture === name ? ' on' : ''}" data-key="${name}">${S.capture === name ? t('cal.keyPress') : `<kbd>${esc(KEYS[name])}</kbd>`}</button></div>`;
+
   function renderSide() {
     const st = S.matcher ? S.matcher.stats() : null, l = S.layout;
     side.innerHTML = `
+      ${IN_APP ? `<span class="lbl">${t('cal.keys')}</span>
+        ${keyRow('scan', t('cal.keyScan'))}${keyRow('toggle', t('cal.keyToggle'))}
+        <p class="small${S.keyMsg && S.keyMsg.bad ? ' bad' : ''}">${t(S.keyMsg ? S.keyMsg.key : 'cal.keysHint')}</p>
+        <div class="btns"><button type="button" class="btn" data-act="keys-default">${t('cal.keysDefault')}</button></div>
+        <span class="lbl" style="margin-top:22px">${t('cal.calib')}</span>` : ''}
       <ol class="steps">
         <li>${IN_APP ? t('cal.step1App', { key: KEYS.scan }) : t('cal.step1Browser')}</li>
         <li>${t('cal.step2')}</li>
@@ -239,12 +249,65 @@
     draw();
   });
 
+  /* ---------- hotkeys ---------- */
+  // The key a hotkey ends with, as Electron and Overwolf name it, or null for a modifier alone or a key that can't be
+  // one. Letters as the keyboard layout has them (Y and Z on a Czech one), digits and the rest by their place.
+  function keyName(e) {
+    const c = e.code || '';
+    if (/^Key[A-Z]$/.test(c)) return /^[a-z]$/i.test(e.key) ? e.key.toUpperCase() : c.slice(3);
+    if (/^Digit\d$/.test(c)) return c.slice(5);
+    if (/^Numpad\d$/.test(c)) return 'num' + c.slice(6);
+    if (/^F([1-9]|1\d|2[0-4])$/.test(c)) return c;
+    return { Space: 'Space', Insert: 'Insert', Delete: 'Delete', Home: 'Home', End: 'End', PageUp: 'PageUp', PageDown: 'PageDown',
+      ArrowUp: 'Up', ArrowDown: 'Down', ArrowLeft: 'Left', ArrowRight: 'Right' }[c] || null;
+  }
+
+  function startCapture(name) {
+    S.capture = name;
+    S.keyMsg = null;
+    CPApp.pauseKeys(true);
+    renderSide();
+  }
+  function stopCapture() {
+    if (!S.capture) return;
+    S.capture = null;
+    S.keyMsg = null;
+    CPApp.pauseKeys(false);
+    renderSide();
+  }
+  const keyResult = r => {
+    S.keyMsg = r.ok ? { key: 'cal.keySaved' } : { key: { same: 'cal.keySame', taken: 'cal.keyTaken' }[r.error] || 'cal.keyOverwolf', bad: true };
+    renderSide();
+  };
+
+  // The next combination pressed becomes the hotkey: Ctrl, Alt or Shift with a key, or an F key alone (a plain
+  // letter would also type in the game's chat). Esc keeps the old one.
+  document.addEventListener('keydown', e => {
+    if (!S.capture) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.key === 'Escape') return stopCapture();
+    const key = keyName(e);
+    if (!key) return;
+    const mods = [e.ctrlKey && 'Ctrl', e.altKey && 'Alt', e.shiftKey && 'Shift'].filter(Boolean);
+    if (!mods.length && !/^F\d+$/.test(key)) { S.keyMsg = { key: 'cal.keyNeedMod', bad: true }; renderSide(); return; }
+    const name = S.capture;
+    S.capture = null;
+    CPApp.pauseKeys(false);
+    CPApp.setKeys({ ...KEYS, [name]: [...mods, key].join('+') }).then(keyResult);
+  }, true);
+  window.addEventListener('blur', stopCapture);
+  window.addEventListener('beforeunload', () => { if (S.capture) CPApp.pauseKeys(false); });
+
   document.addEventListener('click', e => {
     const b = e.target.closest('button');
     if (!b) return;
     const act = b.dataset.act;
     if (act !== 'wipe') S.wipeArmed = false;
-    if (act === 'close') CPApp.closeWindow();
+    if (b.dataset.key) { if (S.capture === b.dataset.key) stopCapture(); else startCapture(b.dataset.key); return; }
+    if (S.capture) stopCapture();
+    if (act === 'keys-default') CPApp.setKeys(CPApp.DEFAULT_KEYS).then(keyResult);
+    else if (act === 'close') CPApp.closeWindow();
     else if (act === 'zoom') { S.zoom = !S.zoom; fitView(); update(); }
     else if (act === 'reset') { S.layout = { ...Scoreboard.DEFAULT_LAYOUT }; fitView(); changed(); }
     else if (act === 'export') {
@@ -283,6 +346,11 @@
   CPApp.resizeBy(document.getElementById('grip'));
 
   const noShot = () => `<p class="empty-msg">${IN_APP ? t('cal.noShotApp', { key: KEYS.scan }) : t('cal.noShotBrowser')}</p>`;
+  CPApp.onKeys(() => {
+    if (!S.matcher) return;
+    renderSide();
+    if (!canvas) stage.innerHTML = noShot();
+  });
   // The language was switched on the site (or in the desktop app's tray menu).
   I18n.onChange(() => {
     if (said) say(said.key, said.cls, said.params);

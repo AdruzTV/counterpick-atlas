@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <base href="../">
-<title data-i18n="cal.title">Counterpick · kalibrace</title>
+<title data-i18n="cal.title">Counterpick · nastavení skenu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=Barlow:wght@400;500;600&display=swap">
@@ -30,13 +30,18 @@
 .prev span { font: 700 11px/1.05 var(--f-display); text-transform: uppercase; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); }
 .prev .sure span { color: var(--fg); }
 .small { color: var(--dim); font-size: 13px; margin: 8px 0 0; }
+.small.bad { color: var(--accent); }
+.keyrow { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; margin-top: 6px; color: var(--muted); font-size: 14px; }
+.btn.key { min-width: 130px; text-transform: none; }
+.btn.key kbd { font-size: 13px; color: var(--fg); }
+.btn.key.on { background: var(--accent); color: var(--accent-ink); }
 </style>
 </head>
 <body class="page">
 <div class="cal">
   <header class="head" id="drag">
     <span class="brand-mark" aria-hidden="true">CA</span>
-    <strong data-i18n="cal.head">Kalibrace <span>scoreboardu</span></strong>
+    <strong data-i18n="cal.head">Nastavení <span>skenu</span></strong>
     <span class="status" id="status"></span>
     <button type="button" class="ic x" data-act="close" title="Zavřít" aria-label="Zavřít" data-i18n-attr="title:ov.close; aria-label:ov.close">×</button>
   </header>

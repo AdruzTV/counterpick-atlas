@@ -183,7 +183,7 @@
     /* ---------- overlay (overlay/js/ingame.js) ---------- */
     'ov.title': ['Counterpick · overlay', 'Counterpick · overlay'],
     'ov.loading': ['Načítám data…', 'Loading data…'],
-    'ov.calib': ['Kalibrace scoreboardu', 'Scoreboard calibration'],
+    'ov.calib': ['Nastavení skenu (zkratky, kalibrace)', 'Scan settings (hotkeys, calibration)'],
     'ov.hide': ['Skrýt', 'Hide'],
     'ov.close': ['Zavřít', 'Close'],
     'ov.confirm': ['✓ Sedí, uložit', '✓ All correct, save'],
@@ -237,9 +237,24 @@
     'ov.keys': [p => `<kbd>${p.scan}</kbd> sken (drž Tab) · <kbd>${p.toggle}</kbd> ${p.desktop ? 'myš do overlaye / skrýt' : 'skrýt'} · klik na hrdinu = oprava`,
       p => `<kbd>${p.scan}</kbd> scan (hold Tab) · <kbd>${p.toggle}</kbd> ${p.desktop ? 'mouse into the overlay / hide' : 'hide'} · click a hero = correct`],
 
-    /* ---------- calibration (overlay/js/calibrate.js) ---------- */
-    'cal.title': ['Counterpick · kalibrace', 'Counterpick · calibration'],
-    'cal.head': ['Kalibrace <span>scoreboardu</span>', 'Scoreboard <span>calibration</span>'],
+    /* ---------- scan settings and calibration (overlay/js/calibrate.js) ---------- */
+    'cal.title': ['Counterpick · nastavení skenu', 'Counterpick · scan settings'],
+    'cal.head': ['Nastavení <span>skenu</span>', 'Scan <span>settings</span>'],
+    'cal.keys': ['Klávesové zkratky', 'Hotkeys'],
+    'cal.keyScan': ['Sken scoreboardu', 'Scan the scoreboard'],
+    'cal.keyToggle': ['Overlay: ukázat / skrýt', 'Overlay: show / hide'],
+    'cal.keyPress': ['Stiskni zkratku…', 'Press a hotkey…'],
+    'cal.keysHint': ['Klikni na zkratku a stiskni novou, třeba Ctrl+Shift+C nebo F8. Esc změnu zruší.',
+      'Click a hotkey and press a new one, e.g. Ctrl+Shift+C or F8. Esc cancels.'],
+    'cal.keyNeedMod': ['Přidej Ctrl, Alt nebo Shift, samotná klávesa by psala i do chatu. Bez nich jde jen F1–F24.',
+      'Add Ctrl, Alt or Shift, a key on its own would also type in the chat. Only F1–F24 work alone.'],
+    'cal.keySaved': ['Uloženo, zkratky platí hned.', 'Saved, the hotkeys work right away.'],
+    'cal.keyTaken': ['Tuhle zkratku nejde použít, nejspíš ji má jiná aplikace. Zkus jinou.', 'This hotkey can’t be used, another app probably has it. Try another one.'],
+    'cal.keySame': ['Sken a overlay nemůžou mít stejnou zkratku.', 'Scan and overlay can’t share one hotkey.'],
+    'cal.keyOverwolf': ['Overwolf zkratku nezměnil. Nastav ji v Overwolfu: Nastavení → Klávesové zkratky.',
+      'Overwolf didn’t change the hotkey. Set it in Overwolf: Settings → Hotkeys.'],
+    'cal.keysDefault': ['Výchozí zkratky', 'Default hotkeys'],
+    'cal.calib': ['Kalibrace scoreboardu', 'Scoreboard calibration'],
     'cal.loading': ['Načítám…', 'Loading…'],
     'cal.canvas': ['Screenshot s rámečky portrétů. Táhni rámečky myší, šipky je posouvají po pixelu.',
       'Screenshot with the portrait boxes. Drag the boxes with the mouse, the arrow keys move them by one pixel.'],
@@ -287,7 +302,7 @@
 
     /* ---------- Overwolf title bar (overwolf/js/shell.js) ---------- */
     'ow.hint': ['Ve hře podrž <b>Tab</b> a zmáčkni <b>Alt+C</b> · <b>Alt+X</b> skryje overlay', 'In the game, hold <b>Tab</b> and press <b>Alt+C</b> · <b>Alt+X</b> hides the overlay'],
-    'ow.calib': ['Kalibrace', 'Calibration'],
+    'ow.calib': ['Nastavení skenu', 'Scan settings'],
     'ow.min': ['Minimalizovat', 'Minimize'],
     'ow.max': ['Maximalizovat', 'Maximize'],
 
@@ -300,8 +315,8 @@
     'app.trayText': ['Zkratky ve hře fungují dál ({key}). Aplikaci ukončíš přes tuhle ikonu.', 'The in-game hotkeys keep working ({key}). Quit the app from this icon.'],
     'app.keysTaken': ['Zkratku {keys} nejde použít, nejspíš ji má jiná aplikace.', 'The hotkey {keys} can’t be used, another app probably has it.'],
     'app.keysAnd': [' a ', ' and '],
-    'app.keysHow': ['Nastav jinou v souboru {file} (keys.scan a keys.toggle, třeba "Ctrl+Shift+C") a aplikaci spusť znovu.',
-      'Set another one in the file {file} (keys.scan and keys.toggle, e.g. "Ctrl+Shift+C") and start the app again.'],
+    'app.keysHow': ['Nastav jinou v nastavení skenu: ⚙ v overlayi, nebo Nastavení skenu v menu ikony v oznamovací oblasti.',
+      'Set another one in the scan settings: ⚙ in the overlay, or Scan settings in the notification area icon’s menu.'],
     'app.captureFail': ['obrazovku se nepodařilo vyfotit', 'the screen couldn’t be captured'],
   };
 

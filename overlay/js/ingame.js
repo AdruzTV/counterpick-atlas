@@ -369,6 +369,8 @@
   keysHint();
   // The language was switched on the site (or in the desktop app's tray menu).
   let loadFailed = '';
+  // New hotkeys from the scan settings.
+  CPApp.onKeys(() => { keysHint(); if (S.atlas && !loadFailed) render(); });
   I18n.onChange(() => {
     keysHint();
     if (loadFailed) { statusEl.textContent = t('ov.dataFail', { msg: loadFailed }); return; }

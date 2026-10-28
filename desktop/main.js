@@ -2,7 +2,8 @@
    - the site (index.html), the same as on GitHub Pages
    - the overlay (overlay/ingame.html), always on top; over the game only in Borderless Windowed mode
    - calibration (overlay/calibrate.html), on demand
-   Global hotkeys (settings.json in the app data folder can change them):
+   Global hotkeys (the player changes them in the scan settings, ⚙ in the overlay; settings.json in the app data
+   folder keeps them):
    - Alt+C photographs the screen under the mouse (the scoreboard while Tab is held) and shows the overlay without
      taking the mouse from the game
    - Alt+X moves the mouse into the overlay; pressed again it hides the overlay
@@ -149,7 +150,10 @@ function openCalibration() {
   });
   keepLinksOutside(calib);
   calib.loadURL(ORIGIN + 'overlay/calibrate.html');
-  calib.on('closed', () => { calib = null; });
+  calib.on('closed', () => {
+    calib = null;
+    if (keysPaused) { keysPaused = false; takeKeys(); }   // closed while waiting for a new hotkey
+  });
 }
 
 // A game started after the app puts its window into the same always-on-top layer, above the overlay, and showing
@@ -199,17 +203,47 @@ async function scan() {
   for (const w of [overlay, calib]) if (w && !w.isDestroyed()) w.webContents.send('scan', lastScan);
 }
 
-function registerKeys() {
+/* ---------- hotkeys ---------- */
+// Off while the scan settings wait for a new hotkey, so that pressing the current one reaches the page.
+let keysPaused = false;
+
+// Registers both hotkeys; returns the ones that could not be taken (another app has them).
+function takeKeys() {
   globalShortcut.unregisterAll();
+  if (keysPaused) return [];
   const take = (accel, fn) => { try { return globalShortcut.register(accel, fn); } catch (e) { return false; } };
-  const failed = [[settings.keys.scan, scan], [settings.keys.toggle, toggleOverlay]].filter(([a, fn]) => !take(a, fn)).map(([a]) => a);
+  return [[settings.keys.scan, scan], [settings.keys.toggle, toggleOverlay]].filter(([a, fn]) => !take(a, fn)).map(([a]) => a);
+}
+
+function registerKeys() {
+  const failed = takeKeys();
   if (failed.length && !SMOKE) {
     dialog.showMessageBox(main, {
       type: 'warning', title: 'Counterpick Atlas',
       message: t('app.keysTaken', { keys: failed.join(t('app.keysAnd')) }),
-      detail: t('app.keysHow', { file: SETTINGS }),
+      detail: t('app.keysHow'),
     });
   }
+}
+
+// New hotkeys from the scan settings ({ scan, toggle }, a missing one = its default). Kept only when every changed
+// one can be registered; then saved, and every window shows them.
+function setKeys(keys) {
+  const next = {};
+  for (const k of Object.keys(DEFAULTS.keys)) next[k] = keys && typeof keys[k] === 'string' && keys[k] ? keys[k] : DEFAULTS.keys[k];
+  if (new Set(Object.values(next).map(a => a.toLowerCase())).size < Object.keys(next).length) return { ok: false, error: 'same' };
+  const before = settings.keys, changed = Object.keys(next).filter(k => next[k] !== before[k]).map(k => next[k]);
+  settings.keys = next;
+  keysPaused = false;
+  if (takeKeys().some(a => changed.includes(a))) {
+    settings.keys = before;
+    takeKeys();
+    return { ok: false, error: 'taken' };
+  }
+  saveSettings();
+  trayMenu();
+  for (const w of [main, overlay, calib]) if (w && !w.isDestroyed()) w.webContents.send('keys', settings.keys);
+  return { ok: true, keys: settings.keys };
 }
 
 function createTray() {
@@ -237,6 +271,8 @@ function trayMenu() {
 
 /* ---------- pages ---------- */
 ipcMain.on('keys', e => { e.returnValue = settings.keys; });
+ipcMain.handle('set-keys', (e, keys) => setKeys(keys));
+ipcMain.on('pause-keys', (e, on) => { keysPaused = !!on; takeKeys(); });
 // The pages' language: the player's choice (null until there is one) and the system's.
 ipcMain.on('lang', e => { e.returnValue = { lang: settings.lang, system: I18N.systemLang(app.getLocale()) }; });
 ipcMain.on('set-lang', (e, l) => setLang(l, e.sender));

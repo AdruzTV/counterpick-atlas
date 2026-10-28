@@ -8,6 +8,9 @@ const LANG = ipcRenderer.sendSync('lang');
 
 contextBridge.exposeInMainWorld('cpaDesktop', {
   keys: ipcRenderer.sendSync('keys'),
+  setKeys: keys => ipcRenderer.invoke('set-keys', keys),   // → { ok, keys } or { ok: false, error: 'same' | 'taken' }
+  pauseKeys: on => ipcRenderer.send('pause-keys', on),
+  onKeys: cb => ipcRenderer.on('keys', (e, keys) => cb(keys)),
   lang: LANG.lang,              // the player's choice, null until there is one
   systemLang: LANG.system,      // from Windows' language, until then
   setLang: l => ipcRenderer.send('set-lang', l),
