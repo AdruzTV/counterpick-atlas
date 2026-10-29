@@ -10,19 +10,22 @@
 (() => {
   const SITE = (window.CounterpickCore && CounterpickCore.SITE) || 'https://adruztv.github.io/counterpick-atlas/';
   const BAR = 32;
-  const AD = { width: 300, height: 250 }, RAIL = AD.width + 24;
+  const AD = { width: 300, height: 250 }, RAIL = AD.width + 25;   // + padding and the rail's left border
   const ADS_SDK = 'https://content.overwolf.com/libs/ads/latest/owads.min.js';
   const log = (...a) => console.log('[CPA]', ...a);
 
   document.head.insertAdjacentHTML('beforeend', `<style>
     body { padding-top: ${BAR}px; padding-right: ${RAIL}px; }
     .bar { top: ${BAR}px !important; }
-    .ow-rail { position: fixed; z-index: 90; top: ${BAR}px; right: 0; bottom: 0; width: ${RAIL}px; padding: 12px; box-sizing: border-box;
-      overflow: hidden auto; background: #070b13; border-left: 1px solid var(--line); }
+    /* The ad sits in the bottom right corner, clear of the resize grip; when the window is short, the how-to above
+       it scrolls instead, so the ad is always fully on screen. */
+    .ow-rail { position: fixed; z-index: 90; top: ${BAR}px; right: 0; bottom: 0; width: ${RAIL}px; padding: 12px 12px 22px;
+      box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; background: #070b13; border-left: 1px solid var(--line); }
+    .ow-ad-wrap { flex: none; margin-top: auto; padding-top: 12px; }
     .ow-rail .ad-label { display: block; margin-bottom: 4px; color: var(--dim); font: 600 11px/1 var(--f-body); letter-spacing: .06em; text-transform: uppercase; }
     .ow-ad-box { width: ${AD.width}px; height: ${AD.height}px; background: transparent; }
     #ow-ad { width: ${AD.width}px; height: ${AD.height}px; }
-    .ow-how { margin-top: 18px; padding: 12px 14px; background: var(--panel); border-left: 3px solid var(--accent); font-size: 14px; color: var(--muted); }
+    .ow-how { flex: 0 1 auto; min-height: 0; overflow: auto; padding: 12px 14px; background: var(--panel); border-left: 3px solid var(--accent); font-size: 14px; color: var(--muted); }
     .ow-how strong { display: block; color: var(--fg); font: italic 800 17px/1.1 var(--f-display); text-transform: uppercase; }
     .ow-how ol { margin: 8px 0 12px; padding-left: 18px; display: grid; gap: 6px; }
     .ow-how kbd { font: 600 12px/18px var(--f-body); color: var(--fg); border: 1px solid var(--line); padding: 0 5px; border-radius: 3px; }
@@ -51,10 +54,10 @@
       <button type="button" class="x" data-ow="close" data-i18n-attr="title:ov.close; aria-label:ov.close">×</button>
     </div><div class="ow-grip" id="ow-grip" aria-hidden="true"></div>
     <aside class="ow-rail" id="ow-rail">
-      <span class="ad-label" data-i18n="ow.ad"></span>
-      <div class="ow-ad-box"><div id="ow-ad"></div></div>
       <div class="ow-how"><strong data-i18n="ow.howTitle"></strong><ol id="ow-how"></ol>
         <button type="button" data-ow="calib" data-i18n="ow.calib"></button></div>
+      <div class="ow-ad-wrap"><span class="ad-label" data-i18n="ow.ad"></span>
+        <div class="ow-ad-box"><div id="ow-ad"></div></div></div>
     </aside>`);
   I18n.apply(document.getElementById('ow-bar'));
   I18n.apply(document.getElementById('ow-rail'));
