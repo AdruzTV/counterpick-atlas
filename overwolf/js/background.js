@@ -79,14 +79,49 @@
       if (!r || !r.success) return reject(new Error(r && r.error || 'capture'));
       const data = new Uint8ClampedArray(r.buffer);
       if (r.format === 'bgra') for (let i = 0; i < data.length; i += 4) { const t = data[i]; data[i] = data[i + 2]; data[i + 2] = t; }
-      resolve({ width: r.width, height: r.height, data });
+      resolve({ width: r.width, height: r.height, data, via: 'buffer' });
     }));
-    if (!media.createScreenshotBuffer) return fromUrl();
+    if (!media.createScreenshotBuffer) return fromUrl().then(f => ({ ...f, via: 'url' }));
     const handle = buffer ? Promise.resolve(buffer) : new Promise(resolve => media.createScreenshotBuffer({ format: 'rgba' }, r => {
       if (r && r.success) buffer = r.screenshotBuffer;
       resolve(buffer);
     }));
-    return handle.then(h => h ? fromBuffer(h) : fromUrl()).catch(e => { log('raw capture failed, trying URL', e); return fromUrl(); });
+    return handle.then(h => h ? fromBuffer(h) : fromUrl().then(f => ({ ...f, via: 'url' })))
+      .catch(e => { log('raw capture failed, trying URL', e); return fromUrl().then(f => ({ ...f, via: 'url' })); });
+  }
+
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  // Where the scoreboard is on a frame (portrait column, first ally row) and how clearly its role icons show.
+  const locate = f => {
+    const s = Scoreboard.findLayout(f);
+    return s && { rows: s.rows, x: Math.round(f.width / 2 + s.layout.cx * f.height), y: Math.round(s.layout.ally * f.height), fit: +s.fit.toFixed(2) };
+  };
+  const agree = (a, b) => !!a && !!b && a.rows === b.rows && Math.abs(a.x - b.x) <= 3 && Math.abs(a.y - b.y) <= 3;
+  let settled = null;   // where the scoreboard last stood still this match
+
+  /* The scoreboard slides in when Tab goes down and out when it comes up, so a single picture can catch it
+     halfway (seen in game: the portrait column 60 px off from one picture to the next, 0.1 s apart). So: up to
+     four pictures a moment apart, until two in a row show it in the same place. Failing that, the one where it
+     stands where it stood still before this match, else the one whose role icons show most clearly. The log
+     says what happened on every scan. */
+  async function grab() {
+    const t0 = Date.now(), shots = [];
+    let pick = null, why = '';
+    for (let k = 0; k < 4 && !pick; k++) {
+      if (k) await sleep(80);
+      const frame = await capture();
+      shots.push({ frame, at: locate(frame) });
+      if (k && agree(shots[k - 1].at, shots[k].at)) { pick = shots[k]; why = 'still'; settled = pick.at; }
+    }
+    if (!pick) {
+      const found = shots.filter(s => s.at);
+      pick = settled && found.find(s => agree(s.at, settled));
+      why = pick ? 'where it stood before' : found.length ? 'clearest icons' : 'no scoreboard';
+      pick = pick || found.sort((a, b) => b.at.fit - a.at.fit)[0] || shots[0];
+    }
+    log('scan', JSON.stringify({ via: pick.frame.via, size: `${pick.frame.width}x${pick.frame.height}`, ms: Date.now() - t0,
+      shots: shots.map(s => s.at ? `${s.at.rows}r x=${s.at.x} y=${s.at.y} fit=${s.at.fit}` : '-'), used: shots.indexOf(pick), why }));
+    return pick.frame;
   }
 
   let scanning = false;
@@ -94,7 +129,7 @@
     if (scanning) return;
     scanning = true;
     try {
-      CPA.frame = await capture();
+      CPA.frame = await grab();
       CPA.frameAt = Date.now();
       CPA.error = '';
     } catch (e) {
@@ -144,7 +179,7 @@
 
   function onEvents(e) {
     for (const ev of (e && e.events) || []) {
-      if (ev.name === 'match_start') { CPA.match = newMatch(); CPA.match.id = Date.now(); send('ingame', 'match', {}); }
+      if (ev.name === 'match_start') { CPA.match = newMatch(); CPA.match.id = Date.now(); settled = null; send('ingame', 'match', {}); }
       else if (ev.name === 'kill_feed') {
         const k = parse(ev.data);
         if (k && typeof k === 'object') CPA.match.killfeed.push({ ...k, at: Date.now() });
@@ -159,7 +194,7 @@
     CPA.inGame = running;
     log('Overwatch running:', running);
     if (running) setFeatures();
-    else { CPA.match = newMatch(); hide('ingame').catch(() => {}); }
+    else { CPA.match = newMatch(); settled = null; hide('ingame').catch(() => {}); }
   }
 
   /* ---------- entry points for the other windows ---------- */

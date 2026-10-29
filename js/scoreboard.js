@@ -104,7 +104,8 @@
   // the two teams' colours are always far apart.
   const near = (h, c) => h >= 0 && Math.min((h - c + HUES) % HUES, (c - h + HUES) % HUES) <= 2;
 
-  /* { layout, rows } of the scoreboard on this frame, or null when none is to be seen. The ally rows are one
+  /* { layout, rows, fit } of the scoreboard on this frame (fit: how well the role icons sit, 0–1), or null when
+     none is to be seen. The ally rows are one
      wide block of a single strong colour, the enemy rows another one below it; whether a team has 5 or 6 rows
      and where exactly the portraits sit is settled by where the role icons line up. */
   function findLayout(frame) {
@@ -192,10 +193,10 @@
         const f = iconFit(rows, dx);
         if (!best || f.fit > best.fit) best = f;
       }
-      if (best.fit >= 0.6) return { rows: best.rows, layout: cleanLayout(best.layout) };
+      if (best.fit >= 0.6) return { rows: best.rows, layout: cleanLayout(best.layout), fit: best.fit };
       const off = (rows, heights) => Math.min(...heights.map(h => Math.abs(ha / rows - h * H)));
       const rows = off(6, [0.0523]) < off(5, [0.0574, 0.0609]) ? 6 : 5;
-      return { rows, layout: layoutFor(rows) };
+      return { rows, layout: layoutFor(rows), fit: best.fit };
     }
     return null;
   }
