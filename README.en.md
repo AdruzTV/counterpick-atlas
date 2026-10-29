@@ -5,7 +5,7 @@
 An unofficial fan guide to Overwatch, written in Czech and also available in English: patch notes, counters, abilities and perks of every hero.
 
 - `index.html` – the whole site
-- `js/i18n.js` – interface texts in Czech and English (site, overlay, calibration, Overwolf bar and the Windows app's menu)
+- `js/i18n.js` – interface texts in Czech and English (site, overlay, scan settings and the Overwolf app's title bar)
 - `js/counterpick-core.js` – how the Counterpick page works out its recommendations (counters, combos, team style, map tips); the site and the in-game overlay share it, so both recommend the same
 - `data/patches.json` – Czech summaries of the patch notes (newest first)
 - `js/blizzard-patches.js` – jQuery scraper of the official patch notes; patches newer than the last Czech summary load on each visit and stay in the browser cache for 12 h
@@ -17,7 +17,7 @@ An unofficial fan guide to Overwatch, written in Czech and also available in Eng
 - `data/status.json` – when the data was last checked, when the patch notes last changed, and the number of heroes
 - `art/`, `p/` – hero artwork and portraits (the same Action downloads them for a new hero)
 - `overlay/`, `js/scoreboard.js`, `data/scoreboard-refs.json` – the in-game overlay: reads the heroes off a scoreboard screenshot and recommends a pick (see below)
-- `desktop/` – the Windows app with the overlay; `manifest.json`, `overwolf/` – the same as an Overwolf app
+- `manifest.json`, `overwolf/` – the Overwolf app: the site as the app window, the overlay in the game, hotkeys and game data
 
 Counters are rough estimates based on abilities, not match statistics.
 
@@ -27,7 +27,7 @@ Not affiliated with Blizzard Entertainment. Hero images, names and ability descr
 
 ## Language
 
-The site, the overlay and the apps are in Czech and English. Switch with the **CZ / EN** buttons in the site's top bar; the browser remembers the choice (`localStorage`), and the overlay and calibration on the same site or in the app follow it right away. Until someone chooses, the system language decides: Czech for Czech and Slovak, English otherwise. The interface texts are in `js/i18n.js`, each with its Czech and English version side by side; when the English one is missing, the Czech one shows. The Counterpick page recommends the same in both languages, only the words change.
+The site, the overlay and the app are in Czech and English. Switch with the **CZ / EN** buttons in the site's top bar; the browser remembers the choice (`localStorage`), and the overlay and calibration on the same site or in the app follow it right away. Until someone chooses, the system language decides: Czech for Czech and Slovak, English otherwise. The interface texts are in `js/i18n.js`, each with its Czech and English version side by side; when the English one is missing, the Czech one shows. The Counterpick page recommends the same in both languages, only the words change.
 
 English texts of the data sit in the same files right after the Czech ones, in fields ending in `_en`: reasons for counters and combos `r_en` (`data/matchups.json`, `data/synergies.json`), the note `review.reason_en`, map traits and sides `label_en`, `desc_en`, `badDesc_en` (`data/maps.json`), and in the Czech patch summaries `title_en`, `summary_en`, `kind_en`, for trivia `tag_en`, `title_en`, `text_en` and for changes `a_en`, `t_en` (`data/patches.json`; numbers like „6,5“ or „35 %“ are converted to English by themselves). Where `_en` is missing, Czech shows, so a new counter or patch can be written in Czech first. GitHub Actions leave these fields alone. The automatically downloaded patch notes are in English already.
 
@@ -39,7 +39,7 @@ The site shows automatic patches only when they are newer than the last Czech su
 
 ### New heroes
 
-The same Action compares the hero list in OverFast API with `data/heroes.json` (`scripts/update_heroes.py`). A missing hero is added with everything the others have: role, description, health, abilities, perks and the Stadium flag. Ability and perk icons go into `data/icons.json`, the portrait into `p/` (the overlay recognises the hero by it) and the artwork into `art/`. The site and the apps load them from GitHub Pages, so they know a new hero without a new version. `heroCount` in `data/status.json` goes up.
+The same Action compares the hero list in OverFast API with `data/heroes.json` (`scripts/update_heroes.py`). A missing hero is added with everything the others have: role, description, health, abilities, perks and the Stadium flag. Ability and perk icons go into `data/icons.json`, the portrait into `p/` (the overlay recognises the hero by it) and the artwork into `art/`. The site and the app load them from GitHub Pages, so they know a new hero without a new version. `heroCount` in `data/status.json` goes up.
 
 - The Action never changes or removes existing heroes. When a patch changes health or abilities, they have to be updated by hand.
 - A new hero gets no counters or style (`data/matchups.json`, `data/synergies.json`), those are written by hand.
@@ -48,48 +48,35 @@ The same Action compares the hero list in OverFast API with `data/heroes.json` (
 
 ## In-game overlay
 
-In the game, Counterpick Atlas can tell you whom to play from a screenshot of the scoreboard. It runs in two apps that show the same pages (`overlay/`): the **Windows app** (`desktop/`, works now) and the **Overwolf app** (`manifest.json`, `overwolf/`, waiting for Overwolf's approval). Outside the game, both show the same site as GitHub Pages.
+In the game, Counterpick Atlas can tell you whom to play from a screenshot of the scoreboard. It runs as an **Overwolf app** (`manifest.json`, `overwolf/`): in the game as an overlay (`overlay/`), outside the game it shows the same site as GitHub Pages.
 
 **In the game**
-- Hold **Tab** (scoreboard) and press **Alt+C**. The app takes a screenshot, recognises the heroes in both teams and shows its recommendations. They are worked out the same way as on the Counterpick page, `js/counterpick-core.js` is shared.
+- Hold **Tab** (scoreboard) and press **Alt+C**. The app takes a picture of the game, recognises the heroes in both teams and shows its recommendations. They are worked out the same way as on the Counterpick page, `js/counterpick-core.js` is shared. The scoreboard slides in for a moment after Tab goes down, so the app takes up to four pictures in a row and uses one where it already stands still.
+- **Alt+X** hides or shows the overlay, Esc hides it too. The overlay works outside a fight as well, and the game doesn't have to be windowed.
+- Overwolf itself reports the heroes of your team and which of them is you (the "Game" label) and the map being played, so it gets picked by itself. When it reports the whole team in role queue, the app learns from their portraits by itself, because the rows are ordered tank → damage → support. Overwolf doesn't report enemies, they are read from the screenshot; the kill feed helps too.
 - Early in a match the scoreboard doesn't show the enemies yet, there is a silhouette with a question mark instead of a portrait. The overlay marks them **Unknown** and leaves them out of the points, so the recommendations rest on your team alone. Scan again once the enemies show up.
 - A hero marked "?" is a guess the app isn't sure about. Click it and choose the right one. The correction is saved as a sample and the app recognises the hero next time. When everything is right, **All correct, save** saves the whole scan.
 - Your row has a "You" label (the app finds it by the highlighted, lighter row). You don't count as part of the team, and your hero sets the role. When the app doesn't find you, click yourself and choose "This is me".
 - Once you have picked a hero, the overlay shows a **Your hero** card above the recommendations: its points, its place among the candidates and how much better pick number 1 is. The points are counted the same way as for the recommendations. Without a picked hero there is no card.
 
 **How it recognises heroes** (`js/scoreboard.js`)
-- It finds the scoreboard on the screenshot by itself: the teammates' rows form one block in the team colour, the enemies' another one below it. The particular colour doesn't matter, colour filters work too (teal and purple, for example). The role icons tell whether a team has 5 or 6 rows, and the overlay switches to 5v5 or 6v6. So it keeps working after Blizzard moves the scoreboard (in 2026 it got wider and moved left in 5v5, 6v6 has it elsewhere again, and at the end of the year level rings appeared next to the portraits and a green strip for party members). The role icons also fine-tune where exactly the portraits are. Banners and the chat over the edge of the scoreboard don't matter, the rows are found by the stat columns in the middle of the screen.
+- It finds the scoreboard on the screenshot by itself: the teammates' rows form one block in the team colour, the enemies' another one below it. The particular colour doesn't matter, colour filters work too (teal and purple, for example). The role icons tell whether a team has 5 or 6 rows, and the overlay switches to 5v5 or 6v6. So it keeps working after Blizzard moves the scoreboard (in 2026 it got wider and moved left in 5v5, 6v6 has it elsewhere again, and at the end of the year level rings appeared next to the portraits and a green strip for party members, the table grows with perk columns, and players "on fire" glow out past its left edge). The role icons also fine-tune where exactly the portraits are. Banners and the chat over the edge of the scoreboard don't matter, the rows are found by the stat columns in the middle of the screen.
 - It reads the role icon of every row (shield, three bars, plus), so a tank row only tries tanks, even in open queue.
 - It compares each portrait with the hero portraits from the site, which are the same artwork as the in-game icons, just cropped differently and sometimes mirrored. It compares colours in three bands (hair, face, shoulders) and the shape. On six screenshots from 2023 to 2026 (5v5 and 6v6, different team colours) it got 53 heroes of 63 right without a single sample, and 59 of 63 with samples from the other screenshots. On three screenshots from the latest game version (some heroes' icons are now drawn differently from the portraits on the site) it got 28 of 30 right without samples from them; the other two had a question mark and the right hero in second place. Heroes it isn't sure about are marked "?"; a hero without a question mark was never wrong in the tests.
-- It is more accurate with samples learned from real scoreboards: every correction and confirmation is saved. `data/scoreboard-refs.json` holds samples of 46 heroes from test screenshots, and the apps download it by themselves. Your own samples can be shared: calibration has a **Copy samples** button, paste the result into `data/scoreboard-refs.json` and commit it.
+- It is more accurate with samples learned from real scoreboards: every correction and confirmation is saved. `data/scoreboard-refs.json` holds samples of 46 heroes from test screenshots, and the app downloads it by itself. Your own samples can be shared: the scan settings have a **Copy samples** button, paste the result into `data/scoreboard-refs.json` and commit it.
 
-**Scan settings** (⚙ in the overlay) start with the **hotkeys**: click a hotkey and press a new one (Ctrl, Alt or Shift with a key, or F1–F24 alone). It works right away, and "Default hotkeys" brings back Alt+C and Alt+X. When another app holds a hotkey, the settings refuse it and keep the old one. Below the hotkeys is **calibration**: it shows on the last screenshot where the app found the scoreboard and what it sees in each row. If it ever doesn't find it or the frames are off, drag them onto the portraits and fine-tune size and spacing with the sliders. That switches to a manual layout; "Automatic" switches back.
+**Scan settings** (⚙ in the overlay) start with the **hotkeys**: click a hotkey and press a new one (Ctrl, Alt or Shift with a key, or F1–F24 alone). It works right away, and "Default hotkeys" brings back Alt+C and Alt+X. Overwolf holds the hotkeys, so they can also be changed in its settings (Hotkeys), and the overlay shows the ones Overwolf has right now. Below the hotkeys is **calibration**: it shows on the last screenshot where the app found the scoreboard and what it sees in each row. If it ever doesn't find it or the frames are off, drag them onto the portraits and fine-tune size and spacing with the sliders. That switches to a manual layout; "Automatic" switches back.
 
-**Data**: the apps load `data/*.json` and the patch notes from GitHub Pages, so they update by themselves, without a new app version. Offline, they use the copy bundled with them.
+**Data**: the app loads `data/*.json` and the patch notes from GitHub Pages, so it updates by itself, without a new app version. Offline, it uses the copy bundled with it. Overwolf numbers maps its own way; the numbers are in `data/maps.json` (`ow`), and for a new map we don't have there yet, the app remembers the map you pick by hand for its number once.
 
-**Without the game**: the overlay and calibration also run in a browser (`overlay/ingame.html`, `overlay/calibrate.html` on GitHub Pages) and accept a pasted screenshot (Ctrl+V or drag and drop).
+**Without the game**: the overlay and scan settings also run in a browser (`overlay/ingame.html`, `overlay/calibrate.html` on GitHub Pages) and accept a pasted screenshot (Ctrl+V or drag and drop).
 
-### Windows app (`desktop/`)
+### Developing the Overwolf app
 
-A standalone app (Electron) that doesn't need Overwolf. Download it from Releases (`desktop-v<version>`): the installer `Counterpick-Atlas-Setup-<version>.exe`, or the portable `Counterpick-Atlas-<version>-portable.exe`, which needs no installation. The app isn't signed, so the first time Windows shows "Windows protected your PC": *More info → Run anyway*.
+The whole repository is an Overwolf app (`manifest.json` in the root). Players get it from the Overwolf store.
 
-- Overwatch has to run in **Borderless Windowed** mode (Options → Video → Display Mode). No window can show over exclusive full screen.
-- **Alt+C** takes a screenshot of the screen the mouse is on and shows the overlay. The mouse stays in the game, so you keep playing.
-- **Alt+X** moves the mouse into the overlay (corrections, role, map), pressing it again hides the overlay. Esc hides it too.
-- Closing the main window doesn't quit the app, it stays as an icon in the notification area so the hotkeys keep working in the game. Quit it from that icon.
-- Switch the language with the CZ / EN buttons in the main window, or in the notification area icon's menu (Jazyk / Language). The two stay in sync, the overlay and calibration switch right away and the app remembers the choice in `settings.json`.
-- Change the hotkeys in the scan settings (⚙ in the overlay, or in the notification area icon's menu). The app keeps them in `%APPDATA%\Counterpick Atlas\settings.json` (`keys.scan`, `keys.toggle`).
-- The app only captures the screen like OBS or Discord do, it doesn't touch the game in any way.
-
-**Development**: in the `desktop/` folder run `npm install`, then `npm start` runs the app from the repository's files and `npm run dist` builds both `.exe` files into `desktop/dist/`. `npx electron . --smoke=<image>` is a quick check: it shows the image full screen, scans it, saves pictures of the windows next to the image and prints what the overlay read.
-
-**Releases**: the GitHub Action `.github/workflows/desktop.yml` builds the app on every change (Actions → Desktop app → Artifacts). When you raise `version` in `desktop/package.json`, it also publishes it as release `desktop-v<version>`.
-
-### Overwolf app
-
-The whole repository is an Overwolf app too (`manifest.json` in the root). Compared with the Windows version it can do more: Overwolf itself reports the heroes of your team and which of them is you (the "Game" label) and the map being played, so the overlay picks it by itself. Overwolf numbers maps its own way; the numbers are in `data/maps.json` (`ow`), and for a new map we don't have there yet, the app remembers the map you pick by hand for its number once. When it reports the whole team in role queue, the app learns from their portraits by itself, because the rows are ordered tank → damage → support. Overwolf doesn't report enemies, they are read from the screenshot; the kill feed helps too. In Overwolf the overlay works outside a fight as well, and the game doesn't have to be windowed.
-
-- **Approval**: Overwolf installs apps from outside its store only for approved developers (otherwise it says "Unauthorized App"). Sign in at dev.overwolf.com and send the *Submit your app idea* form. Once approved, with the same account in Overwolf open Settings → About → Development options → Load unpacked extension and choose the repository folder.
-- **Hotkeys**: Alt+C scan, Alt+X hide or show the overlay. They can be changed in the scan settings (⚙) or in Overwolf's settings (Hotkeys); the overlay shows the ones Overwolf has right now.
-- **Package**: `.github/workflows/overwolf.yml` packs `counterpick-atlas.opk` on every change (Actions → Overwolf app → Artifacts). After approval, the author uploads it to the Overwolf store through the Developers Console.
+- **Running it from the folder**: Overwolf installs apps from outside its store only for approved developers (otherwise it says "Unauthorized App"). With the developer account, open Settings → About → Development options → Load unpacked extension in Overwolf and choose the repository folder; after a change in the files, **Reload** is enough. The data (`data/*.json`) still comes from GitHub Pages, so data changes show only after a push.
+- **Log**: every scan writes to `%localappdata%\Overwolf\Log\Apps\Counterpick Atlas\background.html.log` which pictures it took, where the scoreboard was on them and which one it used. The logs of the game events (team, map, kill feed) are next to it in the `Overwolf General GameEvents Provider` folder.
+- **Testing without the game**: the overlay and scan settings also run in a browser with a pasted screenshot (see above).
+- **Package**: `.github/workflows/overwolf.yml` packs `counterpick-atlas.opk` on every change (Actions → Overwolf app → Artifacts). The author uploads it to the Overwolf store through the Developers Console.
 - Overwatch has game ID 10844 in Overwolf (`manifest.json`). The running game reports itself as 108441 (the ID plus an instance number), and the `GamesList` file in `%localappdata%\Overwolf` lists it that way too.

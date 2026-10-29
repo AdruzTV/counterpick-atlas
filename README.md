@@ -5,7 +5,7 @@
 Neoficiální český fanouškovský průvodce ke hře Overwatch: patch notes, countery, schopnosti a perky všech hrdinů.
 
 - `index.html` – celá stránka
-- `js/i18n.js` – texty rozhraní česky a anglicky (web, overlay, kalibrace, Overwolf lišta i menu aplikace pro Windows)
+- `js/i18n.js` – texty rozhraní česky a anglicky (web, overlay, nastavení skenu a lišta Overwolf aplikace)
 - `js/counterpick-core.js` – výpočet doporučení pro stránku Counterpick (countery, komba, styl týmu, tipy k mapě); sdílí ho web i overlay ve hře, takže doporučují stejně
 - `data/patches.json` – česká shrnutí patch notes (nejnovější nahoře)
 - `js/blizzard-patches.js` – jQuery scraper oficiálních patch notes; patche novější než poslední české shrnutí se načtou při návštěvě a drží se 12 h v cache prohlížeče
@@ -17,7 +17,7 @@ Neoficiální český fanouškovský průvodce ke hře Overwatch: patch notes, c
 - `data/status.json` – kdy byla data naposledy zkontrolována, kdy se naposledy změnily patch notes a počet hrdinů
 - `art/`, `p/` – artworky a portréty hrdinů (u nového hrdiny je stáhne stejná Action)
 - `overlay/`, `js/scoreboard.js`, `data/scoreboard-refs.json` – overlay do hry: rozpoznání hrdinů ze screenshotu scoreboardu a doporučení (viz níže)
-- `desktop/` – aplikace pro Windows s overlayem; `manifest.json`, `overwolf/` – totéž jako Overwolf aplikace
+- `manifest.json`, `overwolf/` – Overwolf aplikace: web jako okno aplikace, overlay ve hře, zkratky a herní data
 
 Countery jsou orientační odhady podle schopností, ne statistiky zápasů.
 
@@ -48,48 +48,35 @@ Stejná Action porovná seznam hrdinů v OverFast API s `data/heroes.json` (`scr
 
 ## Overlay do hry
 
-Ve hře umí Counterpick Atlas ze screenshotu scoreboardu poradit, koho hrát. Běží ve dvou aplikacích, které ukazují stejné stránky (`overlay/`): **aplikace pro Windows** (`desktop/`, funguje hned) a **Overwolf aplikace** (`manifest.json`, `overwolf/`, čeká na schválení od Overwolfu). Mimo hru ukážou obě stejný web jako GitHub Pages.
+Ve hře umí Counterpick Atlas ze screenshotu scoreboardu poradit, koho hrát. Běží jako **Overwolf aplikace** (`manifest.json`, `overwolf/`): ve hře jako overlay (`overlay/`), mimo hru ukáže stejný web jako GitHub Pages.
 
 **Ve hře**
-- Podrž **Tab** (scoreboard) a zmáčkni **Alt+C**. Aplikace vyfotí obrazovku, pozná hrdiny v obou týmech a ukáže doporučení. Počítá je stejně jako stránka Counterpick, `js/counterpick-core.js` je společný.
+- Podrž **Tab** (scoreboard) a zmáčkni **Alt+C**. Aplikace vyfotí hru, pozná hrdiny v obou týmech a ukáže doporučení. Počítá je stejně jako stránka Counterpick, `js/counterpick-core.js` je společný. Scoreboard se po stisku Tab chvíli vysouvá, proto aplikace pořídí až čtyři snímky za sebou a použije ten, kde už stojí na místě.
+- **Alt+X** overlay schová nebo ukáže, Esc ho schová taky. Overlay jde i mimo boj a hra nemusí být v okně.
+- Overwolf sám hlásí hrdiny tvého týmu a kdo z nich jsi ty (štítek „Hra“) a mapu, na které se hraje, takže se vybere sama. Když nahlásí celý tým v role queue, aplikace se z jeho portrétů sama učí, protože řádky jsou seřazené tank → damage → support. Nepřátele Overwolf nehlásí, ti se čtou ze screenshotu; pomáhá i kill feed.
 - Na začátku zápasu scoreboard soupeře ještě neukazuje, místo portrétu je silueta s otazníkem. Overlay je označí jako **Neznámý** a do bodů je nepočítá, doporučení pak vychází jen z tvého týmu. Až se soupeři objeví, naskenuj znovu.
 - Hrdina s „?“ je tip, který si aplikace není jistá. Klikni na něj a vyber správného. Oprava se uloží jako vzorek a příště ho aplikace pozná. Když sedí všechno, uloží celý sken tlačítko **Sedí, uložit**.
 - U tvého řádku je štítek „Ty“ (aplikace ho pozná podle zvýrazněného, světlejšího řádku). Do týmu se nepočítáš a podle tvého hrdiny se nastaví role. Když tě aplikace nepozná, klikni na sebe a zvol „Tohle jsem já“.
 - Když už máš hrdinu vybraného, ukáže overlay nad doporučením kartu **Tvůj hrdina**: jeho body, pořadí mezi kandidáty a o kolik je lepší volba číslo 1. Body se počítají stejně jako u doporučení. Bez vybraného hrdiny se karta neukáže.
 
 **Jak pozná hrdiny** (`js/scoreboard.js`)
-- Scoreboard na screenshotu najde sám: řádky spoluhráčů tvoří jeden blok v barvě týmu, nepřátel druhý pod ním. Na konkrétní barvě nezáleží, funguje i s barevnými filtry (třeba tyrkysová a fialová). Podle ikon rolí pozná, jestli má tým 5 nebo 6 řádků, a overlay se přepne na 5v5 nebo 6v6. Funguje proto i po tom, co Blizzard scoreboard posune (v roce 2026 se v 5v5 rozšířil a posunul doleva, v 6v6 je zase jinde, na konci roku přibyly kroužky úrovně u portrétů a zelený proužek u hráčů z party). Přesnou polohu portrétů doladí podle ikon rolí. Bannery a chat přes okraj scoreboardu nevadí, řádky pozná podle sloupců se statistikami uprostřed obrazovky.
+- Scoreboard na screenshotu najde sám: řádky spoluhráčů tvoří jeden blok v barvě týmu, nepřátel druhý pod ním. Na konkrétní barvě nezáleží, funguje i s barevnými filtry (třeba tyrkysová a fialová). Podle ikon rolí pozná, jestli má tým 5 nebo 6 řádků, a overlay se přepne na 5v5 nebo 6v6. Funguje proto i po tom, co Blizzard scoreboard posune (v roce 2026 se v 5v5 rozšířil a posunul doleva, v 6v6 je zase jinde, na konci roku přibyly kroužky úrovně u portrétů a zelený proužek u hráčů z party, tabulka se rozšiřuje se sloupci perků a hráči v sérii „on fire“ svítí přes její levý okraj). Přesnou polohu portrétů doladí podle ikon rolí. Bannery a chat přes okraj scoreboardu nevadí, řádky pozná podle sloupců se statistikami uprostřed obrazovky.
 - U každého řádku přečte ikonu role (štít, tři čárky, plus), takže na řádek tanka zkouší jen tanky, i v open queue.
 - Portrét porovná s portréty hrdinů z webu, které jsou stejná kresba jako ikonky ve hře, jen jinak oříznutá a někdy zrcadlová. Porovnává barvy ve třech pásech (vlasy, obličej, ramena) a tvar. Na šesti screenshotech z let 2023 až 2026 (5v5 i 6v6, různé barvy týmů) tak bez jediného vzorku trefil 53 hrdinů ze 63, se vzorky z ostatních screenshotů 59 ze 63. Na třech screenshotech z nejnovější verze hry (ikonky jsou u části hrdinů nově kreslené jinak než portréty na webu) trefil 28 z 30 bez vzorků z nich; zbylé dva měl s otazníkem a správného hrdinu hned na druhém místě. Hrdiny, u kterých si jistý není, označí „?“; hrdina bez otazníku nebyl v testech nikdy špatně.
-- Přesnější je s naučenými vzorky ze skutečných scoreboardů: každá oprava i potvrzení se uloží. `data/scoreboard-refs.json` obsahuje vzorky 46 hrdinů z testovacích screenshotů, aplikace si je stáhne sama. Vlastní vzorky jde sdílet: v kalibraci je tlačítko **Kopírovat vzorky**, obsah vlož do `data/scoreboard-refs.json` a commitni.
+- Přesnější je s naučenými vzorky ze skutečných scoreboardů: každá oprava i potvrzení se uloží. `data/scoreboard-refs.json` obsahuje vzorky 46 hrdinů z testovacích screenshotů, aplikace si je stáhne sama. Vlastní vzorky jde sdílet: v nastavení skenu je tlačítko **Kopírovat vzorky**, obsah vlož do `data/scoreboard-refs.json` a commitni.
 
-**Nastavení skenu** (⚙ v overlayi) má nahoře **klávesové zkratky**: klikni na zkratku a stiskni novou (Ctrl, Alt nebo Shift s klávesou, samotné jen F1–F24). Platí hned, „Výchozí zkratky“ vrátí Alt+C a Alt+X. Když zkratku drží jiná aplikace, nastavení ji odmítne a nechá starou. Pod zkratkami je **kalibrace**: ukáže na posledním screenshotu, kde aplikace scoreboard našla a co v kterém řádku vidí. Kdyby ho někdy nenašla nebo rámečky neseděly, přetáhni je na portréty a posuvníky dolaď velikost a rozestup. Tím se přepne na ruční rozložení, zpět jde přes „Automaticky“.
+**Nastavení skenu** (⚙ v overlayi) má nahoře **klávesové zkratky**: klikni na zkratku a stiskni novou (Ctrl, Alt nebo Shift s klávesou, samotné jen F1–F24). Platí hned, „Výchozí zkratky“ vrátí Alt+C a Alt+X. Zkratky drží Overwolf, takže jdou změnit i v jeho nastavení (Hotkeys) a overlay ukazuje ty, které Overwolf právě má. Pod zkratkami je **kalibrace**: ukáže na posledním screenshotu, kde aplikace scoreboard našla a co v kterém řádku vidí. Kdyby ho někdy nenašla nebo rámečky neseděly, přetáhni je na portréty a posuvníky dolaď velikost a rozestup. Tím se přepne na ruční rozložení, zpět jde přes „Automaticky“.
 
-**Data**: aplikace si `data/*.json` i patch notes stahují z GitHub Pages, takže se aktualizují samy, bez nové verze aplikace. Bez internetu použijí kopii, která je v nich přibalená.
+**Data**: aplikace si `data/*.json` i patch notes stahuje z GitHub Pages, takže se aktualizuje sama, bez nové verze aplikace. Bez internetu použije kopii, která je v ní přibalená. Mapy Overwolf čísluje po svém; čísla jsou v `data/maps.json` (`ow`) a u nové mapy, kterou tam ještě nemáme, si aplikace zapamatuje mapu, kterou k jejímu číslu jednou vybereš ručně.
 
-**Bez hry**: overlay a kalibrace běží i v prohlížeči (`overlay/ingame.html`, `overlay/calibrate.html` na GitHub Pages) a přijmou vložený screenshot (Ctrl+V nebo přetažení).
+**Bez hry**: overlay a nastavení skenu běží i v prohlížeči (`overlay/ingame.html`, `overlay/calibrate.html` na GitHub Pages) a přijmou vložený screenshot (Ctrl+V nebo přetažení).
 
-### Aplikace pro Windows (`desktop/`)
+### Vývoj Overwolf aplikace
 
-Samostatná aplikace (Electron), Overwolf nepotřebuje. Ke stažení je v Releases (`desktop-v<verze>`): instalátor `Counterpick-Atlas-Setup-<verze>.exe`, nebo přenosná verze `Counterpick-Atlas-<verze>-portable.exe`, která se nemusí instalovat. Aplikace není podepsaná, takže Windows napoprvé ukážou „Systém Windows ochránil váš počítač“: *Další informace → Přesto spustit*.
+Celý repozitář je Overwolf aplikace (`manifest.json` v kořeni). Ke hráčům se dostane přes Overwolf obchod.
 
-- Overwatch musí běžet v režimu **Borderless Windowed** (Nastavení → Video → Režim zobrazení). Přes exkluzivní fullscreen se žádné okno zobrazit nemůže.
-- **Alt+C** vyfotí obrazovku, na které je myš, a ukáže overlay. Myš přitom zůstane ve hře, takže hraješ dál.
-- **Alt+X** přesune myš do overlaye (opravy, role, mapa), druhým stiskem ho schová. Esc ho schová taky.
-- Zavřením hlavního okna aplikace neskončí, zůstane jako ikona v oznamovací oblasti, aby zkratky ve hře fungovaly. Ukončíš ji přes tuto ikonu.
-- Jazyk přepneš tlačítky CZ / EN v hlavním okně, nebo v menu ikony v oznamovací oblasti (Jazyk / Language). Obojí drží spolu, overlay i kalibrace se přepnou hned a aplikace si volbu pamatuje v `settings.json`.
-- Zkratky změníš v nastavení skenu (⚙ v overlayi, nebo v menu ikony v oznamovací oblasti). Aplikace si je pamatuje v `%APPDATA%\Counterpick Atlas\settings.json` (`keys.scan`, `keys.toggle`).
-- Aplikace jen fotí obrazovku jako OBS nebo Discord, do hry nijak nezasahuje.
-
-**Vývoj**: ve složce `desktop/` `npm install`, pak `npm start` spustí aplikaci ze souborů repozitáře a `npm run dist` postaví oba `.exe` do `desktop/dist/`. `npx electron . --smoke=<obrázek>` je rychlá kontrola: ukáže obrázek přes celou obrazovku, naskenuje ho, uloží vedle obrázku snímky oken a vypíše, co overlay přečetl.
-
-**Vydání**: GitHub Action `.github/workflows/desktop.yml` aplikaci postaví při každé změně (Actions → Desktop app → Artifacts). Když v `desktop/package.json` zvedneš `version`, vydá ji i jako release `desktop-v<verze>`.
-
-### Overwolf aplikace
-
-Celý repozitář je zároveň Overwolf aplikace (`manifest.json` v kořeni). Proti verzi pro Windows umí víc: Overwolf sám hlásí hrdiny tvého týmu a kdo z nich jsi ty (štítek „Hra“) a mapu, na které se hraje, takže se v overlayi vybere sama. Overwolf mapy čísluje po svém; čísla jsou v `data/maps.json` (`ow`) a u nové mapy, kterou tam ještě nemáme, si aplikace zapamatuje mapu, kterou k jejímu číslu jednou vybereš ručně. Když nahlásí celý tým v role queue, aplikace se z jeho portrétů sama učí, protože řádky jsou seřazené tank → damage → support. Nepřátele Overwolf nehlásí, ti se čtou ze screenshotu; pomáhá i kill feed. Overlay jde v Overwolfu i mimo boj, hra nemusí být v okně.
-
-- **Schválení**: Overwolf nainstaluje aplikaci mimo svůj obchod jen schváleným vývojářům (jinak hlásí „Unauthorized App“). Na dev.overwolf.com se přihlas a pošli formulář *Submit your app idea*. Po schválení se ve stejném účtu v Overwolfu otevře Settings → About → Development options → Load unpacked extension a vybere se složka repozitáře.
-- **Zkratky**: Alt+C sken, Alt+X skrýt nebo ukázat overlay. Změnit jdou v nastavení skenu (⚙), nebo v nastavení Overwolfu (Hotkeys); overlay ukazuje ty, které Overwolf právě má.
-- **Balíček**: `.github/workflows/overwolf.yml` při každé změně zabalí `counterpick-atlas.opk` (Actions → Overwolf app → Artifacts). Do Overwolf obchodu ho po schválení nahraje autor přes Developers Console.
+- **Spuštění ze složky**: Overwolf nainstaluje aplikaci mimo svůj obchod jen schváleným vývojářům (jinak hlásí „Unauthorized App“). Ve vývojářském účtu otevři v Overwolfu Settings → About → Development options → Load unpacked extension a vyber složku repozitáře; po změně v souborech stačí **Reload**. Data (`data/*.json`) se i tak berou z GitHub Pages, takže změny dat se projeví až po pushi.
+- **Log**: každý sken zapíše do `%localappdata%\Overwolf\Log\Apps\Counterpick Atlas\background.html.log`, které snímky pořídil, kde na nich byl scoreboard a který použil. Logy herních událostí (tým, mapa, kill feed) jsou vedle ve složce `Overwolf General GameEvents Provider`.
+- **Test bez hry**: overlay a nastavení skenu běží i v prohlížeči s vloženým screenshotem (viz výše).
+- **Balíček**: `.github/workflows/overwolf.yml` při každé změně zabalí `counterpick-atlas.opk` (Actions → Overwolf app → Artifacts). Do Overwolf obchodu ho nahraje autor přes Developers Console.
 - Overwatch má v Overwolfu ID hry 10844 (`manifest.json`). Běžící hra se hlásí jako 108441 (ID a číslo instance), stejně ji vede i soubor `GamesList` v `%localappdata%\Overwolf`.

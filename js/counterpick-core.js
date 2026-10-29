@@ -1,14 +1,13 @@
 /* Counterpick scoring shared by the site (index.html) and the in-game overlay (overlay/ingame.html). No DOM here.
    An Atlas indexes the data files, then ranks heroes for a pick state { mode, role, team, enemy, map, side }.
-   Inside the apps (Overwolf, or the desktop app in desktop/ which serves its files as cpa://) the data files load
-   from GitHub Pages first, so the apps stay current without an update; the copies shipped with them are the
-   fallback. The reasons are worded in the chosen language (js/i18n.js, loaded before this file), the data files'
+   Inside the Overwolf app the data files load from GitHub Pages first, so it stays current without an update; the
+   copies shipped with it are the fallback. The reasons are worded in the chosen language (js/i18n.js, loaded before this file), the data files'
    texts too where they have English (<field>_en); the scores never depend on it. Exposes window.CounterpickCore. */
 (() => {
   const t = (key, params) => I18n.t(key, params), pick = (obj, field) => I18n.pick(obj, field);
   const SITE = 'https://adruztv.github.io/counterpick-atlas/';
   const REMOTE = typeof window.CPA_REMOTE === 'string' ? window.CPA_REMOTE
-    : ['overwolf-extension:', 'cpa:'].includes(location.protocol) ? SITE : '';
+    : location.protocol === 'overwolf-extension:' ? SITE : '';
 
   const ROLES = [
     { key: 'tank', label: 'Tank' },

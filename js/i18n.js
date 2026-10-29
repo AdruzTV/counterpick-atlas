@@ -1,11 +1,10 @@
-/* Interface texts in Czech and English for the site (index.html), the overlay and calibration (overlay/), the Overwolf
-   title bar (overwolf/js/shell.js) and the desktop app's tray menu and dialogs (desktop/main.js requires this file).
+/* Interface texts in Czech and English for the site (index.html), the overlay and calibration (overlay/) and the
+   Overwolf title bar (overwolf/js/shell.js).
    No library and no build: every text is [Czech, English]; a missing English text falls back to Czech. A text is a
    string with {param} slots or, for plurals, a function of the params. Texts may hold HTML, params are inserted as
    given, so callers escape what came from data.
    In pages the choice is kept in localStorage (cpa:lang:v1). Pages of one origin follow each other at once through
-   the storage event: in the desktop app the site, the overlay and calibration are all cpa://atlas. The desktop app
-   also keeps the choice itself for its tray menu (desktop/preload.js); a choice in either place reaches the other.
+   the storage event (in Overwolf the site, the overlay and calibration share the app's origin).
    Without a stored choice: Czech on Czech and Slovak systems, English elsewhere.
    Data files carry English next to Czech as <field>_en; pick(obj, 'field') takes it in English where it exists.
    Exposes window.I18n in pages, module.exports in Node. */
@@ -238,8 +237,8 @@
     'ov.me': ['Tohle jsem já', 'This is me'],
     'ov.notMe': ['Nejsem to já', 'That’s not me'],
     'ov.clear': ['Nikdo / smazat', 'Nobody / clear'],
-    'ov.keys': [p => `<kbd>${p.scan}</kbd> sken (drž Tab) · <kbd>${p.toggle}</kbd> ${p.desktop ? 'myš do overlaye / skrýt' : 'skrýt'} · klik na hrdinu = oprava`,
-      p => `<kbd>${p.scan}</kbd> scan (hold Tab) · <kbd>${p.toggle}</kbd> ${p.desktop ? 'mouse into the overlay / hide' : 'hide'} · click a hero = correct`],
+    'ov.keys': ['<kbd>{scan}</kbd> sken (drž Tab) · <kbd>{toggle}</kbd> skrýt · klik na hrdinu = oprava',
+      '<kbd>{scan}</kbd> scan (hold Tab) · <kbd>{toggle}</kbd> hide · click a hero = correct'],
 
     /* ---------- scan settings and calibration (overlay/js/calibrate.js) ---------- */
     'cal.title': ['Counterpick · nastavení skenu', 'Counterpick · scan settings'],
@@ -253,7 +252,6 @@
     'cal.keyNeedMod': ['Přidej Ctrl, Alt nebo Shift, samotná klávesa by psala i do chatu. Bez nich jde jen F1–F24.',
       'Add Ctrl, Alt or Shift, a key on its own would also type in the chat. Only F1–F24 work alone.'],
     'cal.keySaved': ['Uloženo, zkratky platí hned.', 'Saved, the hotkeys work right away.'],
-    'cal.keyTaken': ['Tuhle zkratku nejde použít, nejspíš ji má jiná aplikace. Zkus jinou.', 'This hotkey can’t be used, another app probably has it. Try another one.'],
     'cal.keySame': ['Sken a overlay nemůžou mít stejnou zkratku.', 'Scan and overlay can’t share one hotkey.'],
     'cal.keyOverwolf': ['Overwolf zkratku nezměnil. Nastav ji v Overwolfu: Nastavení → Klávesové zkratky.',
       'Overwolf didn’t change the hotkey. Set it in Overwolf: Settings → Hotkeys.'],
@@ -309,19 +307,6 @@
     'ow.calib': ['Nastavení skenu', 'Scan settings'],
     'ow.min': ['Minimalizovat', 'Minimize'],
     'ow.max': ['Maximalizovat', 'Maximize'],
-
-    /* ---------- desktop app (desktop/main.js) ---------- */
-    'app.open': ['Otevřít Counterpick Atlas', 'Open Counterpick Atlas'],
-    'app.toggle': ['Ukázat nebo skrýt overlay', 'Show or hide the overlay'],
-    'app.quit': ['Ukončit', 'Quit'],
-    'app.tooltip': ['Counterpick Atlas · {key} ve hře naskenuje scoreboard', 'Counterpick Atlas · {key} in the game scans the scoreboard'],
-    'app.trayTitle': ['Counterpick Atlas běží dál', 'Counterpick Atlas keeps running'],
-    'app.trayText': ['Zkratky ve hře fungují dál ({key}). Aplikaci ukončíš přes tuhle ikonu.', 'The in-game hotkeys keep working ({key}). Quit the app from this icon.'],
-    'app.keysTaken': ['Zkratku {keys} nejde použít, nejspíš ji má jiná aplikace.', 'The hotkey {keys} can’t be used, another app probably has it.'],
-    'app.keysAnd': [' a ', ' and '],
-    'app.keysHow': ['Nastav jinou v nastavení skenu: ⚙ v overlayi, nebo Nastavení skenu v menu ikony v oznamovací oblasti.',
-      'Set another one in the scan settings: ⚙ in the overlay, or Scan settings in the notification area icon’s menu.'],
-    'app.captureFail': ['obrazovku se nepodařilo vyfotit', 'the screen couldn’t be captured'],
   };
 
   // Czech for Czech and Slovak systems, English for everything else.
@@ -341,13 +326,9 @@
   const valid = l => LANGS.includes(l) ? l : null;
   const stored = () => { try { return valid(localStorage.getItem(STORE)); } catch (e) { return null; } };
   const store = l => { try { localStorage.setItem(STORE, l); } catch (e) { /* storage blocked */ } };
-  const desk = window.cpaDesktop || null;   // the desktop app (desktop/preload.js)
   const listeners = [];
 
-  // In the desktop app its own record of the choice wins (the tray menu shows it); the pages' copy follows it.
-  let lang = (desk && valid(desk.lang)) || stored() || systemLang((desk && desk.systemLang) || navigator.language);
-  if (desk && valid(desk.lang) && stored() !== lang) store(lang);
-  else if (desk && !valid(desk.lang) && stored() && desk.setLang) desk.setLang(lang);
+  let lang = stored() || systemLang(navigator.language);
 
   const t = (key, params) => translate(lang, key, params);
   // A data field in the chosen language: obj.field_en in English where it is filled in, else obj.field.
@@ -377,16 +358,14 @@
     for (const cb of listeners) cb(l);
   }
 
-  // The player's choice: remembered, sent to the other pages (storage event) and to the desktop app's tray menu.
-  function set(l, fromApp) {
+  // The player's choice: remembered and sent to the other pages (storage event).
+  function set(l) {
     if (!valid(l)) return;
     store(l);
-    if (desk && desk.setLang && !fromApp) desk.setLang(l);
     change(l);
   }
 
   window.addEventListener('storage', e => { if (e.key === STORE && valid(e.newValue)) change(e.newValue); });
-  if (desk && desk.onLang) desk.onLang(l => set(l, true));   // chosen in the tray menu
 
   /* ---------- formats ---------- */
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

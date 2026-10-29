@@ -1,14 +1,14 @@
 /* In-game overlay: what the last scoreboard scan found and which hero to pick, scored exactly like the site's
    Counterpick page (js/counterpick-core.js). Every slot can be corrected with a click. Corrections, confirmed
    scans and the player's own team as Overwolf reports it become samples, so recognition (js/scoreboard.js)
-   gets better with every match. Runs in Overwolf, in the desktop app (desktop/) or, with a pasted screenshot
-   instead of the hotkey, in a browser (overlay/js/app.js). Texts come from js/i18n.js and follow the language
+   gets better with every match. Runs in Overwolf or, with a pasted screenshot instead of the hotkey, in a browser
+   (overlay/js/app.js). Texts come from js/i18n.js and follow the language
    chosen on the site at once. */
 (() => {
   const { ROLES, ROLE_LABEL, ROLE_ORDER, ROLE_SVG, MAP_MODES, SIDED_MODES, norm } = CounterpickCore;
   const { esc, HOST, KEYS } = CPApp;
   const { t } = I18n;
-  const IN_APP = HOST !== 'browser';   // Overwolf or the desktop app: scans come from the hotkey
+  const IN_APP = HOST !== 'browser';   // Overwolf: scans come from the hotkey
   // Scoreboard rows come sorted by role.
   const ROW_ROLES = { '5v5': ['tank', 'damage', 'damage', 'support', 'support'], '6v6': ['tank', 'tank', 'damage', 'damage', 'support', 'support'] };
   const VERIFY_MARGIN = 0.05;   // lead needed to learn two same-role teammates without asking
@@ -391,9 +391,9 @@
 
   CPApp.dragBy(document.getElementById('drag'));
   CPApp.resizeBy(document.getElementById('grip'));
-  const keysHint = () => { document.getElementById('keys').innerHTML = t('ov.keys', { scan: KEYS.scan, toggle: KEYS.toggle, desktop: HOST === 'desktop' }); };
+  const keysHint = () => { document.getElementById('keys').innerHTML = t('ov.keys', { scan: KEYS.scan, toggle: KEYS.toggle }); };
   keysHint();
-  // The language was switched on the site (or in the desktop app's tray menu).
+  // The language was switched on the site.
   let loadFailed = '';
   // New hotkeys from the scan settings.
   CPApp.onKeys(() => { keysHint(); if (S.atlas && !loadFailed) render(); });

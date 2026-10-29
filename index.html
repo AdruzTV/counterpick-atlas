@@ -1070,7 +1070,7 @@ h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; margin: 0; l
   const showLang = () => langBar.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === I18n.lang));
   langBar.addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (b) I18n.set(b.dataset.lang); });
   showLang();
-  // Chosen here, in another window of the app or in its tray menu: everything is drawn again in that language.
+  // Chosen here or in another window of the app: everything is drawn again in that language.
   I18n.onChange(() => {
     showLang();
     closeSugg();

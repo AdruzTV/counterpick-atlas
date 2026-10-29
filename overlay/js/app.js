@@ -1,17 +1,16 @@
-/* Shared by the overlay (overlay/ingame.html) and calibration (overlay/calibrate.html). The same pages run in three
+/* Shared by the overlay (overlay/ingame.html) and calibration (overlay/calibrate.html). The same pages run in two
    hosts, and this file hides the differences:
    - overwolf: the Overwolf app; screenshots and game data come from its background window (overwolf/js/background.js)
-   - desktop: the standalone app in desktop/; screenshots come from its main process (desktop/preload.js)
    - browser: a normal browser tab with a pasted or dropped screenshot, for testing without the game
    Both pages set <base href="../">, so every path here is relative to the site root. Exposes window.CPApp. */
 (() => {
-  const HOST = window.overwolf ? 'overwolf' : window.cpaDesktop ? 'desktop' : 'browser';
+  const HOST = window.overwolf ? 'overwolf' : 'browser';
   const PREFS = 'cpa:overlay:v1';
   const LAYOUT = 'cpa:scoreboard:layout:v1';
-  // Hotkeys as they are now: the defaults (manifest.json, desktop/main.js) unless the player changed them in the
-  // scan settings (or, in Overwolf, in Overwolf's own settings). KEYS stays the same object and is updated in place.
+  // Hotkeys as they are now: the defaults of manifest.json unless the player changed them in the scan settings or in
+  // Overwolf's own settings. KEYS stays the same object and is updated in place.
   const DEFAULT_KEYS = { scan: 'Alt+C', toggle: 'Alt+X' };
-  const KEYS = { ...DEFAULT_KEYS, ...(HOST === 'desktop' && cpaDesktop.keys || {}) };
+  const KEYS = { ...DEFAULT_KEYS };
 
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch (e) { return fallback; } };
   const write = (key, v) => { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) { /* storage blocked */ } };
@@ -44,8 +43,8 @@
   const setAutoLayout = on => write(AUTO, !!on);
 
   /* ---------- screenshots ---------- */
-  // cb(frame) for every new screenshot, onError(message) when taking one failed. In Overwolf and the desktop app
-  // they come after the hotkey; in a browser from Ctrl+V, drag and drop or any <input type="file" data-shot>.
+  // cb(frame) for every new screenshot, onError(message) when taking one failed. In Overwolf they come after the
+  // hotkey; in a browser from Ctrl+V, drag and drop or any <input type="file" data-shot>.
   function onScan(cb, onError) {
     if (HOST === 'overwolf') {
       let last = 0;
@@ -61,10 +60,6 @@
       window.addEventListener('focus', pull);
       document.addEventListener('visibilitychange', pull);
       pull();
-    } else if (HOST === 'desktop') {
-      const take = r => { if (r) r.error ? onError(r.error) : cb(r.frame); };
-      cpaDesktop.onScan(take);
-      cpaDesktop.lastScan().then(take);
     } else {
       const take = file => {
         if (!file || !/^image\//.test(file.type)) return;
@@ -112,7 +107,7 @@
   }
 
   /* ---------- hotkeys ---------- */
-  // Keys a hotkey can end with, the same in Electron accelerators and Overwolf (with their Windows key codes).
+  // Keys a hotkey can end with (as the scan settings name them) and their Windows key codes for Overwolf.
   const VK = { Space: 32, PageUp: 33, PageDown: 34, End: 35, Home: 36, Left: 37, Up: 38, Right: 39, Down: 40, Insert: 45, Delete: 46 };
   const vkOf = key => /^[A-Z0-9]$/.test(key) ? key.charCodeAt(0) : /^num\d$/.test(key) ? 96 + Number(key[3])
     : /^F\d+$/.test(key) ? 111 + Number(key.slice(1)) : VK[key] || 0;
@@ -147,11 +142,10 @@
   }
 
   /* New hotkeys { scan, toggle } (a missing one = its default) → Promise of { ok } or { ok: false, error } with
-     error 'same' (both one key), 'taken' (another app has it) or 'overwolf' (Overwolf refused, change it there). */
+     error 'same' (both one key) or 'overwolf' (Overwolf refused, change it there). */
   function setKeys(keys) {
     const next = { ...DEFAULT_KEYS, ...keys };
     if (next.scan.toLowerCase() === next.toggle.toLowerCase()) return Promise.resolve({ ok: false, error: 'same' });
-    if (HOST === 'desktop') return cpaDesktop.setKeys(next).then(r => { if (r.ok) keysChanged(r.keys); return r; });
     if (HOST !== 'overwolf' || !overwolf.settings.hotkeys.assign) return Promise.resolve({ ok: false, error: 'overwolf' });
     return owHotkeys().then(list => Promise.all(Object.keys(OW_KEYS).filter(k => next[k] !== KEYS[k]).map(k => new Promise(resolve => {
       const parts = next[k].split('+'), key = parts.pop(), h = list.find(x => x && x.name === OW_KEYS[k]);
@@ -164,11 +158,10 @@
 
   // While the scan settings wait for a new hotkey, the current ones do nothing (so pressing them reaches the page).
   function pauseKeys(on) {
-    if (HOST === 'desktop') cpaDesktop.pauseKeys(on);
-    else if (HOST === 'overwolf') { const C = bg() && bg().CPA; if (C) C.keysPaused = !!on; }
+    const C = bg() && bg().CPA;
+    if (C) C.keysPaused = !!on;
   }
 
-  if (HOST === 'desktop' && cpaDesktop.onKeys) cpaDesktop.onKeys(keysChanged);
   if (HOST === 'overwolf') {
     readOwKeys();
     if (overwolf.settings.hotkeys.onChanged) overwolf.settings.hotkeys.onChanged.addListener(() => readOwKeys());
@@ -177,12 +170,10 @@
   /* ---------- windows ---------- */
   function hideOverlay() {
     if (HOST === 'overwolf') bg().CPA_api.hideOverlay();
-    else if (HOST === 'desktop') cpaDesktop.hideOverlay();
   }
 
   function openCalibration() {
     if (HOST === 'overwolf') bg().CPA_api.openCalibration();
-    else if (HOST === 'desktop') cpaDesktop.openCalibration();
     else window.open('overlay/calibrate.html', '_blank');
   }
 
@@ -191,18 +182,16 @@
     else window.close();
   }
 
-  // Drag the window by an element: neither app gives these windows a system title bar.
+  // Drag the window by an element: Overwolf gives these windows no system title bar.
   function dragBy(el) {
-    if (!el) return;
-    if (HOST === 'desktop') el.style.setProperty('-webkit-app-region', 'drag');
-    if (HOST !== 'overwolf') return;
+    if (!el || HOST !== 'overwolf') return;
     el.addEventListener('mousedown', e => {
       if (e.button !== 0 || e.target.closest('button, a, input, select')) return;
       overwolf.windows.getCurrentWindow(r => r && r.success && overwolf.windows.dragMove(r.window.id));
     });
   }
 
-  // Resize from a corner grip. Overwolf windows need it; desktop windows have their own border, so it hides.
+  // Resize from a corner grip. Overwolf windows need it; in a browser tab it hides.
   function resizeBy(el) {
     if (!el) return;
     if (HOST !== 'overwolf') { el.hidden = true; return; }
@@ -214,7 +203,6 @@
 
   function copyText(text) {
     if (HOST === 'overwolf' && overwolf.utils && overwolf.utils.placeOnClipboard) { overwolf.utils.placeOnClipboard(text); return Promise.resolve(); }
-    if (HOST === 'desktop') return cpaDesktop.copyText(text);
     return navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject(new Error('clipboard'));
   }
 

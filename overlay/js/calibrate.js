@@ -250,7 +250,7 @@
   });
 
   /* ---------- hotkeys ---------- */
-  // The key a hotkey ends with, as Electron and Overwolf name it, or null for a modifier alone or a key that can't be
+  // The key a hotkey ends with, as the scan settings name it, or null for a modifier alone or a key that can't be
   // one. Letters as the keyboard layout has them (Y and Z on a Czech one), digits and the rest by their place.
   function keyName(e) {
     const c = e.code || '';
@@ -276,7 +276,7 @@
     renderSide();
   }
   const keyResult = r => {
-    S.keyMsg = r.ok ? { key: 'cal.keySaved' } : { key: { same: 'cal.keySame', taken: 'cal.keyTaken' }[r.error] || 'cal.keyOverwolf', bad: true };
+    S.keyMsg = r.ok ? { key: 'cal.keySaved' } : { key: r.error === 'same' ? 'cal.keySame' : 'cal.keyOverwolf', bad: true };
     renderSide();
   };
 
@@ -351,7 +351,7 @@
     renderSide();
     if (!canvas) stage.innerHTML = noShot();
   });
-  // The language was switched on the site (or in the desktop app's tray menu).
+  // The language was switched on the site.
   I18n.onChange(() => {
     if (said) say(said.key, said.cls, said.params);
     if (!S.matcher) return;

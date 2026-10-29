@@ -2,7 +2,7 @@ name: Overwolf app
 
 # Packs the Overwolf app (manifest.json in the repo root) into counterpick-atlas.opk whenever the app changes,
 # downloadable from the run's artifacts. Overwolf installs it only for whitelisted developers until the app is in
-# the Overwolf store, so there is no public release yet; the Windows app (desktop.yml) is the one to hand out.
+# the Overwolf store, so there is no public release here: players will get it from the store.
 on:
   push:
     branches: [main]
