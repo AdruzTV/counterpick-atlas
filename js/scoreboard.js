@@ -166,10 +166,10 @@
       const a = tall[i], e = tall[j], ha = a.bottom - a.top, he = e.bottom - e.top, gap = e.top - a.bottom;
       if (Math.abs(ha - he) > 0.15 * ha || gap < 0.01 * H || gap > 0.25 * H) continue;
       const la = left(a), le = left(e);
-      // A whole team in one party has no row starting at the edge: one team's edge is enough.
+      // The two teams' edges can differ: a whole team in one party has no row starting at the edge (green
+      // strips), and rows "on fire" glow in the team colour out past it. Both are tried, the role icons decide.
       if (la === null || le === null || Math.abs(la - le) > 0.06 * W) continue;
-      const edge = Math.min(la, le);
-      const layoutFor = (rows, dx = 0) => {
+      const layoutFor = (rows, dx = 0, edge = Math.min(la, le)) => {
         const row = (ha + he) / 2 / rows;
         return cleanLayout({
           cx: (edge + (0.95 + dx) * row - W / 2) / H,
@@ -180,8 +180,8 @@
       // 5 or 6 rows, and the portrait column: where the role icons fit best (the portrait sits 0.7 rows right of
       // its icon; how far from the edge differs between versions). The team whose icons fit better counts: early in
       // a match the enemies' rows have none. Without icons, the usual row heights.
-      const iconFit = (rows, dx) => {
-        const l = layoutFor(rows, dx), row = l.pitch * H, bx = boxes(l, W, H, rows);
+      const iconFit = (rows, dx, edge) => {
+        const l = layoutFor(rows, dx, edge), row = l.pitch * H, bx = boxes(l, W, H, rows);
         const fits = { ally: bx.ally.map(b => roleFit(frame, b, row)), enemy: bx.enemy.map(b => roleFit(frame, b, row)) };
         const avg = list => list.reduce((s, f) => s + f[1], 0) / list.length;
         const good = fits.ally.concat(fits.enemy).filter(f => f[1] >= 0.6).map(f => f[3]).sort((p, q) => p - q);
@@ -189,9 +189,12 @@
         return { rows, fit: Math.max(avg(fits.ally), avg(fits.enemy)), layout: { ...l, cx: l.cx + shift / H } };
       };
       let best = null;
-      for (const rows of [5, 6]) for (let dx = -0.3; dx <= 0.31; dx += 0.1) {
-        const f = iconFit(rows, dx);
-        if (!best || f.fit > best.fit) best = f;
+      for (const edge of Math.abs(la - le) > 3 ? [Math.min(la, le), Math.max(la, le)] : [la]) {
+        if (best && best.fit >= 0.85) break;   // clear enough from the first one
+        for (const rows of [5, 6]) for (let dx = -0.3; dx <= 0.31; dx += 0.1) {
+          const f = iconFit(rows, dx, edge);
+          if (!best || f.fit > best.fit) best = f;
+        }
       }
       if (best.fit >= 0.6) return { rows: best.rows, layout: cleanLayout(best.layout), fit: best.fit };
       const off = (rows, heights) => Math.min(...heights.map(h => Math.abs(ha / rows - h * H)));
