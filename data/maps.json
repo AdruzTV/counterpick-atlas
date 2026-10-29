@@ -272,6 +272,9 @@
    "key": "grimsvotn",
    "name": "Grímsvötn",
    "mode": "escort",
+   "ow": [
+    5050
+   ],
    "traits": []
   },
   {
