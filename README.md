@@ -92,4 +92,4 @@ Celý repozitář je zároveň Overwolf aplikace (`manifest.json` v kořeni). Pr
 - **Schválení**: Overwolf nainstaluje aplikaci mimo svůj obchod jen schváleným vývojářům (jinak hlásí „Unauthorized App“). Na dev.overwolf.com se přihlas a pošli formulář *Submit your app idea*. Po schválení se ve stejném účtu v Overwolfu otevře Settings → About → Development options → Load unpacked extension a vybere se složka repozitáře.
 - **Zkratky**: Alt+C sken, Alt+X skrýt nebo ukázat overlay. Změnit jdou v nastavení skenu (⚙), nebo v nastavení Overwolfu (Hotkeys); overlay ukazuje ty, které Overwolf právě má.
 - **Balíček**: `.github/workflows/overwolf.yml` při každé změně zabalí `counterpick-atlas.opk` (Actions → Overwolf app → Artifacts). Do Overwolf obchodu ho po schválení nahraje autor přes Developers Console.
-- Overwatch má v Overwolfu ID hry 10844 (`manifest.json`). Kdyby se aplikace ve hře nespustila, ověř ID v souboru gamelist v `%localappdata%\Overwolf`.
+- Overwatch má v Overwolfu ID hry 10844 (`manifest.json`). Běžící hra se hlásí jako 108441 (ID a číslo instance), stejně ji vede i soubor `GamesList` v `%localappdata%\Overwolf`.

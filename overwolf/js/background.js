@@ -5,7 +5,7 @@
      names enemy heroes too. The overlay uses them next to the screenshot.
    Other windows reach this one with overwolf.windows.getMainWindow() and read window.CPA. */
 (() => {
-  const OW_CLASS = 1084;              // Overwatch: game id 10844 = class 1084, instance 4
+  const OW_CLASS = 10844;             // Overwatch: class id 10844 (manifest.json); the running instance is 108441
   const FEATURES = ['game_info', 'match_info', 'roster', 'kill', 'death'];
 
   const CPA = window.CPA = {
