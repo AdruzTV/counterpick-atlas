@@ -54,7 +54,7 @@
       this.heroes = []; this.HM = {};
       this.VS = {}; this.BY = {}; this.REVIEW = {};
       this.STYLES = {}; this.PAIRS = {};
-      this.MAPS = []; this.MAP_BY = {}; this.MAP_TRAITS = {}; this.SIDES = {}; this.HERO_TAGS = {};
+      this.MAPS = []; this.MAP_BY = {}; this.MAP_BY_GAME = {}; this.MAP_TRAITS = {}; this.SIDES = {}; this.HERO_TAGS = {};
     }
 
     /* ---------- indexing the data files ---------- */
@@ -96,6 +96,9 @@
       this.MAPS = arr(d && d.maps).filter(m => m && m.key && m.name)
         .map(m => ({ key: String(m.key), name: String(m.name), mode: String(m.mode), traits: arr(m.traits).filter(t => this.MAP_TRAITS[t]) }));
       this.MAP_BY = Object.fromEntries(this.MAPS.map(m => [m.key, m]));
+      // Overwolf names the map of a match by a number ("ow" in data/maps.json, several for seasonal versions).
+      this.MAP_BY_GAME = {};
+      for (const m of arr(d && d.maps)) if (m && this.MAP_BY[m.key]) for (const id of arr(m.ow)) this.MAP_BY_GAME[String(id)] = String(m.key);
     }
 
     /* ---------- names ---------- */

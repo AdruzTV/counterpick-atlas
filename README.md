@@ -87,7 +87,7 @@ Samostatná aplikace (Electron), Overwolf nepotřebuje. Ke stažení je v Releas
 
 ### Overwolf aplikace
 
-Celý repozitář je zároveň Overwolf aplikace (`manifest.json` v kořeni). Proti verzi pro Windows umí víc: Overwolf sám hlásí hrdiny tvého týmu a kdo z nich jsi ty (štítek „Hra“). Když nahlásí celý tým v role queue, aplikace se z jeho portrétů sama učí, protože řádky jsou seřazené tank → damage → support. Nepřátele Overwolf nehlásí, ti se čtou ze screenshotu; pomáhá i kill feed. Overlay jde v Overwolfu i mimo boj, hra nemusí být v okně.
+Celý repozitář je zároveň Overwolf aplikace (`manifest.json` v kořeni). Proti verzi pro Windows umí víc: Overwolf sám hlásí hrdiny tvého týmu a kdo z nich jsi ty (štítek „Hra“) a mapu, na které se hraje, takže se v overlayi vybere sama. Overwolf mapy čísluje po svém; čísla jsou v `data/maps.json` (`ow`) a u nové mapy, kterou tam ještě nemáme, si aplikace zapamatuje mapu, kterou k jejímu číslu jednou vybereš ručně. Když nahlásí celý tým v role queue, aplikace se z jeho portrétů sama učí, protože řádky jsou seřazené tank → damage → support. Nepřátele Overwolf nehlásí, ti se čtou ze screenshotu; pomáhá i kill feed. Overlay jde v Overwolfu i mimo boj, hra nemusí být v okně.
 
 - **Schválení**: Overwolf nainstaluje aplikaci mimo svůj obchod jen schváleným vývojářům (jinak hlásí „Unauthorized App“). Na dev.overwolf.com se přihlas a pošli formulář *Submit your app idea*. Po schválení se ve stejném účtu v Overwolfu otevře Settings → About → Development options → Load unpacked extension a vybere se složka repozitáře.
 - **Zkratky**: Alt+C sken, Alt+X skrýt nebo ukázat overlay. Změnit jdou v nastavení skenu (⚙), nebo v nastavení Overwolfu (Hotkeys); overlay ukazuje ty, které Overwolf právě má.

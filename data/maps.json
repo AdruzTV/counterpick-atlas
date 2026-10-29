@@ -148,6 +148,9 @@
    "key": "antarctic-peninsula",
    "name": "Antarctic Peninsula",
    "mode": "control",
+   "ow": [
+    3314
+   ],
    "traits": [
     "close"
    ]
@@ -162,6 +165,9 @@
    "key": "busan",
    "name": "Busan",
    "mode": "control",
+   "ow": [
+    2018
+   ],
    "traits": [
     "open"
    ]
@@ -176,6 +182,9 @@
    "key": "ilios",
    "name": "Ilios",
    "mode": "control",
+   "ow": [
+    1645
+   ],
    "traits": [
     "edges",
     "high"
@@ -185,6 +194,10 @@
    "key": "lijiang-tower",
    "name": "Lijiang Tower",
    "mode": "control",
+   "ow": [
+    1634,
+    1719
+   ],
    "traits": [
     "close",
     "edges"
@@ -194,6 +207,9 @@
    "key": "nepal",
    "name": "Nepal",
    "mode": "control",
+   "ow": [
+    1207
+   ],
    "traits": [
     "edges",
     "open"
@@ -203,6 +219,9 @@
    "key": "oasis",
    "name": "Oasis",
    "mode": "control",
+   "ow": [
+    1694
+   ],
    "traits": [
     "edges",
     "open"
@@ -212,6 +231,9 @@
    "key": "samoa",
    "name": "Samoa",
    "mode": "control",
+   "ow": [
+    3776
+   ],
    "traits": [
     "open"
    ]
@@ -226,6 +248,9 @@
    "key": "circuit-royal",
    "name": "Circuit Royal",
    "mode": "escort",
+   "ow": [
+    2087
+   ],
    "traits": [
     "long",
     "high"
@@ -235,6 +260,9 @@
    "key": "dorado",
    "name": "Dorado",
    "mode": "escort",
+   "ow": [
+    707
+   ],
    "traits": [
     "long",
     "high"
@@ -250,6 +278,9 @@
    "key": "havana",
    "name": "Havana",
    "mode": "escort",
+   "ow": [
+    2628
+   ],
    "traits": [
     "long",
     "open"
@@ -259,6 +290,9 @@
    "key": "junkertown",
    "name": "Junkertown",
    "mode": "escort",
+   "ow": [
+    1878
+   ],
    "traits": [
     "long",
     "open"
@@ -268,6 +302,9 @@
    "key": "rialto",
    "name": "Rialto",
    "mode": "escort",
+   "ow": [
+    2161
+   ],
    "traits": [
     "close",
     "edges"
@@ -277,6 +314,9 @@
    "key": "route-66",
    "name": "Route 66",
    "mode": "escort",
+   "ow": [
+    1467
+   ],
    "traits": [
     "long",
     "open"
@@ -286,6 +326,9 @@
    "key": "shambali-monastery",
    "name": "Shambali Monastery",
    "mode": "escort",
+   "ow": [
+    3205
+   ],
    "traits": [
     "close"
    ]
@@ -294,6 +337,9 @@
    "key": "watchpoint-gibraltar",
    "name": "Watchpoint: Gibraltar",
    "mode": "escort",
+   "ow": [
+    388
+   ],
    "traits": [
     "high",
     "long"
@@ -309,6 +355,10 @@
    "key": "blizzard-world",
    "name": "Blizzard World",
    "mode": "hybrid",
+   "ow": [
+    1886,
+    2651
+   ],
    "traits": [
     "close",
     "high"
@@ -318,6 +368,10 @@
    "key": "eichenwalde",
    "name": "Eichenwalde",
    "mode": "hybrid",
+   "ow": [
+    1677,
+    2036
+   ],
    "traits": [
     "close"
    ]
@@ -326,6 +380,10 @@
    "key": "hollywood",
    "name": "Hollywood",
    "mode": "hybrid",
+   "ow": [
+    687,
+    1707
+   ],
    "traits": [
     "close",
     "high"
@@ -335,6 +393,10 @@
    "key": "kings-row",
    "name": "King’s Row",
    "mode": "hybrid",
+   "ow": [
+    212,
+    1713
+   ],
    "traits": [
     "close",
     "high"
@@ -344,6 +406,9 @@
    "key": "midtown",
    "name": "Midtown",
    "mode": "hybrid",
+   "ow": [
+    2892
+   ],
    "traits": [
     "open",
     "long"
@@ -359,6 +424,9 @@
    "key": "numbani",
    "name": "Numbani",
    "mode": "hybrid",
+   "ow": [
+    468
+   ],
    "traits": [
     "high",
     "open"
@@ -368,6 +436,9 @@
    "key": "paraiso",
    "name": "Paraíso",
    "mode": "hybrid",
+   "ow": [
+    2360
+   ],
    "traits": [
     "open",
     "high"
@@ -377,6 +448,9 @@
    "key": "colosseo",
    "name": "Colosseo",
    "mode": "push",
+   "ow": [
+    2868
+   ],
    "traits": [
     "open",
     "long"
@@ -386,6 +460,9 @@
    "key": "esperanca",
    "name": "Esperança",
    "mode": "push",
+   "ow": [
+    3411
+   ],
    "traits": [
     "open"
    ]
@@ -394,6 +471,9 @@
    "key": "new-queen-street",
    "name": "New Queen Street",
    "mode": "push",
+   "ow": [
+    2795
+   ],
    "traits": [
     "close"
    ]
@@ -414,6 +494,9 @@
    "key": "runasapi",
    "name": "Runasapi",
    "mode": "push",
+   "ow": [
+    3762
+   ],
    "traits": [
     "high"
    ]
@@ -428,6 +511,9 @@
    "key": "new-junk-city",
    "name": "New Junk City",
    "mode": "flashpoint",
+   "ow": [
+    3603
+   ],
    "traits": [
     "open"
    ]
@@ -436,6 +522,9 @@
    "key": "suravasa",
    "name": "Suravasa",
    "mode": "flashpoint",
+   "ow": [
+    3390
+   ],
    "traits": [
     "open"
    ]
@@ -444,6 +533,9 @@
    "key": "hanaoka",
    "name": "Hanaoka",
    "mode": "clash",
+   "ow": [
+    4439
+   ],
    "traits": [
     "close"
    ]
@@ -452,6 +544,9 @@
    "key": "throne-of-anubis",
    "name": "Throne of Anubis",
    "mode": "clash",
+   "ow": [
+    4448
+   ],
    "traits": [
     "close"
    ]

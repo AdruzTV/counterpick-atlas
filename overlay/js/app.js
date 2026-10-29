@@ -79,16 +79,18 @@
     }
   }
 
-  // Overwolf only: cb('roster') when the player's team changes, cb('match') when a new match starts.
+  // Overwolf only: cb('roster') when the player's team changes, cb('match') when a new match starts, cb('map')
+  // when Overwolf names the map.
   function onGame(cb) {
-    if (HOST === 'overwolf') overwolf.windows.onMessageReceived.addListener(m => { if (m.id === 'roster' || m.id === 'match') cb(m.id); });
+    if (HOST === 'overwolf') overwolf.windows.onMessageReceived.addListener(m => { if (['roster', 'match', 'map'].includes(m.id)) cb(m.id); });
   }
 
-  // Heroes Overwolf knows about this match: the player's own team (with who the player is) and enemies seen in
-  // the kill feed. Overwolf names enemy heroes only in the kill feed, never in the roster. Empty elsewhere.
+  // What Overwolf knows about this match: the player's own team (with who the player is), enemies seen in the
+  // kill feed (Overwolf names enemy heroes only there, never in the roster) and the map (its own number, see
+  // Atlas.MAP_BY_GAME). Empty elsewhere.
   function gameInfo(atlas) {
-    const b = bg(), m = b && b.CPA && b.CPA.match;
-    const out = { allies: [], self: null, selfRole: null, enemiesSeen: [], queue: m ? m.queue : '' };
+    const b = bg(), C = b && b.CPA, m = C && C.match;
+    const out = { allies: [], self: null, selfRole: null, enemiesSeen: [], queue: m ? m.queue : '', map: C && C.map || '' };
     if (!m) return out;
     for (const p of Object.values(m.roster || {})) {
       if (!p || typeof p !== 'object') continue;

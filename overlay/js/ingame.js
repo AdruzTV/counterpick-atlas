@@ -28,6 +28,7 @@
     ally: [], enemy: [], self: null, selfKey: null,
     scannedAt: 0, scoreboardOk: true, error: null, fromGame: false, saved: 0,   // error: { key, msg } of js/i18n.js
     pick: null,                     // { side, i, filter, q } while the hero picker is open
+    mapId: null, mapFromGame: false,   // the map number Overwolf reported last, and whether S.map came from it
   };
   const rows = () => S.mode === '6v6' ? 6 : 5;
   // hidden: the scoreboard shows a "?" silhouette there (enemies early in a match); no hero, left out of the points.
@@ -81,6 +82,7 @@
     if (fullTeam && rowRoles && S.scoreboardOk) learnFromRoster(rowRoles);
     syncRole();
     closePicker();
+    applyMap();
     render();
   }
 
@@ -113,6 +115,23 @@
         slots[i].learned = true;
       });
     }
+  }
+
+  // Overwolf names the map by a number. data/maps.json knows most; a number it doesn't know (a newer map) gets the
+  // map the player picks by hand while it is reported, for next time.
+  const MAP_IDS = 'cpa:overwolf:maps:v1';
+  function applyMap() {
+    const id = CPApp.gameInfo(S.atlas).map;
+    if (id === S.mapId) return;   // once per map: a map picked by hand stays until the next one
+    S.mapId = id;
+    S.mapFromGame = false;
+    if (!id) { render(); return; }   // the match ended: the map stays, as the player's
+    const key = S.atlas.MAP_BY_GAME[id] || CPApp.read(MAP_IDS, {})[id];
+    S.mapFromGame = !!(key && S.atlas.MAP_BY[key]);
+    S.map = S.mapFromGame ? key : '';   // an unknown map: not the one from before
+    if (!S.mapFromGame) console.log('[CPA] unknown map number', id);
+    savePrefs();
+    render();
   }
 
   // In 5v5 your role is the role of the hero you are playing. The hero is remembered for the next scan.
@@ -175,7 +194,8 @@
       const list = A.MAPS.filter(m => m.mode === mode);
       return list.length ? `<optgroup label="${label}">${list.map(m => `<option value="${esc(m.key)}"${m.key === S.map ? ' selected' : ''}>${esc(m.name)}</option>`).join('')}</optgroup>` : '';
     }).join('');
-    return `<select class="sel" id="map" aria-label="${t('ov.map')}"><option value="">${t('ov.anyMap')}</option>${groups}</select>`;
+    return `<select class="sel" id="map" aria-label="${t('ov.map')}"><option value="">${t('ov.anyMap')}</option>${groups}</select>
+      ${S.mapFromGame ? `<span class="tag-game" title="${t('ov.gameTitle')}">${t('ov.game')}</span>` : ''}`;
   }
 
   function sidePicker() {
@@ -356,6 +376,9 @@
   document.addEventListener('change', e => {
     if (e.target.id !== 'map') return;
     S.map = e.target.value;
+    S.mapFromGame = false;
+    // A map number data/maps.json doesn't know: remember the player's choice for it.
+    if (S.mapId && S.map && !S.atlas.MAP_BY_GAME[S.mapId]) CPApp.write(MAP_IDS, { ...CPApp.read(MAP_IDS, {}), [S.mapId]: S.map });
     savePrefs();
     render();
   });
@@ -388,9 +411,16 @@
       render();
       CPApp.onGame(what => {
         if (what === 'roster') applyRoster();
-        else { S.ally = []; S.enemy = []; S.self = null; S.selfKey = null; S.scannedAt = 0; S.map = ''; S.side = ''; savePrefs(); render(); }
+        else if (what === 'map') applyMap();
+        else {
+          S.ally = []; S.enemy = []; S.self = null; S.selfKey = null; S.scannedAt = 0; S.map = ''; S.side = ''; S.mapId = null;
+          savePrefs();
+          render();
+          applyMap();   // the map can be reported just before the match starts
+        }
       });
       applyRoster();
+      applyMap();
       CPApp.onScan(onFrame, onScanError);
     })
     .catch(e => { loadFailed = String(e && e.message || e); statusEl.textContent = t('ov.dataFail', { msg: loadFailed }); statusEl.className = 'status err'; });

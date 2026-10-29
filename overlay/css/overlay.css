@@ -55,6 +55,7 @@ img { display: block; }
 .role-ic { width: 13px; height: 13px; fill: currentColor; flex-shrink: 0; }
 .sel { height: 33px; flex: 1 1 140px; min-width: 0; padding: 0 8px; background: var(--panel); color: var(--fg); border: 1px solid var(--line); font: 500 14px var(--f-body); }
 .sel:focus { outline: none; border-color: var(--accent); }
+.tag-game { align-self: center; margin-left: -4px; font: 800 10px/1 var(--f-display); letter-spacing: .08em; padding: 4px 6px 3px; background: var(--panel-hi); color: var(--muted); text-transform: uppercase; }
 
 /* browser test mode */
 .test { margin-top: 12px; background: var(--panel); border-left: 3px solid var(--blue); padding: 10px 12px; color: var(--muted); font-size: 14px; }

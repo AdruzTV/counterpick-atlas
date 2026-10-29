@@ -15,11 +15,13 @@
     error: '',
     inGame: false,
     keysPaused: false,                // set by the scan settings while they wait for a new hotkey
+    map: '',                          // Overwolf's number of the map being played; apart from match, as it can come
+                                      // just before match_start
     match: newMatch(),
   };
 
   function newMatch() {
-    return { id: 0, startedAt: Date.now(), queue: '', map: '', roster: {}, heroes: '', killfeed: [] };
+    return { id: 0, startedAt: Date.now(), queue: '', roster: {}, heroes: '', killfeed: [] };
   }
 
   const log = (...a) => console.log('[CPA]', ...a);
@@ -173,7 +175,10 @@
       const c = info[cat];
       if (!c) continue;
       if (c.game_queue_type) CPA.match.queue = c.game_queue_type;
-      if (c.map) CPA.match.map = String(c.map);
+      if ('map' in c) {   // a number, null when the match ends
+        const map = c.map ? String(c.map) : '';
+        if (map !== CPA.map) { CPA.map = map; log('map', map || '-'); send('ingame', 'map', {}); }
+      }
     }
   }
 
@@ -194,7 +199,7 @@
     CPA.inGame = running;
     log('Overwatch running:', running);
     if (running) setFeatures();
-    else { CPA.match = newMatch(); settled = null; hide('ingame').catch(() => {}); }
+    else { CPA.match = newMatch(); CPA.map = ''; settled = null; hide('ingame').catch(() => {}); }
   }
 
   /* ---------- entry points for the other windows ---------- */
