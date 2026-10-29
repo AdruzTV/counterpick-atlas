@@ -303,7 +303,10 @@
     'cal.noShotBrowser': ['Vlož screenshot scoreboardu (<kbd>Ctrl+V</kbd>) nebo ho sem přetáhni.', 'Paste a screenshot of the scoreboard (<kbd>Ctrl+V</kbd>) or drop it here.'],
 
     /* ---------- Overwolf title bar (overwolf/js/shell.js) ---------- */
-    'ow.hint': ['Ve hře podrž <b>Tab</b> a zmáčkni <b>Alt+C</b> · <b>Alt+X</b> skryje overlay', 'In the game, hold <b>Tab</b> and press <b>Alt+C</b> · <b>Alt+X</b> hides the overlay'],
+    'ow.ad': ['Reklama', 'Advertisement'],
+    'ow.howTitle': ['Ve hře', 'In the game'],
+    'ow.how': ['<li>Podrž <kbd>Tab</kbd> a zmáčkni <kbd>{scan}</kbd>: overlay pozná hrdiny ze scoreboardu a poradí, koho hrát.</li><li><kbd>{toggle}</kbd> overlay schová nebo ukáže.</li><li>Hrdinu s otazníkem oprav kliknutím, příště ho aplikace pozná sama.</li>',
+      '<li>Hold <kbd>Tab</kbd> and press <kbd>{scan}</kbd>: the overlay reads the heroes off the scoreboard and tells you whom to play.</li><li><kbd>{toggle}</kbd> hides or shows the overlay.</li><li>Fix a hero marked with a question mark by clicking it, next time the app knows it.</li>'],
     'ow.calib': ['Nastavení skenu', 'Scan settings'],
     'ow.min': ['Minimalizovat', 'Minimize'],
     'ow.max': ['Maximalizovat', 'Maximize'],

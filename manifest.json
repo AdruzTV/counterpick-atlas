@@ -13,7 +13,7 @@
     "launcher_icon": "overwolf/icons/launcher.ico",
     "window_icon": "overwolf/icons/window_icon.png"
   },
-  "permissions": ["Hotkeys", "GameInfo", "Media", "Clipboard"],
+  "permissions": ["Hotkeys", "GameInfo", "Media", "Clipboard", "Extensions", "Streaming", "Profile"],
   "data": {
     "start_window": "background",
     "game_targeting": { "type": "dedicated", "game_ids": [10844] },

@@ -75,6 +75,8 @@ Ve hře umí Counterpick Atlas ze screenshotu scoreboardu poradit, koho hrát. B
 
 Celý repozitář je Overwolf aplikace (`manifest.json` v kořeni). Ke hráčům se dostane přes Overwolf obchod.
 
+- **Reklama**: hlavní okno (web) má vpravo panel s jednou reklamou 300×250 přes Overwolf Ads SDK a pod ní návod, jak overlay používat (`overwolf/js/shell.js`). Podle pravidel Overwolfu je jen v tomhle okně: overlay se otevírá během zápasu a reklamy během hraní zakázané jsou, nastavení skenu je stránka nastavení. Na webu na GitHub Pages reklama není. Skutečné reklamy začnou chodit, až je Overwolf po své kontrole aplikace zapne; do té doby může být místo prázdné.
+
 - **Spuštění ze složky**: Overwolf nainstaluje aplikaci mimo svůj obchod jen schváleným vývojářům (jinak hlásí „Unauthorized App“). Ve vývojářském účtu otevři v Overwolfu Settings → About → Development options → Load unpacked extension a vyber složku repozitáře; po změně v souborech stačí **Reload**. Data (`data/*.json`) se i tak berou z GitHub Pages, takže změny dat se projeví až po pushi.
 - **Log**: každý sken zapíše do `%localappdata%\Overwolf\Log\Apps\Counterpick Atlas\background.html.log`, které snímky pořídil, kde na nich byl scoreboard a který použil. Logy herních událostí (tým, mapa, kill feed) jsou vedle ve složce `Overwolf General GameEvents Provider`.
 - **Test bez hry**: overlay a nastavení skenu běží i v prohlížeči s vloženým screenshotem (viz výše).
