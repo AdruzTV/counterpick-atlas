@@ -29,8 +29,9 @@ jobs:
         id: meta
         run: echo "version=$(python3 -c "import json; print(json.load(open('manifest.json'))['meta']['version'])")" >> "$GITHUB_OUTPUT"
 
+      # Overwolf asks for a zip with normal compression (not the highest), manifest.json at its root.
       - name: Pack
-        run: zip -r -9 -q counterpick-atlas.opk manifest.json index.html js data art p overlay overwolf
+        run: zip -r -q counterpick-atlas.opk manifest.json index.html js data art p overlay overwolf
 
       - uses: actions/upload-artifact@v4
         with:
