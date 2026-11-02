@@ -31,6 +31,7 @@
       'Unofficial fan project, not affiliated with Blizzard Entertainment. Hero images, names and ability descriptions © Blizzard Entertainment.'],
     'site.foot2': ['Data hrdinů z OverFast API. Patch notes jsou česká shrnutí oficiálních poznámek; nejnovější patche se stahují automaticky z webu Blizzardu (v angličtině). Countery jsou orientační: vychází ze schopností hrdinů, ne ze statistik zápasů.',
       'Hero data from OverFast API. Patch notes are summaries of the official notes; the newest patches are downloaded automatically from Blizzard’s website. Counters are a rough guide: they come from the heroes’ abilities, not from match statistics.'],
+    'site.support': ['Podpora, časté dotazy a změny', 'Support, FAQ and changelog'],
     'site.fileTitle': ['Tohle je zdrojový soubor webu.', 'This is the site’s source file.'],
     'site.fileText': ['Stránku otevři na její webové adrese. Prohlížeč ze souboru na disku nenačte data hrdinů.',
       'Open the page at its web address. A browser won’t load the hero data from a file on disk.'],

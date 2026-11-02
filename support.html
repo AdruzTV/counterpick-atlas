@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Counterpick Atlas · podpora</title>
+<meta name="description" content="Podpora Counterpick Atlas: jak používat overlay v Overwatch, časté dotazy, řešení problémů a seznam změn.">
+<meta name="theme-color" content="#0d1320">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M9 4h23l-9 24H0z' fill='%23f99e1a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Support page for the Overwolf app (linked from its main window and scan settings): how to use it, FAQ,
+   troubleshooting, privacy, changelog. Czech and English side by side in the file; the CZ / EN buttons
+   (js/i18n.js, shared with the site) show one of them. Same dark look as index.html. */
+:root {
+  color-scheme: dark;
+  --bg: #0d1320; --panel: #161f30; --panel-hi: #1e2a40; --line: #2a3953;
+  --fg: #eef2f8; --muted: #94a2ba; --dim: #63718b; --accent: #f99e1a; --accent-ink: #1c1203; --blue: #5ab6ff;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --f-body: "Barlow", "Helvetica Neue", system-ui, sans-serif;
+}
+html { background: var(--bg); }
+body { margin: 0; color: var(--fg); font: 400 16px/1.6 var(--f-body); }
+a { color: var(--blue); }
+.wrap { max-width: 860px; margin-inline: auto; padding-inline: 16px; }
+@media (min-width: 720px) { .wrap { padding-inline: 28px; } }
+.bar { border-bottom: 1px solid var(--line); background: #0a0f1a; }
+.bar .wrap { display: flex; align-items: center; gap: 16px; padding-block: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--fg); text-decoration: none; margin-right: auto; }
+.brand-mark { display: grid; place-items: center; width: 34px; height: 30px; background: var(--accent); color: var(--accent-ink);
+  font: italic 800 15px/1 var(--f-display); clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); }
+.brand-name { font: italic 800 21px/1 var(--f-display); text-transform: uppercase; }
+.brand-name span { color: var(--accent); }
+.lang { display: flex; gap: 4px; }
+.lang button { border: 0; padding: 7px 10px; background: var(--panel); color: var(--muted); font: 700 13px/1 var(--f-display); letter-spacing: .06em; cursor: pointer;
+  clip-path: polygon(5px 0, 100% 0, calc(100% - 5px) 100%, 0 100%); }
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+main { padding-block: 28px 56px; }
+h1 { margin: 0; font: italic 800 42px/1.05 var(--f-display); text-transform: uppercase; }
+h2 { margin: 40px 0 12px; font: italic 800 26px/1.1 var(--f-display); text-transform: uppercase; }
+h3 { margin: 22px 0 6px; font: 700 19px/1.25 var(--f-display); letter-spacing: .02em; }
+.lead { color: var(--muted); font-size: 18px; margin: 10px 0 0; }
+p, li { color: var(--muted); }
+strong { color: var(--fg); font-weight: 600; }
+ol, ul { padding-left: 22px; }
+li + li { margin-top: 6px; }
+kbd { font: 600 13px/20px var(--f-body); color: var(--fg); border: 1px solid var(--line); padding: 0 6px; border-radius: 3px; background: var(--panel); }
+code { font-size: 14px; color: var(--fg); background: var(--panel); padding: 1px 5px; border-radius: 3px; overflow-wrap: anywhere; }
+.box { background: var(--panel); border-left: 3px solid var(--accent); padding: 14px 18px; margin-top: 16px; }
+.box p { margin: 0; }
+.box p + p { margin-top: 8px; }
+.log { border-left: 3px solid var(--line); padding-left: 16px; }
+.log h3 { margin-top: 0; }
+.foot { border-top: 1px solid var(--line); color: var(--dim); font-size: 14px; padding-block: 20px; }
+.foot p { color: var(--dim); margin: 0; }
+[data-show]:not(.on) { display: none; }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="./">
+      <span class="brand-mark" aria-hidden="true">CA</span>
+      <span class="brand-name">Counterpick <span>Atlas</span></span>
+    </a>
+    <div class="lang" id="lang" role="group" aria-label="Jazyk / Language">
+      <button type="button" data-lang="cs" title="Čeština" lang="cs">CZ</button>
+      <button type="button" data-lang="en" title="English" lang="en">EN</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<article data-show="cs" lang="cs">
+  <h1>Podpora</h1>
+  <p class="lead">Counterpick Atlas je aplikace pro Overwolf: ve hře Overwatch přečte ze screenshotu scoreboardu hrdiny obou týmů a poradí, koho hrát. Mimo hru ukazuje patch notes, countery a schopnosti hrdinů.</p>
+
+  <h2>Jak ji používat</h2>
+  <ol>
+    <li>Nainstaluj aplikaci v Overwolfu a spusť Overwatch.</li>
+    <li>V zápase podrž <kbd>Tab</kbd> (scoreboard) a zmáčkni <kbd>Alt+C</kbd>. Ukáže se overlay s hrdiny obou týmů a doporučením.</li>
+    <li>Hrdina s otazníkem je tip. Klikni na něj a vyber správného, aplikace si to zapamatuje.</li>
+    <li><kbd>Alt+X</kbd> nebo <kbd>Esc</kbd> overlay schová. Zkratky změníš v <strong>Nastavení skenu</strong> (⚙ v overlayi nebo v liště hlavního okna).</li>
+  </ol>
+
+  <h2>Časté dotazy a řešení problémů</h2>
+  <h3>Po Alt+C se nic nestane</h3>
+  <p>Zkontroluj, že Overwolf běží a Counterpick Atlas je v něm zapnutý pro Overwatch. Zkratku mohla změnit jiná aplikace: aktuální zkratky jsou v Nastavení skenu a v Overwolfu v Nastavení → Klávesové zkratky (Hotkeys).</p>
+  <h3>Overlay píše, že nevidí scoreboard</h3>
+  <p>Při <kbd>Alt+C</kbd> musíš držet <kbd>Tab</kbd>, dokud se scoreboard úplně nevysune. Když to nepomůže, otevři Nastavení skenu: ukáže poslední screenshot a rámečky, kde aplikace hledá portréty. Rámečky jde ručně posunout na portréty.</p>
+  <h3>Hrdinové jsou špatně</h3>
+  <p>Hrdinu označeného „?“ oprav kliknutím, oprava se uloží jako vzorek a příště ho aplikace pozná. Na začátku zápasu scoreboard soupeře ještě neukazuje: overlay je označí jako <strong>Neznámý</strong> a do bodů je nepočítá. Hráč, který je zrovna mrtvý, má přes portrét odpočet a aplikace si u něj nemusí být jistá; stačí naskenovat znovu po jeho návratu do hry.</p>
+  <h3>Mapa se nevybrala</h3>
+  <p>Mapu hlásí Overwolf. U nové mapy, kterou aplikace ještě nezná, ji jednou vyber ručně a příště se vybere sama.</p>
+  <h3>Jak se počítá doporučení?</h3>
+  <p>Kandidát dostane body za každého nepřítele, kterého counteruje, a ztratí je za každého, kdo counteruje jeho. Body přidá i kombo se spoluhráčem a styl, který sedí ke zbytku týmu. Countery jsou orientační odhady podle schopností, ne statistiky zápasů.</p>
+  <h3>Je to v pořádku vůči hře?</h3>
+  <p>Aplikace pracuje jen s tím, co máš na obrazovce (tvůj scoreboard), a s daty, které hlásí Overwolf. Do hry nijak nezasahuje: nečte ani nemění její paměť ani soubory a nic za tebe nehraje.</p>
+
+  <h2>Soukromí</h2>
+  <ul>
+    <li>Screenshot scoreboardu se zpracuje jen v paměti aplikace. Neukládá se na disk a nikam se neposílá.</li>
+    <li>Naučené vzorky hrdinů (malé obrázky 16×16 px) zůstávají v tvém počítači. Smazat je můžeš v Nastavení skenu.</li>
+    <li>Data o hrdinech, mapách a patch notes aplikace stahuje z GitHub Pages, písma z Google Fonts. Žádný účet, žádná analytika.</li>
+    <li>Reklamu v hlavním okně dodává Overwolf, souhlas a nastavení soukromí pro reklamy řeší klient Overwolfu (<a href="https://overwolf.com/legal/client/privacy">zásady Overwolfu</a>).</li>
+  </ul>
+
+  <h2>Nahlásit problém</h2>
+  <div class="box">
+    <p>Problém nebo nápad založ na GitHubu jako <a href="https://github.com/AdruzTV/counterpick-atlas/issues/new">nové issue</a> (potřebuješ účet na GitHubu).</p>
+    <p>Pomůže screenshot scoreboardu, co overlay ukázal, a log z <code>%localappdata%\Overwolf\Log\Apps\Counterpick Atlas\background.html.log</code>.</p>
+  </div>
+
+  <h2>Změny</h2>
+  <div class="log">
+    <h3>0.1.0 · listopad 2026</h3>
+    <ul>
+      <li>První verze pro Overwolf: overlay ve hře, rozpoznání hrdinů ze scoreboardu (5v5 i 6v6, barevné filtry, nový scoreboard z konce roku 2026), doporučení podle counterů, komb a stylu týmu.</li>
+      <li>Tým, mapa a kill feed z dat Overwolfu, vlastní klávesové zkratky, nastavení skenu s kalibrací, čeština a angličtina.</li>
+    </ul>
+    <p>Data (hrdinové, countery, mapy, patch notes) se aktualizují průběžně bez nové verze aplikace.</p>
+  </div>
+</article>
+
+<article data-show="en" lang="en">
+  <h1>Support</h1>
+  <p class="lead">Counterpick Atlas is an Overwolf app: in Overwatch it reads the heroes of both teams off a screenshot of the scoreboard and tells you whom to play. Outside the game it shows patch notes, counters and hero abilities.</p>
+
+  <h2>How to use it</h2>
+  <ol>
+    <li>Install the app in Overwolf and start Overwatch.</li>
+    <li>In a match, hold <kbd>Tab</kbd> (scoreboard) and press <kbd>Alt+C</kbd>. The overlay shows the heroes of both teams and its recommendations.</li>
+    <li>A hero with a question mark is a guess. Click it and choose the right one; the app remembers it.</li>
+    <li><kbd>Alt+X</kbd> or <kbd>Esc</kbd> hides the overlay. Change the hotkeys in <strong>Scan settings</strong> (⚙ in the overlay or in the main window's title bar).</li>
+  </ol>
+
+  <h2>FAQ and troubleshooting</h2>
+  <h3>Nothing happens on Alt+C</h3>
+  <p>Check that Overwolf is running and Counterpick Atlas is enabled for Overwatch in it. Another app may have taken the hotkey: the current hotkeys are in Scan settings and in Overwolf under Settings → Hotkeys.</p>
+  <h3>The overlay says it can't see the scoreboard</h3>
+  <p>Keep holding <kbd>Tab</kbd> while you press <kbd>Alt+C</kbd>, until the scoreboard has fully slid in. If that doesn't help, open Scan settings: it shows the last screenshot and the boxes where the app looks for portraits. You can drag the boxes onto the portraits by hand.</p>
+  <h3>The heroes are wrong</h3>
+  <p>Fix a hero marked "?" by clicking it; the correction is saved as a sample and the app recognises the hero next time. Early in a match the scoreboard doesn't show the enemies yet: the overlay marks them <strong>Unknown</strong> and leaves them out of the points. A player who is dead has a respawn timer over the portrait, so the app may be unsure about them; just scan again once they are back.</p>
+  <h3>The map wasn't picked</h3>
+  <p>Overwolf reports the map. For a new map the app doesn't know yet, pick it by hand once and it is picked by itself next time.</p>
+  <h3>How are the recommendations worked out?</h3>
+  <p>A candidate gains points for every enemy it counters and loses points for everyone who counters it. A combo with a teammate and a style that suits the rest of the team add points too. Counters are rough estimates based on abilities, not match statistics.</p>
+  <h3>Is it fair to the game?</h3>
+  <p>The app only works with what is on your screen (your scoreboard) and the data Overwolf reports. It doesn't touch the game: it doesn't read or change its memory or files, and it doesn't play for you.</p>
+
+  <h2>Privacy</h2>
+  <ul>
+    <li>The scoreboard screenshot is processed in the app's memory only. It is not saved to disk and not sent anywhere.</li>
+    <li>Learned hero samples (small 16×16 px pictures) stay on your computer. You can delete them in Scan settings.</li>
+    <li>The app downloads hero, map and patch note data from GitHub Pages, and fonts from Google Fonts. No account, no analytics.</li>
+    <li>The ad in the main window is served by Overwolf; the Overwolf client handles consent and ad privacy settings (<a href="https://overwolf.com/legal/client/privacy">Overwolf's privacy policy</a>).</li>
+  </ul>
+
+  <h2>Report a problem</h2>
+  <div class="box">
+    <p>Report a problem or an idea on GitHub as a <a href="https://github.com/AdruzTV/counterpick-atlas/issues/new">new issue</a> (you need a GitHub account).</p>
+    <p>A screenshot of the scoreboard, what the overlay showed, and the log from <code>%localappdata%\Overwolf\Log\Apps\Counterpick Atlas\background.html.log</code> help a lot.</p>
+  </div>
+
+  <h2>Changelog</h2>
+  <div class="log">
+    <h3>0.1.0 · November 2026</h3>
+    <ul>
+      <li>First Overwolf version: in-game overlay, hero recognition from the scoreboard (5v5 and 6v6, colour filters, the new late-2026 scoreboard), recommendations from counters, combos and team style.</li>
+      <li>Team, map and kill feed from Overwolf's data, your own hotkeys, scan settings with calibration, Czech and English.</li>
+    </ul>
+    <p>The data (heroes, counters, maps, patch notes) updates continuously without a new app version.</p>
+  </div>
+</article>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p data-show="cs" lang="cs">Neoficiální fanouškovský projekt, není spojený s Blizzard Entertainment. Overwatch © Blizzard Entertainment.</p>
+    <p data-show="en" lang="en">An unofficial fan project, not affiliated with Blizzard Entertainment. Overwatch © Blizzard Entertainment.</p>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script>
+// One language at a time, chosen like on the site (and remembered with it).
+(() => {
+  const show = () => {
+    document.documentElement.lang = I18n.lang;
+    document.querySelectorAll('[data-show]').forEach(e => e.classList.toggle('on', e.dataset.show === I18n.lang));
+    document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === I18n.lang));
+    document.title = I18n.lang === 'en' ? 'Counterpick Atlas · support' : 'Counterpick Atlas · podpora';
+  };
+  document.getElementById('lang').addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (b) I18n.set(b.dataset.lang); });
+  I18n.onChange(show);
+  show();
+})();
+</script>
+</body>
+</html>

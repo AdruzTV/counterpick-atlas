@@ -18,6 +18,7 @@ Neoficiální český fanouškovský průvodce ke hře Overwatch: patch notes, c
 - `art/`, `p/` – artworky a portréty hrdinů (u nového hrdiny je stáhne stejná Action)
 - `overlay/`, `js/scoreboard.js`, `data/scoreboard-refs.json` – overlay do hry: rozpoznání hrdinů ze screenshotu scoreboardu a doporučení (viz níže)
 - `manifest.json`, `overwolf/` – Overwolf aplikace: web jako okno aplikace, overlay ve hře, zkratky a herní data
+- `support.html` – stránka podpory aplikace (jak ji používat, časté dotazy, soukromí, hlášení problémů přes GitHub Issues, seznam změn); odkazuje na ni patička webu, panel hlavního okna i nastavení skenu
 
 Countery jsou orientační odhady podle schopností, ne statistiky zápasů.
 

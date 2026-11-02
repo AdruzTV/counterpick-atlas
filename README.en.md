@@ -18,6 +18,7 @@ An unofficial fan guide to Overwatch, written in Czech and also available in Eng
 - `art/`, `p/` – hero artwork and portraits (the same Action downloads them for a new hero)
 - `overlay/`, `js/scoreboard.js`, `data/scoreboard-refs.json` – the in-game overlay: reads the heroes off a scoreboard screenshot and recommends a pick (see below)
 - `manifest.json`, `overwolf/` – the Overwolf app: the site as the app window, the overlay in the game, hotkeys and game data
+- `support.html` – the app's support page (how to use it, FAQ, privacy, reporting problems through GitHub Issues, changelog); the site's footer, the main window's rail and the scan settings link to it
 
 Counters are rough estimates based on abilities, not match statistics.
 

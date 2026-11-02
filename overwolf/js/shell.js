@@ -1,6 +1,7 @@
 /* The site (index.html) as the Overwolf desktop window. index.html loads this only when window.overwolf exists.
    Adds a title bar to drag, minimise, maximise and close the frameless window, a rail on the right with the app's
-   ad and how to use the overlay, opens outside links in the real browser, and loads hero images that this app
+   ad, how to use the overlay and a link to the support page (support.html on GitHub Pages, so that it opens in the
+   player's browser and this window keeps its title bar), opens outside links in the real browser, and loads hero images that this app
    version doesn't ship (heroes added later) from GitHub Pages. Its texts follow the site's language (js/i18n.js).
 
    The ad (Overwolf Ads SDK, dev.overwolf.com → Monetization → Advertising) follows Overwolf's rules: only in this
@@ -31,6 +32,7 @@
     .ow-how kbd { font: 600 12px/18px var(--f-body); color: var(--fg); border: 1px solid var(--line); padding: 0 5px; border-radius: 3px; }
     .ow-how button { border: 0; padding: 8px 12px; background: var(--panel-hi); color: var(--fg); font: 700 13px/1 var(--f-display); letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
     .ow-how button:hover { background: var(--line); }
+    .ow-how .ow-support { display: block; margin-top: 10px; color: var(--blue); font-size: 13px; }
     .ow-bar { position: fixed; z-index: 100; top: 0; left: 0; right: 0; height: ${BAR}px; display: flex; align-items: center; gap: 4px;
       padding-left: 12px; background: #070b13; border-bottom: 1px solid var(--line); user-select: none; cursor: default; }
     .ow-bar .t { font: italic 800 15px/1 var(--f-display); text-transform: uppercase; letter-spacing: .03em; }
@@ -55,7 +57,8 @@
     </div><div class="ow-grip" id="ow-grip" aria-hidden="true"></div>
     <aside class="ow-rail" id="ow-rail">
       <div class="ow-how"><strong data-i18n="ow.howTitle"></strong><ol id="ow-how"></ol>
-        <button type="button" data-ow="calib" data-i18n="ow.calib"></button></div>
+        <button type="button" data-ow="calib" data-i18n="ow.calib"></button>
+        <a class="ow-support" href="${SITE}support.html" data-i18n="site.support"></a></div>
       <div class="ow-ad-wrap"><span class="ad-label" data-i18n="ow.ad"></span>
         <div class="ow-ad-box"><div id="ow-ad"></div></div></div>
     </aside>`);

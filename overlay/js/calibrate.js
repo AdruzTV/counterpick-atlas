@@ -234,7 +234,8 @@
         <button type="button" class="btn" data-act="export">${t('cal.export')}</button>
         <button type="button" class="btn" data-act="wipe">${t(S.wipeArmed ? 'cal.wipeSure' : 'cal.wipe')}</button>
       </div>
-      <p class="small">${t('cal.share')}</p>`;
+      <p class="small">${t('cal.share')}</p>
+      <p class="small"><a href="${CounterpickCore.SITE}support.html" data-ext>${t('site.support')}</a></p>`;
   }
 
   side.addEventListener('input', e => {
@@ -300,6 +301,8 @@
   window.addEventListener('beforeunload', () => { if (S.capture) CPApp.pauseKeys(false); });
 
   document.addEventListener('click', e => {
+    const link = e.target.closest('a[data-ext]');
+    if (link) { e.preventDefault(); CPApp.openUrl(link.href); return; }
     const b = e.target.closest('button');
     if (!b) return;
     const act = b.dataset.act;

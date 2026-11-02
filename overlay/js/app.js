@@ -201,6 +201,12 @@
     });
   }
 
+  // An outside page in the player's browser (an Overwolf window would open it inside itself).
+  function openUrl(url) {
+    if (HOST === 'overwolf' && overwolf.utils && overwolf.utils.openUrlInDefaultBrowser) overwolf.utils.openUrlInDefaultBrowser(url);
+    else window.open(url, '_blank', 'noopener');
+  }
+
   function copyText(text) {
     if (HOST === 'overwolf' && overwolf.utils && overwolf.utils.placeOnClipboard) { overwolf.utils.placeOnClipboard(text); return Promise.resolve(); }
     return navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject(new Error('clipboard'));
@@ -216,6 +222,6 @@
 
   window.CPApp = {
     HOST, KEYS, DEFAULT_KEYS, onKeys, setKeys, pauseKeys, PREFS, read, write, bg, loadAtlas, layout, saveLayout, autoLayout, setAutoLayout,
-    onScan, onGame, gameInfo, hideOverlay, openCalibration, closeWindow, dragBy, resizeBy, copyText, esc,
+    onScan, onGame, gameInfo, hideOverlay, openCalibration, closeWindow, dragBy, resizeBy, openUrl, copyText, esc,
   };
 })();
