@@ -311,6 +311,9 @@
     return null;
   }
 
+  // A summary breaks between its sentences rather than inside one (each sentence is an inline block, css/site.css).
+  const sentences = s => esc(s).split(/(?<=[.!?])\s+(?=[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ])/).map(x => `<span class="sent">${x}</span>`).join(' ');
+
   function patchCard(p, i) {
     const art = patchArt(p);
     const hl = p.highlights.length ? `<div class="hls">${p.highlights.map(h => `
@@ -324,9 +327,9 @@
         <a class="src" href="${esc(p.url)}" target="_blank" rel="noopener">${t('patch.official')}</a>
       </div>
       <h2 id="${p.id}-h">${esc(p.title)}</h2>
-      ${p.summary ? `<p class="summary">${esc(p.summary)}</p>` : ''}
-      ${hl}
+      ${p.summary ? `<p class="summary">${sentences(p.summary)}</p>` : ''}
       ${ledger(p)}
+      ${hl}
     </article>`;
   }
 

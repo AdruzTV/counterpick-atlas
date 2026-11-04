@@ -1,8 +1,9 @@
 /* The site (index.html) as the Overwolf desktop window. index.html loads this only when window.overwolf exists.
-   Adds a title bar to drag, minimise, maximise and close the frameless window, a rail on the right with the app's
-   ad, how to use the overlay and a link to the support page (support.html on GitHub Pages, so that it opens in the
-   player's browser and this window keeps its title bar), opens outside links in the real browser, and loads hero images that this app
-   version doesn't ship (heroes added later) from GitHub Pages. Its texts follow the site's language (js/i18n.js).
+   Adds a title bar to drag, minimise, maximise and close the frameless window, a rail on the right with a random
+   hero line, how to use the overlay with a link to the support page (support.html on GitHub Pages, so that it opens
+   in the player's browser and this window keeps its title bar) and the app's ad at the bottom, opens outside links in
+   the real browser, and loads hero images that this app version doesn't ship (heroes added later) from GitHub Pages.
+   Its texts follow the site's language (js/i18n.js).
 
    The ad (Overwolf Ads SDK, dev.overwolf.com → Monetization → Advertising) follows Overwolf's rules: only in this
    desktop window, never over the game (the overlay opens during matches, and the scan settings are a settings
@@ -25,17 +26,26 @@
        it scrolls instead, so the ad is always fully on screen. */
     .ow-rail { position: fixed; z-index: 90; top: ${BAR}px; right: 0; bottom: 0; width: ${RAIL}px; padding: 12px 12px 22px;
       box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; background: var(--ground); border-left: 1px solid var(--line); }
-    .ow-ad-wrap { flex: none; margin-top: auto; padding-top: 12px; }
+    .ow-ad-wrap { flex: none; padding-top: 12px; }
     .ow-rail .ad-label { display: block; margin-bottom: 4px; color: var(--ink-2); font: 500 12px/1 var(--f-ui); }
     .ow-ad-box { width: ${AD.width}px; height: ${AD.height}px; background: transparent; }
     #ow-ad { width: ${AD.width}px; height: ${AD.height}px; }
-    .ow-how { flex: 0 1 auto; min-height: 0; overflow: auto; padding: 14px 16px 16px; background: var(--surface); border-radius: 12px; font-size: 14.5px; color: var(--ink-2); }
+    .ow-how { flex: 0 1 auto; min-height: 0; overflow: auto; margin: auto 0; padding: 12px 16px 14px; background: var(--surface); border-radius: 12px; font-size: 14.5px; color: var(--ink-2); }
     .ow-how h2 { margin: 0; color: var(--ink); font: 600 18px/1.2 var(--f-ui); }
-    .ow-how ol { margin: 10px 0 14px; padding-left: 20px; display: grid; gap: 8px; line-height: 1.45; }
+    .ow-how ol { margin: 8px 0 12px; padding-left: 20px; display: grid; gap: 8px; line-height: 1.45; }
     .ow-how kbd { font-size: 13px; line-height: 20px; padding: 0 5px; background: var(--surface); }
     .ow-how button { display: inline-flex; align-items: center; height: 44px; padding: 0 16px; border: 0; border-radius: 9px; background: var(--soft); color: var(--ink); font: 600 15px/1 var(--f-ui); cursor: pointer; }
     .ow-how button:hover { background: var(--line); }
     .ow-how .ow-support { display: block; margin-top: 12px; color: var(--ally); font-size: 14px; }
+    /* A hero line on top. When the window is short it gives way first (the large flex-shrink) and hides rather than
+       showing cut; then the how-to scrolls. The ad always stays whole. */
+    .ow-quote { flex: 0 1000 auto; min-height: 0; overflow: hidden; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: center;
+      margin: 0; padding: 12px 14px; background: var(--surface); border-radius: 12px; }
+    .ow-quote.ow-cut { display: none; }
+    .ow-quote img { display: block; width: 56px; height: 56px; border-radius: 8px; object-fit: cover; background: var(--soft); }
+    .ow-quote blockquote { margin: 0; font: italic 800 21px/1.1 var(--f-game); color: var(--ink); overflow-wrap: anywhere; }
+    .ow-quote blockquote .q { color: var(--orange); }
+    .ow-quote figcaption { margin-top: 5px; font: 500 13px/1.2 var(--f-ui); color: var(--ink-2); }
     .ow-bar { position: fixed; z-index: 100; top: 0; left: 0; right: 0; height: ${BAR}px; display: flex; align-items: center; gap: 4px;
       padding-left: 12px; background: #05070B; color: var(--night-fg); user-select: none; cursor: default; }
     .ow-bar .t { font: italic 800 15px/1 var(--f-game); text-transform: uppercase; letter-spacing: .03em; }
@@ -51,6 +61,19 @@
   </style>`);
 
   const icon = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">${d}</svg>`;
+  // A random hero line on top of the rail, picked each time the app opens, never the same one twice in a row.
+  const QUOTES = [
+    ['Good kitty', 'ana', 'Ana'], ['Come hereee', 'reinhardt', 'Reinhardt'], ['Ahh, it’s snowing!', 'junkrat', 'Junkrat'],
+    ['Baaawwb!!! Do something!!!', 'ashe', 'Ashe'], ['Bzzzz bzt?', 'bastion', 'Bastion'], ['Listen to your mummy', 'ana', 'Ana'],
+    ['Meow meow meow', 'jetpack-cat', 'Jetpack Cat'],
+  ];
+  const QUOTE_KEY = 'cpa:ow:quote';
+  let last = -1;
+  try { const v = localStorage.getItem(QUOTE_KEY); if (v !== null) last = Number(v); } catch (e) { /* storage blocked */ }
+  let qi = Math.floor(Math.random() * QUOTES.length);
+  if (qi === last) qi = (qi + 1) % QUOTES.length;
+  try { localStorage.setItem(QUOTE_KEY, String(qi)); } catch (e) { /* storage blocked */ }
+  const [quoteText, quoteHero, quoteName] = QUOTES[qi];
   // data-i18n: I18n.apply() words them again when the language changes.
   document.body.insertAdjacentHTML('afterbegin', `<div class="ow-bar" id="ow-bar">
       <span class="t">Counter<span>Atlas</span></span>
@@ -61,6 +84,10 @@
       <button type="button" class="x" data-ow="close" data-i18n-attr="title:ov.close; aria-label:ov.close">${icon('<path d="M6 6l12 12M18 6 6 18"/>')}</button>
     </div><div class="ow-grip" id="ow-grip" aria-hidden="true"></div>
     <aside class="ow-rail" id="ow-rail">
+      <figure class="ow-quote" id="ow-quote">
+        <img src="p/${quoteHero}.jpg" alt="" width="56" height="56">
+        <div><blockquote><span class="q">“</span>${quoteText}<span class="q">”</span></blockquote><figcaption>— ${quoteName}</figcaption></div>
+      </figure>
       <div class="ow-how"><h2 data-i18n="ow.howTitle"></h2><ol id="ow-how"></ol>
         <button type="button" data-ow="calib" data-i18n="ow.calib"></button>
         <a class="ow-support" href="${SITE}support.html" data-i18n="site.support"></a></div>
@@ -69,6 +96,16 @@
     </aside>`);
   I18n.apply(document.getElementById('ow-bar'));
   I18n.apply(document.getElementById('ow-rail'));
+
+  // The quote shows only when it fits whole; a clipped card is worse than none.
+  const quoteCard = document.getElementById('ow-quote');
+  const fitQuote = () => {
+    quoteCard.classList.remove('ow-cut');
+    if (quoteCard.scrollHeight > quoteCard.clientHeight + 1) quoteCard.classList.add('ow-cut');
+  };
+  new ResizeObserver(fitQuote).observe(document.getElementById('ow-rail'));
+  window.addEventListener('resize', fitQuote);
+  fitQuote();
 
   const current = cb => overwolf.windows.getCurrentWindow(r => r && r.success && cb(r.window));
   const api = () => overwolf.windows.getMainWindow().CPA_api;

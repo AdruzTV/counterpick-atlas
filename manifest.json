@@ -35,7 +35,7 @@
         "desktop_only": true,
         "native_window": true,
         "resizable": true,
-        "size": { "width": 1280, "height": 820 },
+        "size": { "width": 1460, "height": 820 },
         "min_size": { "width": 900, "height": 600 },
         "keep_window_location": true
       },
