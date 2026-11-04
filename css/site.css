@@ -217,7 +217,7 @@ a.pill:hover { box-shadow: 0 0 0 2px currentColor; }
 
 /* ---------- roster: one row per role, like hero select ---------- */
 .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 26px; color: var(--ink-2); font-size: 15px; }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend > span { display: inline-flex; align-items: center; gap: 6px; }
 .roster { display: grid; gap: 30px; }
 .role-h { display: flex; align-items: center; gap: 10px; font: 600 20px/1 var(--f-ui); margin-bottom: 12px; }
 .role-h svg { width: 20px; height: 20px; fill: var(--ink); }
@@ -228,7 +228,8 @@ a.pill:hover { box-shadow: 0 0 0 2px currentColor; }
 .tile:focus-visible { outline-offset: 3px; }
 .tile img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 6px; background: var(--soft); }
 .tile .nm { display: block; margin-top: 7px; padding: 0 2px; font: italic 800 15px/1 var(--f-game); text-transform: uppercase; letter-spacing: .01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.flag { position: absolute; top: 9px; right: 9px; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 5px; font: 700 11px/1 var(--f-ui); color: var(--night); }
+.flag { position: absolute; top: 9px; right: 9px; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 5px; color: var(--night); }
+.flag svg { display: block; width: 10px; height: 10px; fill: currentColor; }
 .flag.buff { background: var(--buff); } .flag.nerf { background: var(--enemy); } .flag.rework { background: var(--ally); } .flag.mixed { background: var(--orange); }
 .legend .flag { position: static; }
 

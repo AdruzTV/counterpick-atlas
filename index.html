@@ -83,6 +83,9 @@
   const atlas = new CounterpickCore.Atlas();
   const VERDICT = { buff: { sym: '▲' }, nerf: { sym: '▼' }, rework: { sym: '◆' }, mixed: { sym: '◆' } };
   const verdictLabel = v => t('verdict.' + v);
+  // Corner flags draw their mark as a shape, so it sits in the middle whatever the font has for ▲ ▼ ◆.
+  const FLAG_PATH = { buff: 'M5 1.6 8.8 8.4H1.2Z', nerf: 'M1.2 1.6h7.6L5 8.4Z', rework: 'M5 .8 9.2 5 5 9.2.8 5Z', mixed: 'M5 .8 9.2 5 5 9.2.8 5Z' };
+  const flag = v => `<span class="flag ${v}" aria-hidden="true"><svg viewBox="0 0 10 10"><path d="${FLAG_PATH[v]}"/></svg></span>`;
   // Patch changes in lanes: down on the left, up on the right ("against you left, for you right").
   const LANES = [['nerf', ['nerf'], '▼'], ['change', ['rework', 'mixed'], '◆'], ['buff', ['buff'], '▲']];
   const ANY_SVG = '<svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3h3v7.5H21v3h-7.5V21h-3v-7.5H3v-3h7.5V3Z"/></svg>';
@@ -236,15 +239,23 @@
       return;
     }
     if (isRefresh || !app.querySelector('.home')) renderHome();
-    setNav(id === 'hrdinove' ? 'heroes' : 'patch');
     document.title = 'Counterpick Atlas';
-    if (isRefresh) return;
-    const target = id && document.getElementById(id);
-    if (target) {
-      if (target.tagName === 'DETAILS') target.open = true;
-      target.scrollIntoView({ block: 'start' });
-    } else window.scrollTo(0, 0);
+    if (!isRefresh) {
+      const target = id && document.getElementById(id);
+      if (target) {
+        if (target.tagName === 'DETAILS') target.open = true;
+        target.scrollIntoView({ block: 'start' });
+      } else window.scrollTo(0, 0);
+    }
+    homeNav();
   }
+
+  // On the home page the bar follows the reading: Patch notes above the heroes, Hrdinové once they fill the screen.
+  function homeNav() {
+    const heroes = app.querySelector('.home #hrdinove');
+    if (heroes) setNav(heroes.getBoundingClientRect().top < innerHeight * 0.4 ? 'heroes' : 'patch');
+  }
+  window.addEventListener('scroll', homeNav, { passive: true });
 
   /* ---------- small renderers ---------- */
   const pill = v => `<span class="pill ${v}">${VERDICT[v].sym} ${verdictLabel(v)}</span>`;
@@ -333,8 +344,8 @@
 
   function tile(h) {
     const l = LATEST[h.key], v = l && l.change.verdict;
-    const flag = l ? `<span class="flag ${v}" aria-hidden="true">${VERDICT[v].sym}</span><span class="sr">${verdictLabel(v)} ${fmtDate(l.patch.date)}</span>` : '';
-    return `<a class="tile" href="#${h.key}"><img src="p/${h.key}.jpg" alt="" loading="lazy" width="160" height="160">${flag}<span class="nm">${esc(h.name)}</span></a>`;
+    const mark = l ? `${flag(v)}<span class="sr">${verdictLabel(v)} ${fmtDate(l.patch.date)}</span>` : '';
+    return `<a class="tile" href="#${h.key}"><img src="p/${h.key}.jpg" alt="" loading="lazy" width="160" height="160">${mark}<span class="nm">${esc(h.name)}</span></a>`;
   }
 
   // The app in the game, with a small picture of the overlay. Web only: inside the Overwolf app it is hidden.
@@ -369,7 +380,7 @@
       return `<div><h3 class="role-h">${ROLE_SVG[r.key]}${r.label} <span class="n">${list.length}</span></h3>
         <div class="grid">${list.map(tile).join('')}</div></div>`;
     }).join('');
-    const legend = ['buff', 'nerf', 'mixed', 'rework'].map(v => `<span><span class="flag ${v}" aria-hidden="true">${VERDICT[v].sym}</span>${verdictLabel(v)}</span>`).join('');
+    const legend = ['buff', 'nerf', 'mixed', 'rework'].map(v => `<span>${flag(v)}${verdictLabel(v)}</span>`).join('');
     app.innerHTML = `<div class="home">
       ${appBand()}
       <section class="wrap sec" id="patch" aria-labelledby="patch-h">
