@@ -103,7 +103,7 @@
     const bx = Scoreboard.boxes(S.layout, S.frame.width, S.frame.height, S.rows);
     ctx.font = `700 ${Math.max(11, Math.min(16, 0.35 * bx.ally[0].s * k))}px "Barlow Condensed", sans-serif`;
     for (const sideKey of ['ally', 'enemy']) {
-      const colour = sideKey === 'ally' ? '#5ab6ff' : '#ff626a';
+      const colour = sideKey === 'ally' ? '#5AB0FF' : '#FF6B74';
       bx[sideKey].forEach((b, i) => {
         const [x, y] = toCanvas(b.x - b.s / 2, b.y - b.s / 2), s = b.s * k;
         ctx.lineWidth = S.active === sideKey ? 2.5 : 1.5;
@@ -122,7 +122,7 @@
           const w = ctx.measureText(label).width + 8;
           ctx.fillStyle = 'rgba(13,19,32,.85)';
           ctx.fillRect(x - w - 4, y + s / 2 - 9, w, 18);
-          ctx.fillStyle = slot.sure ? '#eef2f8' : '#f99e1a';
+          ctx.fillStyle = slot.sure ? '#F2F4F7' : '#F99E1A';
           ctx.fillText(label, x - w, y + s / 2 + 5);
         }
       });
@@ -204,38 +204,39 @@
   function renderSide() {
     const st = S.matcher ? S.matcher.stats() : null, l = S.layout;
     side.innerHTML = `
-      ${IN_APP ? `<span class="lbl">${t('cal.keys')}</span>
+      ${IN_APP ? `<section class="card" aria-labelledby="k-h"><h2 id="k-h">${t('cal.keys')}</h2>
         ${keyRow('scan', t('cal.keyScan'))}${keyRow('toggle', t('cal.keyToggle'))}
         <p class="small${S.keyMsg && S.keyMsg.bad ? ' bad' : ''}">${t(S.keyMsg ? S.keyMsg.key : 'cal.keysHint')}</p>
         <div class="btns"><button type="button" class="btn" data-act="keys-default">${t('cal.keysDefault')}</button></div>
-        <span class="lbl" style="margin-top:22px">${t('cal.calib')}</span>` : ''}
-      <ol class="steps">
-        <li>${IN_APP ? t('cal.step1App', { key: KEYS.scan }) : t('cal.step1Browser')}</li>
-        <li>${t('cal.step2')}</li>
-        <li>${t('cal.step3')}</li>
-      </ol>
-      <span class="lbl">${t('cal.find')}</span>
-      <div class="seg">${seg('findmode', 'auto', t('cal.auto'), S.auto)}${seg('findmode', 'manual', t('cal.byHand'), !S.auto)}</div>
-      <span class="lbl">${t('cal.rows')}</span>
-      <div class="seg">${seg('rows', 5, '5v5', S.rows === 5)}${seg('rows', 6, '6v6', S.rows === 6)}</div>
-      <span class="lbl">${t('cal.size')}</span>
-      <div class="range"><input type="range" id="size" min="0.02" max="0.1" step="0.0005" value="${l.size}"><output>${px(l.size)}</output></div>
-      <span class="lbl">${t('cal.pitch')}</span>
-      <div class="range"><input type="range" id="pitch" min="0.03" max="0.1" step="0.0005" value="${l.pitch}"><output>${px(l.pitch)}</output></div>
-      <div class="btns">
-        <button type="button" class="btn" data-act="zoom">${t(S.zoom ? 'cal.whole' : 'cal.zoom')}</button>
-        <button type="button" class="btn" data-act="reset">${t('cal.reset')}</button>
-      </div>
-      ${S.result ? `<span class="lbl">${t('cal.seen')}</span>${previews('ally')}<div style="height:4px"></div>${previews('enemy')}
-        <p class="small">${t('cal.fixInOverlay')}</p>` : ''}
-      <span class="lbl">${t('cal.samples')}</span>
-      ${st ? `<p class="small" style="margin-top:0">${t('cal.stats', st)}</p>` : ''}
-      <div class="btns">
-        <button type="button" class="btn" data-act="export">${t('cal.export')}</button>
-        <button type="button" class="btn" data-act="wipe">${t(S.wipeArmed ? 'cal.wipeSure' : 'cal.wipe')}</button>
-      </div>
-      <p class="small">${t('cal.share')}</p>
-      <p class="small"><a href="${CounterpickCore.SITE}support.html" data-ext>${t('site.support')}</a></p>`;
+      </section>` : ''}
+      <section class="card" aria-labelledby="c-h"><h2 id="c-h">${t('cal.calib')}</h2>
+        <ol class="steps">
+          <li>${IN_APP ? t('cal.step1App', { key: KEYS.scan }) : t('cal.step1Browser')}</li>
+          <li>${t('cal.step2')}</li>
+          <li>${t('cal.step3')}</li>
+        </ol>
+        <div class="opt-row"><span id="l-find">${t('cal.find')}</span>
+          <div class="seg" role="group" aria-labelledby="l-find">${seg('findmode', 'auto', t('cal.auto'), S.auto)}${seg('findmode', 'manual', t('cal.byHand'), !S.auto)}</div></div>
+        <div class="opt-row"><span id="l-rows">${t('cal.rows')}</span>
+          <div class="seg" role="group" aria-labelledby="l-rows">${seg('rows', 5, '5v5', S.rows === 5)}${seg('rows', 6, '6v6', S.rows === 6)}</div></div>
+        <div class="range"><label for="size">${t('cal.size')}</label><input type="range" id="size" min="0.02" max="0.1" step="0.0005" value="${l.size}"><output for="size">${px(l.size)}</output></div>
+        <div class="range"><label for="pitch">${t('cal.pitch')}</label><input type="range" id="pitch" min="0.03" max="0.1" step="0.0005" value="${l.pitch}"><output for="pitch">${px(l.pitch)}</output></div>
+        <div class="btns">
+          <button type="button" class="btn" data-act="zoom">${t(S.zoom ? 'cal.whole' : 'cal.zoom')}</button>
+          <button type="button" class="btn" data-act="reset">${t('cal.reset')}</button>
+        </div>
+      </section>
+      ${S.result ? `<section class="card" aria-labelledby="s-h"><h2 id="s-h">${t('cal.seen')}</h2>${previews('ally')}${previews('enemy')}
+        <p class="small">${t('cal.fixInOverlay')}</p></section>` : ''}
+      <section class="card" aria-labelledby="v-h"><h2 id="v-h">${t('cal.samples')}</h2>
+        ${st ? `<p class="small top">${t('cal.stats', st)}</p>` : ''}
+        <div class="btns">
+          <button type="button" class="btn" data-act="export">${t('cal.export')}</button>
+          <button type="button" class="btn danger" data-act="wipe">${t(S.wipeArmed ? 'cal.wipeSure' : 'cal.wipe')}</button>
+        </div>
+        <p class="small">${t('cal.share')}</p>
+        <p class="small"><a href="${CounterpickCore.SITE}support.html" data-ext>${t('site.support')}</a></p>
+      </section>`;
   }
 
   side.addEventListener('input', e => {

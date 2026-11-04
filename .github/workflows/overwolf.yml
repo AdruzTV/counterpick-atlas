@@ -31,7 +31,7 @@ jobs:
 
       # Overwolf asks for a zip with normal compression (not the highest), manifest.json at its root.
       - name: Pack
-        run: zip -r -q counterpick-atlas.opk manifest.json index.html js data art p overlay overwolf
+        run: zip -r -q counterpick-atlas.opk manifest.json index.html css js data art p overlay overwolf
 
       - uses: actions/upload-artifact@v4
         with:

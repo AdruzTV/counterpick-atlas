@@ -44,7 +44,7 @@
     'verdict.mixed': ['Buff i nerf', 'Buff & nerf'],
     'patch.title': ['Patch notes', 'Patch notes'],
     'patch.newest': ['Nejnovější', 'Latest'],
-    'patch.auto': ['Auto · EN', 'Auto'],
+    'patch.auto': ['Automaticky · anglicky', 'Automatic'],
     'patch.autoTitle': ['Staženo automaticky z oficiálních patch notes, bez českého shrnutí', 'Downloaded automatically from the official patch notes'],
     'patch.official': ['Oficiální znění ↗', 'Official notes ↗'],
     'patch.heroChanges': ['Změny hrdinů · {n}', 'Hero changes · {n}'],
@@ -59,6 +59,26 @@
     'patch.checked': ['Data naposledy zkontrolována: {when}', 'Data last checked: {when}'],
     'home.allPatches': ['Všechny patche v angličtině ↗', 'All patch notes ↗'],
     'home.heroesAside': ['{n} hrdinů · značka v rohu = změna v posledních patchích', '{n} heroes · corner badge = changed in recent patches'],
+    'patch.heroes': ['Změny hrdinů', 'Hero changes'],
+    'patch.heroesN': [n => `${n} ${n === 1 ? 'hrdina' : n < 5 ? 'hrdinové' : 'hrdinů'}`, n => `${n} ${n === 1 ? 'hero' : 'heroes'}`],
+    'lane.nerf': ['Oslabení', 'Nerfs'],
+    'lane.change': ['Rework a mix', 'Reworks and mixed'],
+    'lane.buff': ['Posílení', 'Buffs'],
+    'site.retry': ['Obnovit stránku', 'Reload the page'],
+    'home.heroCount': ['{n} hrdinů', '{n} heroes'],
+    'home.legend': ['Značka v rohu = změna v posledních dvou patchích:', 'Corner badge = changed in the last two patches:'],
+
+    /* ---------- site: the Overwolf app (web only, hidden inside the app) ---------- */
+    'app.label': ['Aplikace do hry', 'The in-game app'],
+    'app.title': ['Countery přímo ve hře', 'Counters right in the game'],
+    'app.text': ['Aplikace pro Overwolf přečte ze scoreboardu hrdiny obou týmů a poradí, koho hrát. V zápase stačí podržet <kbd>Tab</kbd> a zmáčknout <kbd>Alt+C</kbd>.',
+      'The Overwolf app reads both teams’ heroes from the scoreboard and tells you whom to play. In a match, just hold <kbd>Tab</kbd> and press <kbd>Alt+C</kbd>.'],
+    'app.cta': ['Získat v obchodě Overwolf ↗', 'Get it on the Overwolf store ↗'],
+    'app.how': ['Jak overlay funguje', 'How the overlay works'],
+    'app.fine': ['Zdarma pro Windows, potřebuješ klienta Overwolf.', 'Free for Windows, needs the Overwolf client.'],
+    'app.promoTitle': ['Ve hře to za tebe vyplní overlay', 'In the game, the overlay fills this in for you'],
+    'app.promoText': ['Aplikace pro Overwolf přečte hrdiny ze scoreboardu sama: podrž <kbd>Tab</kbd> a zmáčkni <kbd>Alt+C</kbd>.',
+      'The Overwolf app reads the heroes from the scoreboard itself: hold <kbd>Tab</kbd> and press <kbd>Alt+C</kbd>.'],
 
     /* ---------- site: hero page ---------- */
     'hp.health': ['{n} zdraví', '{n} health'],
@@ -91,6 +111,9 @@
     'hero.vsEmpty': ['Zatím tu nejsou žádné matchupy.', 'No matchups here yet.'],
     'hero.note': ['Orientační přehled podle schopností hrdinů. Hodně záleží na mapě, složení týmu a skillu hráče.',
       'A rough guide based on the heroes’ abilities. A lot depends on the map, the team composition and the player’s skill.'],
+    'hero.countersHint': ['Vlevo hrdinové, se kterými má {name} problém, vpravo ti, proti kterým je dobrá volba. Dva dílky u osy znamenají tvrdý counter.',
+      'On the left the heroes {name} struggles against, on the right the ones {name} is a good pick against. Two bars at the axis mean a hard counter.'],
+    'hero.changed': ['Poslední změny:', 'Latest changes:'],
     'hero.abilities': ['Schopnosti', 'Abilities'],
     'hero.abilitiesHint': ['Popisy jsou v angličtině, stejně jako ve hře.', 'Descriptions as in the game.'],
 
@@ -136,6 +159,11 @@
     'cp.misfits': ['Spíš ne', 'Rather not'],
     'cp.note': ['Pořadí určují countery, známá komba a styl týmu. Mapa a strana jsou jen tip, body nepřidávají. Rozhoduje i to, na kom jsi dobrý.',
       'The order comes from counters, known combos and the team’s style. Map and side are only tips, they add no points. It also matters which heroes you are good at.'],
+    'cp.vsYou': ['proti tobě', 'against you'],
+    'cp.forYou': ['pro tebe', 'for you'],
+    'cp.you': ['Ty', 'You'],
+    'cp.youRole': ['{role}, doporučení níže', '{role}, picks below'],
+    'cp.youAny': ['Doporučení níže', 'Picks below'],
     'search.none': ['Žádný hrdina neodpovídá. Zkus jiný název.', 'No hero matches. Try another name.'],
 
     /* ---------- reasons from js/counterpick-core.js ---------- */
@@ -274,8 +302,8 @@
       'Paste a screenshot of the scoreboard (<kbd>Ctrl+V</kbd>), drop it here, or <label class="test" style="padding:0;border:0;background:none"><u>choose a file</u><input type="file" accept="image/*" data-shot hidden></label>.'],
     'cal.step2': ['Scoreboard se na screenshotu hledá sám, rámečky ukazují, kde ho našel. Když sedí na portrétech, nic dalšího není potřeba.',
       'The scoreboard is found on the screenshot automatically, the boxes show where. If they sit on the portraits, nothing else is needed.'],
-    'cal.step3': ['Když nesedí, táhni <b style="color:var(--blue)">modré</b> rámečky na portréty spoluhráčů a <b style="color:var(--bad)">červené</b> na portréty nepřátel (šipky posouvají po pixelu, se Shiftem po pěti) a posuvníky dolaď velikost a rozestup. Tím přepneš na ruční rozložení.',
-      'If they don’t, drag the <b style="color:var(--blue)">blue</b> boxes onto your teammates’ portraits and the <b style="color:var(--bad)">red</b> ones onto the enemies’ (arrow keys move by one pixel, with Shift by five) and fine-tune size and spacing with the sliders. This switches to the hand-placed layout.'],
+    'cal.step3': ['Když nesedí, táhni <b style="color:var(--ally)">modré</b> rámečky na portréty spoluhráčů a <b style="color:var(--enemy)">červené</b> na portréty nepřátel (šipky posouvají po pixelu, se Shiftem po pěti) a posuvníky dolaď velikost a rozestup. Tím přepneš na ruční rozložení.',
+      'If they don’t, drag the <b style="color:var(--ally)">blue</b> boxes onto your teammates’ portraits and the <b style="color:var(--enemy)">red</b> ones onto the enemies’ (arrow keys move by one pixel, with Shift by five) and fine-tune size and spacing with the sliders. This switches to the hand-placed layout.'],
     'cal.find': ['Hledání scoreboardu', 'Finding the scoreboard'],
     'cal.auto': ['Automaticky', 'Automatic'],
     'cal.byHand': ['Ručně', 'By hand'],
@@ -380,6 +408,11 @@
     return lang === 'en' ? `${MONTHS[m - 1]} ${d}, ${y}` : `${d}. ${m}. ${y}`;
   };
   // A moment with its time: "24. 10. 2026 v 10:56" / "Oct 24, 2026, 10:56"
+  // The same without the year, for the patch timeline: "13. 10." / "Oct 13"
+  const dayMonth = iso => {
+    const [, m, d] = String(iso).slice(0, 10).split('-').map(Number);
+    return lang === 'en' ? `${MONTHS[m - 1]} ${d}` : `${d}. ${m}.`;
+  };
   const stamp = iso => {
     const d = new Date(iso);
     if (isNaN(d)) return '';
@@ -391,7 +424,7 @@
   apply();
 
   window.I18n = {
-    LANGS, t, pick, set, apply, num, date, stamp,
+    LANGS, t, pick, set, apply, num, date, dayMonth, stamp,
     get lang() { return lang; },
     onChange: cb => { listeners.push(cb); },
   };

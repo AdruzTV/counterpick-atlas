@@ -5,6 +5,7 @@
 An unofficial fan guide to Overwatch, written in Czech and also available in English: patch notes, counters, abilities and perks of every hero.
 
 - `index.html` – the whole site
+- `css/site.css` – the look of the site and the support page (dark slate, Overwatch orange, Jost and Barlow Condensed); the overlay and scan settings use the same colours in `overlay/css/overlay.css`
 - `js/i18n.js` – interface texts in Czech and English (site, overlay, scan settings and the Overwolf app's title bar)
 - `js/counterpick-core.js` – how the Counterpick page works out its recommendations (counters, combos, team style, map tips); the site and the in-game overlay share it, so both recommend the same
 - `data/patches.json` – Czech summaries of the patch notes (newest first)

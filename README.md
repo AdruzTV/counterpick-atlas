@@ -5,6 +5,7 @@
 Neoficiální český fanouškovský průvodce ke hře Overwatch: patch notes, countery, schopnosti a perky všech hrdinů.
 
 - `index.html` – celá stránka
+- `css/site.css` – vzhled webu a stránky podpory (tmavá břidlice, oranžová Overwatch, písma Jost a Barlow Condensed); overlay a nastavení skenu mají stejné barvy v `overlay/css/overlay.css`
 - `js/i18n.js` – texty rozhraní česky a anglicky (web, overlay, nastavení skenu a lišta Overwolf aplikace)
 - `js/counterpick-core.js` – výpočet doporučení pro stránku Counterpick (countery, komba, styl týmu, tipy k mapě); sdílí ho web i overlay ve hře, takže doporučují stejně
 - `data/patches.json` – česká shrnutí patch notes (nejnovější nahoře)

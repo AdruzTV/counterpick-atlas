@@ -15,48 +15,53 @@
   const ADS_SDK = 'https://content.overwolf.com/libs/ads/latest/owads.min.js';
   const log = (...a) => console.log('[CPA]', ...a);
 
+  // The page hides what is for the web only (store links) by this class; index.html sets it early too.
+  document.documentElement.classList.add('in-app');
   document.head.insertAdjacentHTML('beforeend', `<style>
     body { padding-top: ${BAR}px; padding-right: ${RAIL}px; }
-    .bar { top: ${BAR}px !important; }
+    .top { top: ${BAR}px !important; }
+    html { scroll-padding-top: ${BAR + 84}px; }
     /* The ad sits in the bottom right corner, clear of the resize grip; when the window is short, the how-to above
        it scrolls instead, so the ad is always fully on screen. */
     .ow-rail { position: fixed; z-index: 90; top: ${BAR}px; right: 0; bottom: 0; width: ${RAIL}px; padding: 12px 12px 22px;
-      box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; background: #070b13; border-left: 1px solid var(--line); }
+      box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; background: var(--ground); border-left: 1px solid var(--line); }
     .ow-ad-wrap { flex: none; margin-top: auto; padding-top: 12px; }
-    .ow-rail .ad-label { display: block; margin-bottom: 4px; color: var(--dim); font: 600 11px/1 var(--f-body); letter-spacing: .06em; text-transform: uppercase; }
+    .ow-rail .ad-label { display: block; margin-bottom: 4px; color: var(--ink-2); font: 500 12px/1 var(--f-ui); }
     .ow-ad-box { width: ${AD.width}px; height: ${AD.height}px; background: transparent; }
     #ow-ad { width: ${AD.width}px; height: ${AD.height}px; }
-    .ow-how { flex: 0 1 auto; min-height: 0; overflow: auto; padding: 12px 14px; background: var(--panel); border-left: 3px solid var(--accent); font-size: 14px; color: var(--muted); }
-    .ow-how strong { display: block; color: var(--fg); font: italic 800 17px/1.1 var(--f-display); text-transform: uppercase; }
-    .ow-how ol { margin: 8px 0 12px; padding-left: 18px; display: grid; gap: 6px; }
-    .ow-how kbd { font: 600 12px/18px var(--f-body); color: var(--fg); border: 1px solid var(--line); padding: 0 5px; border-radius: 3px; }
-    .ow-how button { border: 0; padding: 8px 12px; background: var(--panel-hi); color: var(--fg); font: 700 13px/1 var(--f-display); letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
+    .ow-how { flex: 0 1 auto; min-height: 0; overflow: auto; padding: 14px 16px 16px; background: var(--surface); border-radius: 12px; font-size: 14.5px; color: var(--ink-2); }
+    .ow-how h2 { margin: 0; color: var(--ink); font: 600 18px/1.2 var(--f-ui); }
+    .ow-how ol { margin: 10px 0 14px; padding-left: 20px; display: grid; gap: 8px; line-height: 1.45; }
+    .ow-how kbd { font-size: 13px; line-height: 20px; padding: 0 5px; background: var(--surface); }
+    .ow-how button { display: inline-flex; align-items: center; height: 44px; padding: 0 16px; border: 0; border-radius: 9px; background: var(--soft); color: var(--ink); font: 600 15px/1 var(--f-ui); cursor: pointer; }
     .ow-how button:hover { background: var(--line); }
-    .ow-how .ow-support { display: block; margin-top: 10px; color: var(--blue); font-size: 13px; }
+    .ow-how .ow-support { display: block; margin-top: 12px; color: var(--ally); font-size: 14px; }
     .ow-bar { position: fixed; z-index: 100; top: 0; left: 0; right: 0; height: ${BAR}px; display: flex; align-items: center; gap: 4px;
-      padding-left: 12px; background: #070b13; border-bottom: 1px solid var(--line); user-select: none; cursor: default; }
-    .ow-bar .t { font: italic 800 15px/1 var(--f-display); text-transform: uppercase; letter-spacing: .03em; }
-    .ow-bar .t span { color: var(--accent); }
-    .ow-bar .h { margin-left: 14px; flex: 1; min-width: 0; color: var(--dim); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .ow-bar .h b { color: var(--muted); font-weight: 600; }
-    .ow-bar button { height: ${BAR}px; min-width: 42px; padding: 0 12px; border: 0; background: none; color: var(--muted); font: 600 14px var(--f-body); cursor: pointer; }
-    .ow-bar button:hover { background: var(--panel-hi); color: var(--fg); }
-    .ow-bar button.x:hover { background: #c4323a; color: #fff; }
+      padding-left: 12px; background: #05070B; color: var(--night-fg); user-select: none; cursor: default; }
+    .ow-bar .t { font: italic 800 15px/1 var(--f-game); text-transform: uppercase; letter-spacing: .03em; }
+    .ow-bar .t span { color: var(--orange); }
+    .ow-bar .h { margin-left: 16px; flex: 1; min-width: 0; color: var(--night-mute); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ow-bar .h b { color: var(--night-fg); font-weight: 600; }
+    .ow-bar button { height: ${BAR}px; min-width: 44px; padding: 0 12px; border: 0; background: none; color: var(--night-mute); font: 500 13px var(--f-ui); cursor: pointer; }
+    .ow-bar button:hover { background: var(--night-2); color: var(--night-fg); }
+    .ow-bar button.x:hover { background: #C4323A; color: #FFFFFF; }
+    .ow-bar svg { width: 14px; height: 14px; display: block; margin: auto; }
     .ow-grip { position: fixed; z-index: 100; right: 0; bottom: 0; width: 16px; height: 16px; cursor: nwse-resize;
-      background: linear-gradient(135deg, transparent 50%, var(--line) 50%); }
+      background: linear-gradient(135deg, transparent 50%, var(--edge) 50%); }
   </style>`);
 
+  const icon = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">${d}</svg>`;
   // data-i18n: I18n.apply() words them again when the language changes.
   document.body.insertAdjacentHTML('afterbegin', `<div class="ow-bar" id="ow-bar">
       <span class="t">Counterpick <span>Atlas</span></span>
       <span class="h"></span>
       <button type="button" data-ow="calib" data-i18n="ow.calib" data-i18n-attr="title:ov.calib"></button>
-      <button type="button" data-ow="min" data-i18n-attr="title:ow.min; aria-label:ow.min">–</button>
-      <button type="button" data-ow="max" data-i18n-attr="title:ow.max; aria-label:ow.max">□</button>
-      <button type="button" class="x" data-ow="close" data-i18n-attr="title:ov.close; aria-label:ov.close">×</button>
+      <button type="button" data-ow="min" data-i18n-attr="title:ow.min; aria-label:ow.min">${icon('<path d="M5 12h14"/>')}</button>
+      <button type="button" data-ow="max" data-i18n-attr="title:ow.max; aria-label:ow.max">${icon('<rect x="5" y="5" width="14" height="14" rx="1"/>')}</button>
+      <button type="button" class="x" data-ow="close" data-i18n-attr="title:ov.close; aria-label:ov.close">${icon('<path d="M6 6l12 12M18 6 6 18"/>')}</button>
     </div><div class="ow-grip" id="ow-grip" aria-hidden="true"></div>
     <aside class="ow-rail" id="ow-rail">
-      <div class="ow-how"><strong data-i18n="ow.howTitle"></strong><ol id="ow-how"></ol>
+      <div class="ow-how"><h2 data-i18n="ow.howTitle"></h2><ol id="ow-how"></ol>
         <button type="button" data-ow="calib" data-i18n="ow.calib"></button>
         <a class="ow-support" href="${SITE}support.html" data-i18n="site.support"></a></div>
       <div class="ow-ad-wrap"><span class="ad-label" data-i18n="ow.ad"></span>

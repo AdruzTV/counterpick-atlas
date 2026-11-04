@@ -168,6 +168,15 @@
   const fmtPts = v => (v > 0 ? '+' : v < 0 ? '−' : '') + I18n.num(Math.abs(v));
   const scoreCls = v => v > 0 ? 'score' : v < 0 ? 'score neg' : 'score zero';
   const seg = (attr, value, label, on) => `<button type="button" class="seg-btn" data-${attr}="${value}" aria-pressed="${on}">${label}</button>`;
+  // The score split at zero, as on the site: points against you on the left, for you on the right, one scale for the
+  // cards shown together.
+  const halves = c => [-1, 1].map(s => c.why.filter(w => !w.tip && w.v * s > 0).reduce((a, w) => a + Math.abs(w.v), 0));
+  const barScale = list => Math.min(15, 92 / Math.max(1, ...list.flatMap(halves)));
+  function dbarHtml(c, k) {
+    const pts = c.why.filter(w => !w.tip && w.v);
+    const bar = w => `<i style="width:${(Math.abs(w.v) * k).toFixed(1)}%"></i>`;
+    return `<div class="dbar" aria-hidden="true"><div class="neg">${pts.filter(w => w.v < 0).reverse().map(bar).join('')}</div><div class="pos">${pts.filter(w => w.v > 0).map(bar).join('')}</div></div>`;
+  }
 
   function pickState() {
     return {
@@ -183,7 +192,7 @@
     const label = h ? esc(h.name) : t(s.hidden ? 'ov.unknown' : s.empty ? 'ov.nobody' : 'ov.fill');
     const badge = side === 'ally' && i === S.self ? `<span class="badge">${t('ov.you')}</span>` : '';
     const game = s.src === 'game' ? `<span class="badge game" title="${t('ov.gameTitle')}">${t('ov.game')}</span>` : '';
-    return `<button type="button" class="slot${h && !s.sure ? ' unsure' : ''}" data-slot="${side}:${i}" title="${t('ov.fix')}">
+    return `<button type="button" class="slot${h && !s.sure ? ' unsure' : ''}${badge ? ' you' : ''}" data-slot="${side}:${i}" title="${t('ov.fix')}">
       ${badge}${game}${pic}${s.crop ? `<img class="seen" src="${s.crop}" alt="">` : ''}<span class="nm">${label}</span></button>`;
   }
 
@@ -212,7 +221,7 @@
 
   // The hero the player already plays (their row on the scoreboard), scored like the recommendations, with its
   // place among them. Nothing while the player hasn't picked or isn't known.
-  function ownHtml(ranked) {
+  function ownHtml(ranked, k) {
     const me = S.self !== null && S.ally[S.self], key = me && me.key, A = S.atlas, h = key && A.HM[key];
     if (!h) return '';
     const pick = pickState();
@@ -222,9 +231,10 @@
       : best.score > c.score ? t('ov.ownBehind', { name: esc(best.h.name), n: I18n.num(best.score - c.score) }) : '';
     const why = whyList(c, 3) || `<li><span>${t('cp.neutral')}</span></li>`;
     return `<span class="lbl">${t('ov.ownPick')}${pos >= 0 ? ` <small>· ${t('ov.ownRank', { pos: pos + 1, n: ranked.length })}</small>` : ''}</span>
-      <article class="rc own"><img src="p/${h.key}.jpg" alt="">
-        <div><strong>${esc(h.name)}</strong>${note ? `<p class="own-note">${note}</p>` : ''}<ul class="why">${why}</ul></div>
-        <span class="${scoreCls(c.score)}">${fmtPts(c.score)}</span></article>`;
+      <article class="rc own"><div class="rc-top"><img src="p/${h.key}.jpg" alt="">
+        <div><strong>${esc(h.name)}</strong>${note ? `<p class="own-note">${note}</p>` : ''}</div>
+        <span class="${scoreCls(c.score)}">${fmtPts(c.score)}</span></div>
+        ${dbarHtml(c, k || barScale([c]))}<ul class="why">${why}</ul></article>`;
   }
 
   function recsHtml() {
@@ -233,17 +243,18 @@
     if (!ranked) return `<p class="empty-msg">${IN_APP ? t('ov.emptyApp', { key: KEYS.scan }) : t('ov.emptyBrowser')}</p>`;
     if (!ranked.length) return ownHtml(ranked) + `<p class="empty-msg">${t('cp.noneLeft')}</p>`;
     if (!ranked.some(c => c.why.some(w => !w.tip))) return ownHtml(ranked) + `<p class="empty-msg">${t('ov.nothing')}</p>`;
-    const top = ranked.slice(0, 3);
+    const top = ranked.slice(0, 3), k = barScale(top);
     const more = ranked.slice(3, 6).filter(c => c.score >= 0);
     const avoid = ranked.filter(c => c.score < 0 && !top.includes(c)).slice(-2).reverse();
     const row = (c, pickWhy) => {
       const w = pickWhy(c.why);
       return `<div class="rr"><img src="p/${c.h.key}.jpg" alt=""><div><strong>${esc(c.h.name)}</strong>${w ? `<p>${esc(w.t)}</p>` : ''}</div><span class="${scoreCls(c.score)}">${fmtPts(c.score)}</span></div>`;
     };
-    return `${ownHtml(ranked)}<span class="lbl">${t('cp.recs')} <small>${S.mode === '5v5' ? ROLE_LABEL[S.role] : '6v6'} · ${t('ov.compared', { n: ranked.length })}</small></span>
-      <div class="recs">${top.map((c, i) => `<article class="rc"><img src="p/${c.h.key}.jpg" alt="">
-        <div><span class="rank">#${i + 1}</span><strong>${esc(c.h.name)}</strong><ul class="why">${whyList(c, 3)}</ul></div>
-        <span class="${scoreCls(c.score)}">${fmtPts(c.score)}</span></article>`).join('')}</div>
+    return `${ownHtml(ranked, k)}<span class="lbl">${t('cp.recs')} <small>${S.mode === '5v5' ? ROLE_LABEL[S.role] : '6v6'} · ${t('ov.compared', { n: ranked.length })}</small></span>
+      <div class="recs">${top.map((c, i) => `<article class="rc${i === 0 ? ' first' : ''}"><div class="rc-top"><img src="p/${c.h.key}.jpg" alt="">
+        <div><span class="rank">#${i + 1}</span><strong>${esc(c.h.name)}</strong></div>
+        <span class="${scoreCls(c.score)}">${fmtPts(c.score)}</span></div>
+        ${dbarHtml(c, k)}<ul class="why">${whyList(c, 3)}</ul></article>`).join('')}</div>
       ${more.length ? `<span class="lbl">${t('cp.more')}</span><div class="rows">${more.map(c => row(c, why => why.find(w => w.v > 0))).join('')}</div>` : ''}
       ${avoid.length ? `<span class="lbl">${t('cp.avoid')}</span><div class="rows">${avoid.map(c => row(c, why => why.find(w => w.v < 0))).join('')}</div>` : ''}`;
   }
@@ -286,9 +297,9 @@
         ${S.mode === '5v5' ? `<div class="seg" role="group" aria-label="${t('cp.yourRole')}">${ROLES.map(r => seg('role', r.key, ROLE_SVG[r.key] + r.label, S.role === r.key)).join('')}</div>` : ''}
       </div>
       <div class="opts">${mapSelect()}${sidePicker()}</div>
-      <span class="lbl">${t('cp.team')} ${S.fromGame ? `<small>${t('ov.fromGame')}</small>` : ''}</span>
+      <span class="lbl ally">${t('cp.team')} ${S.fromGame ? `<small>${t('ov.fromGame')}</small>` : ''}</span>
       <div class="slots" style="--n:${rows()}">${S.ally.map((s, i) => slotHtml('ally', s, i)).join('')}</div>
-      <span class="lbl">${t('cp.enemies')} ${unsure ? `<small>${t('ov.unsure')}</small>` : ''}</span>
+      <span class="lbl enemy">${t('cp.enemies')} ${unsure ? `<small>${t('ov.unsure')}</small>` : ''}</span>
       <div class="slots enemy" style="--n:${rows()}">${S.enemy.map((s, i) => slotHtml('enemy', s, i)).join('')}</div>
       ${hidden ? `<p class="note">${t('ov.hidden', { n: hidden })}</p>` : ''}
       ${selfHint}
