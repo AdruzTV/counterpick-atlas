@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Counterpick Atlas · podpora</title>
-<meta name="description" content="Podpora Counterpick Atlas: jak používat overlay v Overwatch, časté dotazy, řešení problémů a seznam změn.">
+<title>CounterBoard · podpora</title>
+<meta name="description" content="Podpora CounterBoard: jak používat overlay v Overwatch, časté dotazy, řešení problémů a seznam změn.">
 <meta name="theme-color" content="#0B0F17">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M9 4h23l-9 24H0z' fill='%23f99e1a'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -30 244 244'%3E%3Cpath fill='%23F99E1A' fill-rule='evenodd' d='M64 0h180l-27 78H37zM82 20l-13 38h40l13-38zM30 98h180l-30 86H0zM52 118l-15 46h40l15-46z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800&family=Jost:wght@400;500;600;700&display=swap">
@@ -64,9 +64,9 @@ code { font-size: 15px; background: var(--surface); padding: 1px 6px; border-rad
 
 <header class="top">
   <div class="wrap top-in">
-    <a class="brand" href="./" aria-label="Counterpick Atlas – přehled" data-i18n-attr="aria-label:site.home">
-      <span class="mark" aria-hidden="true">CA</span>
-      <span class="word">Counterpick <span>Atlas</span></span>
+    <a class="brand" href="./" aria-label="CounterBoard – přehled" data-i18n-attr="aria-label:site.home">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="word">Counter<span>Board</span></span>
     </a>
     <nav class="nav" aria-label="Sekce" data-i18n-attr="aria-label:site.nav">
       <a href="./#patch" data-i18n="nav.patch">Patch notes</a>
@@ -95,11 +95,11 @@ code { font-size: 15px; background: var(--surface); padding: 1px 6px; border-rad
   <article class="doc">
     <div data-show="cs" lang="cs">
       <h1>Podpora</h1>
-      <p class="lead">Counterpick Atlas je aplikace pro Overwolf: ve hře Overwatch přečte ze screenshotu scoreboardu hrdiny obou týmů a poradí, koho hrát. Mimo hru ukazuje patch notes, countery a schopnosti hrdinů.</p>
+      <p class="lead">CounterBoard je aplikace pro Overwolf: ve hře Overwatch přečte ze screenshotu scoreboardu hrdiny obou týmů a poradí, koho hrát. Mimo hru ukazuje patch notes, countery a schopnosti hrdinů.</p>
     </div>
     <div data-show="en" lang="en">
       <h1>Support</h1>
-      <p class="lead">Counterpick Atlas is an Overwolf app: in Overwatch it reads the heroes of both teams off a screenshot of the scoreboard and tells you whom to play. Outside the game it shows patch notes, counters and hero abilities.</p>
+      <p class="lead">CounterBoard is an Overwolf app: in Overwatch it reads the heroes of both teams off a screenshot of the scoreboard and tells you whom to play. Outside the game it shows patch notes, counters and hero abilities.</p>
     </div>
 
     <section id="use">
@@ -127,7 +127,7 @@ code { font-size: 15px; background: var(--surface); padding: 1px 6px; border-rad
       <div data-show="cs" lang="cs">
         <h2>Časté dotazy a řešení problémů</h2>
         <div class="faq">
-          <details open><summary>Po Alt+C se nic nestane</summary><p>Zkontroluj, že Overwolf běží a Counterpick Atlas je v něm zapnutý pro Overwatch. Zkratku mohla změnit jiná aplikace: aktuální zkratky jsou v Nastavení skenu a v Overwolfu v Nastavení → Klávesové zkratky (Hotkeys).</p></details>
+          <details open><summary>Po Alt+C se nic nestane</summary><p>Zkontroluj, že Overwolf běží a CounterBoard je v něm zapnutý pro Overwatch. Zkratku mohla změnit jiná aplikace: aktuální zkratky jsou v Nastavení skenu a v Overwolfu v Nastavení → Klávesové zkratky (Hotkeys).</p></details>
           <details><summary>Overlay píše, že nevidí scoreboard</summary><p>Při <kbd>Alt+C</kbd> musíš držet <kbd>Tab</kbd>, dokud se scoreboard úplně nevysune. Když to nepomůže, otevři Nastavení skenu: ukáže poslední screenshot a rámečky, kde aplikace hledá portréty. Rámečky jde ručně posunout na portréty.</p></details>
           <details><summary>Hrdinové jsou špatně</summary><p>Hrdinu označeného „?“ oprav kliknutím, oprava se uloží jako vzorek a příště ho aplikace pozná. Na začátku zápasu scoreboard soupeře ještě neukazuje: overlay je označí jako Neznámý a do bodů je nepočítá. Hráč, který je zrovna mrtvý, má přes portrét odpočet a aplikace si u něj nemusí být jistá; stačí naskenovat znovu po jeho návratu do hry.</p></details>
           <details><summary>Mapa se nevybrala</summary><p>Mapu hlásí Overwolf. U nové mapy, kterou aplikace ještě nezná, ji jednou vyber ručně a příště se vybere sama.</p></details>
@@ -138,7 +138,7 @@ code { font-size: 15px; background: var(--surface); padding: 1px 6px; border-rad
       <div data-show="en" lang="en">
         <h2>FAQ and troubleshooting</h2>
         <div class="faq">
-          <details open><summary>Nothing happens on Alt+C</summary><p>Check that Overwolf is running and Counterpick Atlas is enabled for Overwatch in it. Another app may have taken the hotkey: the current hotkeys are in Scan settings and in Overwolf under Settings → Hotkeys.</p></details>
+          <details open><summary>Nothing happens on Alt+C</summary><p>Check that Overwolf is running and CounterBoard is enabled for Overwatch in it. Another app may have taken the hotkey: the current hotkeys are in Scan settings and in Overwolf under Settings → Hotkeys.</p></details>
           <details><summary>The overlay says it can't see the scoreboard</summary><p>Keep holding <kbd>Tab</kbd> while you press <kbd>Alt+C</kbd>, until the scoreboard has fully slid in. If that doesn't help, open Scan settings: it shows the last screenshot and the boxes where the app looks for portraits. You can drag the boxes onto the portraits by hand.</p></details>
           <details><summary>The heroes are wrong</summary><p>Fix a hero marked "?" by clicking it; the correction is saved as a sample and the app recognises the hero next time. Early in a match the scoreboard doesn't show the enemies yet: the overlay marks them Unknown and leaves them out of the points. A player who is dead has a respawn timer over the portrait, so the app may be unsure about them; just scan again once they are back.</p></details>
           <details><summary>The map wasn't picked</summary><p>Overwolf reports the map. For a new map the app doesn't know yet, pick it by hand once and it is picked by itself next time.</p></details>
@@ -173,14 +173,14 @@ code { font-size: 15px; background: var(--surface); padding: 1px 6px; border-rad
       <div data-show="cs" lang="cs">
         <h2>Nahlásit problém</h2>
         <div class="box">
-          <p>Problém nebo nápad založ na GitHubu jako nové issue (potřebuješ účet na GitHubu). Pomůže screenshot scoreboardu, co overlay ukázal, a log z <code>%localappdata%\Overwolf\Log\Apps\Counterpick Atlas\background.html.log</code>.</p>
+          <p>Problém nebo nápad založ na GitHubu jako nové issue (potřebuješ účet na GitHubu). Pomůže screenshot scoreboardu, co overlay ukázal, a log z <code>%localappdata%\Overwolf\Log\Apps\CounterBoard\background.html.log</code>.</p>
           <a class="btn" href="https://github.com/AdruzTV/counterpick-atlas/issues/new">Založit issue na GitHubu ↗</a>
         </div>
       </div>
       <div data-show="en" lang="en">
         <h2>Report a problem</h2>
         <div class="box">
-          <p>Report a problem or an idea on GitHub as a new issue (you need a GitHub account). A screenshot of the scoreboard, what the overlay showed, and the log from <code>%localappdata%\Overwolf\Log\Apps\Counterpick Atlas\background.html.log</code> help a lot.</p>
+          <p>Report a problem or an idea on GitHub as a new issue (you need a GitHub account). A screenshot of the scoreboard, what the overlay showed, and the log from <code>%localappdata%\Overwolf\Log\Apps\CounterBoard\background.html.log</code> help a lot.</p>
           <a class="btn" href="https://github.com/AdruzTV/counterpick-atlas/issues/new">Open an issue on GitHub ↗</a>
         </div>
       </div>
@@ -215,13 +215,13 @@ code { font-size: 15px; background: var(--surface); padding: 1px 6px; border-rad
 
 <footer class="foot">
   <div class="wrap foot-in">
-    <a class="brand" href="./" aria-label="Counterpick Atlas – přehled" data-i18n-attr="aria-label:site.home">
-      <span class="mark" aria-hidden="true">CA</span>
-      <span class="word">Counterpick <span>Atlas</span></span>
+    <a class="brand" href="./" aria-label="CounterBoard – přehled" data-i18n-attr="aria-label:site.home">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="word">Counter<span>Board</span></span>
     </a>
     <div>
-      <p data-show="cs" lang="cs">Neoficiální fanouškovský projekt, není spojený s Blizzard Entertainment. Overwatch © Blizzard Entertainment. <a href="./">Zpět na Counterpick Atlas</a></p>
-      <p data-show="en" lang="en">An unofficial fan project, not affiliated with Blizzard Entertainment. Overwatch © Blizzard Entertainment. <a href="./">Back to Counterpick Atlas</a></p>
+      <p data-show="cs" lang="cs">Neoficiální fanouškovský projekt, není spojený s Blizzard Entertainment. Overwatch © Blizzard Entertainment. <a href="./">Zpět na CounterBoard</a></p>
+      <p data-show="en" lang="en">An unofficial fan project, not affiliated with Blizzard Entertainment. Overwatch © Blizzard Entertainment. <a href="./">Back to CounterBoard</a></p>
     </div>
   </div>
 </footer>
@@ -234,7 +234,7 @@ code { font-size: 15px; background: var(--surface); padding: 1px 6px; border-rad
     document.documentElement.lang = I18n.lang;
     document.querySelectorAll('[data-show]').forEach(e => e.classList.toggle('on', e.dataset.show === I18n.lang));
     document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === I18n.lang));
-    document.title = I18n.lang === 'en' ? 'Counterpick Atlas · support' : 'Counterpick Atlas · podpora';
+    document.title = I18n.lang === 'en' ? 'CounterBoard · support' : 'CounterBoard · podpora';
   };
   document.getElementById('lang').addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (b) I18n.set(b.dataset.lang); });
   I18n.onChange(show);

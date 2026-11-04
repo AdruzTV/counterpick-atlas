@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Counterpick Atlas</title>
+<title>CounterBoard</title>
 <meta name="description" content="Neoficiální český průvodce k Overwatch: patch notes, countery, schopnosti a perky všech hrdinů." data-i18n-attr="content:site.metaDesc">
 <meta name="theme-color" content="#0B0F17">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M9 4h23l-9 24H0z' fill='%23f99e1a'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -30 244 244'%3E%3Cpath fill='%23F99E1A' fill-rule='evenodd' d='M64 0h180l-27 78H37zM82 20l-13 38h40l13-38zM30 98h180l-30 86H0zM52 118l-15 46h40l15-46z'/%3E%3C/svg%3E">
 <!-- Inside the Overwolf app: hide what only makes sense on the web (the store links), before anything is drawn. -->
 <script>if (window.overwolf) document.documentElement.classList.add('in-app');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,9 +18,9 @@
 
 <header class="top">
   <div class="wrap top-in">
-    <a class="brand" href="#" aria-label="Counterpick Atlas – přehled" data-i18n-attr="aria-label:site.home">
-      <span class="mark" aria-hidden="true">CA</span>
-      <span class="word">Counterpick <span>Atlas</span></span>
+    <a class="brand" href="#" aria-label="CounterBoard – přehled" data-i18n-attr="aria-label:site.home">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="word">Counter<span>Board</span></span>
     </a>
     <nav class="nav" id="nav" aria-label="Sekce" data-i18n-attr="aria-label:site.nav">
       <a href="#patch" data-nav="patch" data-i18n="nav.patch">Patch notes</a>
@@ -46,9 +46,9 @@
 
 <footer class="foot">
   <div class="wrap foot-in">
-    <a class="brand" href="#" aria-label="Counterpick Atlas – přehled" data-i18n-attr="aria-label:site.home">
-      <span class="mark" aria-hidden="true">CA</span>
-      <span class="word">Counterpick <span>Atlas</span></span>
+    <a class="brand" href="#" aria-label="CounterBoard – přehled" data-i18n-attr="aria-label:site.home">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="word">Counter<span>Board</span></span>
     </a>
     <div>
       <p data-i18n="site.foot1">Neoficiální fanouškovský projekt, není spojený s Blizzard Entertainment. Obrázky hrdinů, názvy a anglické popisy schopností © Blizzard Entertainment.</p>
@@ -228,18 +228,18 @@
       if (isRefresh === true && app.querySelector('.cp')) updateCpResults(); else renderCounterpick();
       if (!isRefresh) window.scrollTo(0, 0);
       setNav('counterpick');
-      document.title = 'Counterpick · Counterpick Atlas';
+      document.title = 'Counterpick · CounterBoard';
       return;
     }
     if (HM[id]) {
       renderHero(id);
       if (!isRefresh) window.scrollTo(0, 0);
       setNav('heroes');
-      document.title = `${HM[id].name} · Counterpick Atlas`;
+      document.title = `${HM[id].name} · CounterBoard`;
       return;
     }
     if (isRefresh || !app.querySelector('.home')) renderHome();
-    document.title = 'Counterpick Atlas';
+    document.title = 'CounterBoard';
     if (!isRefresh) {
       const target = id && document.getElementById(id);
       if (target) {
@@ -356,13 +356,13 @@
         <h2 id="app-h">${t('app.title')}</h2>
         <p>${t('app.text')}</p>
         <div class="app-cta">
-          <a class="btn cta" href="${STORE}"><span class="mark" aria-hidden="true">CA</span>${t('app.cta')}</a>
+          <a class="btn cta" href="${STORE}"><span class="mark" aria-hidden="true"></span>${t('app.cta')}</a>
           <a class="cta2" href="${HOWTO}">${t('app.how')}</a>
         </div>
         <p class="fine">${t('app.fine')}</p>
       </div>
       <div class="app-shot" aria-hidden="true"><div class="mini">
-        <div class="mini-h"><span class="mark">CA</span><b>Counter<span>pick</span></b></div>
+        <div class="mini-h"><span class="mark"></span><b>Counter<span>Board</span></b></div>
         <div class="mini-l">${t('cp.enemies')}</div>
         <div class="mini-s">${enemies.map(k => `<img src="p/${k}.jpg" alt="" width="64" height="64" loading="lazy">`).join('')}</div>
         ${HM.ana ? `<div class="mini-r"><img src="p/ana.jpg" alt="" width="40" height="40" loading="lazy">
@@ -704,7 +704,7 @@
       </section>
       <section class="sec cp-results" aria-live="polite" aria-label="${t('cp.recs')}">${resultsHtml()}</section>
       <aside class="promo web-only" aria-label="${t('app.label')}">
-        <span class="mark" aria-hidden="true">CA</span>
+        <span class="mark" aria-hidden="true"></span>
         <div><strong>${t('app.promoTitle')}</strong><p>${t('app.promoText')}</p></div>
         <a class="btn" href="${STORE}">${t('app.cta')}</a>
       </aside>

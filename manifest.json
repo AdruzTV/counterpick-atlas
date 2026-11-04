@@ -2,12 +2,12 @@
   "manifest_version": 1,
   "type": "WebApp",
   "meta": {
-    "name": "Counterpick Atlas",
+    "name": "CounterBoard",
     "author": "AdruzTV",
     "version": "0.1.0",
     "minimum-overwolf-version": "0.250.0",
     "description": "Unofficial Overwatch fan guide in English and Czech: counters, patch notes and in-game hero picks based on a screenshot of the scoreboard.",
-    "dock_button_title": "Counterpick",
+    "dock_button_title": "CounterBoard",
     "icon": "overwolf/icons/icon.png",
     "icon_gray": "overwolf/icons/icon_gray.png",
     "launcher_icon": "overwolf/icons/launcher.ico",
@@ -23,7 +23,7 @@
     ],
     "hotkeys": {
       "cpa_scan": { "title": "Scan the scoreboard (hold Tab)", "action-type": "custom", "default": "Alt+C" },
-      "cpa_toggle": { "title": "Show / hide Counterpick", "action-type": "custom", "default": "Alt+X" }
+      "cpa_toggle": { "title": "Show / hide CounterBoard", "action-type": "custom", "default": "Alt+X" }
     },
     "windows": {
       "background": {

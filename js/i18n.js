@@ -19,7 +19,7 @@
     /* ---------- site: page frame ---------- */
     'site.metaDesc': ['Neoficiální český průvodce k Overwatch: patch notes, countery, schopnosti a perky všech hrdinů.',
       'Unofficial fan guide to Overwatch: patch notes, counters, abilities and perks of every hero.'],
-    'site.home': ['Counterpick Atlas – přehled', 'Counterpick Atlas – home'],
+    'site.home': ['CounterBoard – přehled', 'CounterBoard – home'],
     'site.searchPh': ['Najdi hrdinu… třeba Genji nebo Rein', 'Find a hero… e.g. Genji or Rein'],
     'site.searchLabel': ['Najdi hrdinu', 'Find a hero'],
     'site.nav': ['Sekce', 'Sections'],
@@ -209,7 +209,7 @@
     'bp.update': ['Aktualizace hry', 'Game update'],
 
     /* ---------- overlay (overlay/js/ingame.js) ---------- */
-    'ov.title': ['Counterpick · overlay', 'Counterpick · overlay'],
+    'ov.title': ['CounterBoard · overlay', 'CounterBoard · overlay'],
     'ov.loading': ['Načítám data…', 'Loading data…'],
     'ov.calib': ['Nastavení skenu (zkratky, kalibrace)', 'Scan settings (hotkeys, calibration)'],
     'ov.hide': ['Skrýt', 'Hide'],
@@ -270,7 +270,7 @@
       '<kbd>{scan}</kbd> scan (hold Tab) · <kbd>{toggle}</kbd> hide · click a hero = correct'],
 
     /* ---------- scan settings and calibration (overlay/js/calibrate.js) ---------- */
-    'cal.title': ['Counterpick · nastavení skenu', 'Counterpick · scan settings'],
+    'cal.title': ['CounterBoard · nastavení skenu', 'CounterBoard · scan settings'],
     'cal.head': ['Nastavení <span>skenu</span>', 'Scan <span>settings</span>'],
     'cal.keys': ['Klávesové zkratky', 'Hotkeys'],
     'cal.keyScan': ['Sken scoreboardu', 'Scan the scoreboard'],

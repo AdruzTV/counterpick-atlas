@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'data' / 'blizzard-patch-notes.html'
 STATUS = ROOT / 'data' / 'status.json'
 BASE = 'https://overwatch.blizzard.com/en-us/news/patch-notes/'
-UA = 'Mozilla/5.0 (compatible; CounterpickAtlas/1.0; +https://adruztv.github.io/counterpick-atlas/)'
+UA = 'Mozilla/5.0 (compatible; CounterBoard/1.0; +https://adruztv.github.io/counterpick-atlas/)'
 
 
 class BodySpan(HTMLParser):

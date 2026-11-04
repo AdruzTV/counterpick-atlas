@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 MAPS = ROOT / 'data' / 'maps.json'
 API = 'https://overfast-api.tekrop.fr/maps'
 MODES = ['control', 'escort', 'hybrid', 'push', 'flashpoint', 'clash']
-UA = 'Mozilla/5.0 (compatible; CounterpickAtlas/1.0; +https://adruztv.github.io/counterpick-atlas/)'
+UA = 'Mozilla/5.0 (compatible; CounterBoard/1.0; +https://adruztv.github.io/counterpick-atlas/)'
 
 
 def main():

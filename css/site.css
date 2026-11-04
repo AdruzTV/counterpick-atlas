@@ -1,4 +1,4 @@
-/* Counterpick Atlas, "Výběr hrdiny" look: dark slate, Overwatch orange for your choice and what's new,
+/* CounterBoard, "Výběr hrdiny" look: dark slate, Overwatch orange for your choice and what's new,
    against you on the left (red), for you on the right (green). Jost for the interface, Barlow Condensed Italic 800
    (the logo's face) for hero names, scores and dates. Used by index.html and support.html; overlay/css/overlay.css
    repeats the tokens for the in-game windows. */
@@ -48,7 +48,8 @@ kbd { font: 600 14px/22px var(--f-ui); color: var(--ink); border: 1px solid var(
 /* ---------- logo ---------- */
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--night-fg); flex: none; }
 .brand:hover { color: var(--night-fg); }
-.mark { width: 34px; height: 30px; flex: none; background: var(--orange); clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%); display: grid; place-items: center; color: #1C1203; font: italic 800 17px/1 var(--f-game); }
+/* The mark: two slanted rows like the two teams on the scoreboard, each with a cut-out portrait cell. */
+.mark { width: 34px; height: 26px; flex: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 244 184'%3E%3Cpath fill='%23F99E1A' fill-rule='evenodd' d='M64 0h180l-27 78H37zM82 20l-13 38h40l13-38zM30 98h180l-30 86H0zM52 118l-15 46h40l15-46z'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
 .word { font: italic 800 22px/1 var(--f-game); text-transform: uppercase; letter-spacing: .02em; }
 .word span { color: var(--orange); }
 
@@ -134,14 +135,14 @@ a.pill:hover { box-shadow: 0 0 0 2px currentColor; }
 .app-text p { margin: 10px 0 0; color: var(--ink-2); font-size: 17px; max-width: 52ch; }
 .app-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 22px; }
 .cta { height: 52px; padding: 0 22px; font-size: 17px; gap: 10px; }
-.cta .mark, .promo .btn .mark { width: 26px; height: 22px; font-size: 13px; background: var(--on-orange); color: var(--orange); clip-path: polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%); }
+.cta .mark, .promo .btn .mark { width: 26px; height: 20px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 244 184'%3E%3Cpath fill='%23161E2C' fill-rule='evenodd' d='M64 0h180l-27 78H37zM82 20l-13 38h40l13-38zM30 98h180l-30 86H0zM52 118l-15 46h40l15-46z'/%3E%3C/svg%3E"); }
 .cta2 { font: 500 16px var(--f-ui); }
 .app-text .fine { margin-top: 14px; font-size: 14px; }
 .app-shot { position: relative; background: var(--night); padding: 26px 30px 26px 76px; display: grid; align-content: center; clip-path: polygon(56px 0, 100% 0, 100% 100%, 0 100%); }
 .app-shot::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 70px; background: var(--orange); clip-path: polygon(44px 0, 56px 0, 12px 100%, 0 100%); }
 .mini { background: #161E2C; border-radius: 10px; box-shadow: 0 0 0 1px #33405A, 0 18px 40px rgba(0, 0, 0, .5); padding: 10px 12px 12px; font-size: 12px; color: var(--night-mute); }
 .mini-h { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; margin-bottom: 10px; border-bottom: 1px solid #33405A; }
-.mini-h .mark { width: 24px; height: 21px; font-size: 12px; }
+.mini-h .mark { width: 24px; height: 18px; }
 .mini-h b { font: italic 800 16px/1 var(--f-game); text-transform: uppercase; color: var(--night-fg); }
 .mini-h b span { color: var(--orange); }
 .mini-l { font: 600 11px/1 var(--f-ui); color: var(--enemy); margin-bottom: 5px; }
@@ -416,7 +417,7 @@ a.pill:hover { box-shadow: 0 0 0 2px currentColor; }
 .th:hover { color: var(--ink); box-shadow: 0 0 0 2px var(--ink); }
 .cp-note { margin: 22px 0 0; color: var(--ink-2); font-size: 14px; max-width: 80ch; }
 .promo { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px; align-items: center; margin-top: 34px; background: var(--night); color: var(--night-fg); border-radius: 14px; padding: 20px 24px; box-shadow: 0 0 0 1px var(--line); }
-.promo > .mark { width: 46px; height: 40px; font-size: 22px; }
+.promo > .mark { width: 46px; height: 35px; }
 .promo strong { font: 600 19px/1.2 var(--f-ui); }
 .promo p { margin: 4px 0 0; color: var(--night-mute); font-size: 15px; }
 .promo kbd { font-size: 13px; line-height: 20px; color: var(--night-fg); border-color: var(--night-edge); background: none; }
