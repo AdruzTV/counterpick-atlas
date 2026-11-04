@@ -1,4 +1,4 @@
-# CounterBoard
+# CounterAtlas
 
 *Formerly Counterpick Atlas.*
 
@@ -52,7 +52,7 @@ The same Action compares the hero list in OverFast API with `data/heroes.json` (
 
 ## In-game overlay
 
-In the game, CounterBoard can tell you whom to play from a screenshot of the scoreboard. It runs as an **Overwolf app** (`manifest.json`, `overwolf/`): in the game as an overlay (`overlay/`), outside the game it shows the same site as GitHub Pages.
+In the game, CounterAtlas can tell you whom to play from a screenshot of the scoreboard. It runs as an **Overwolf app** (`manifest.json`, `overwolf/`): in the game as an overlay (`overlay/`), outside the game it shows the same site as GitHub Pages.
 
 **In the game**
 - Hold **Tab** (scoreboard) and press **Alt+C**. The app takes a picture of the game, recognises the heroes in both teams and shows its recommendations. They are worked out the same way as on the Counterpick page, `js/counterpick-core.js` is shared. The scoreboard slides in for a moment after Tab goes down, so the app takes up to four pictures in a row and uses one where it already stands still.
@@ -82,7 +82,7 @@ The whole repository is an Overwolf app (`manifest.json` in the root). Players g
 - **Ad**: the main window (the site) has a rail on the right with how to use the overlay and, below it in the bottom right corner, one 300×250 ad through the Overwolf Ads SDK (`overwolf/js/shell.js`). In a small window the how-to scrolls, and the ad stays fully on screen. By Overwolf's rules it is only in that window: the overlay opens during matches and ads during gameplay are forbidden, and the scan settings are a settings page. The site on GitHub Pages has no ad. Real ads start once Overwolf enables them after reviewing the app; until then the space may stay empty.
 
 - **Running it from the folder**: Overwolf installs apps from outside its store only for approved developers (otherwise it says "Unauthorized App"). With the developer account, open Settings → About → Development options → Load unpacked extension in Overwolf and choose the repository folder; after a change in the files, **Reload** is enough. The data (`data/*.json`) still comes from GitHub Pages, so data changes show only after a push.
-- **Log**: every scan writes to `%localappdata%\Overwolf\Log\Apps\CounterBoard\background.html.log` which pictures it took, where the scoreboard was on them and which one it used. The logs of the game events (team, map, kill feed) are next to it in the `Overwolf General GameEvents Provider` folder.
+- **Log**: every scan writes to `%localappdata%\Overwolf\Log\Apps\CounterAtlas\background.html.log` which pictures it took, where the scoreboard was on them and which one it used. The logs of the game events (team, map, kill feed) are next to it in the `Overwolf General GameEvents Provider` folder.
 - **Testing without the game**: the overlay and scan settings also run in a browser with a pasted screenshot (see above).
-- **Package**: `.github/workflows/overwolf.yml` packs `counterboard.opk` on every change (Actions → Overwolf app → Artifacts). The author uploads it to the Overwolf store through the Developers Console.
+- **Package**: `.github/workflows/overwolf.yml` packs `counteratlas.opk` on every change (Actions → Overwolf app → Artifacts). The author uploads it to the Overwolf store through the Developers Console.
 - Overwatch has game ID 10844 in Overwolf (`manifest.json`). The running game reports itself as 108441 (the ID plus an instance number), and the `GamesList` file in `%localappdata%\Overwolf` lists it that way too.

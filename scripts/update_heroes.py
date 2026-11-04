@@ -29,7 +29,7 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parent.parent
 API = 'https://overfast-api.tekrop.fr/heroes'
-UA = 'Mozilla/5.0 (compatible; CounterBoard/1.0; +https://adruztv.github.io/counterpick-atlas/)'
+UA = 'Mozilla/5.0 (compatible; CounterAtlas/1.0; +https://adruztv.github.io/counterpick-atlas/)'
 ICON_SIZE = 64  # longer side of the icons in data/icons.json
 PORTRAIT_SIZE = (160, 160)
 ART_SIZE = (1280, 608)  # index.html shows art/<key>.jpg at this size

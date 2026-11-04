@@ -53,7 +53,7 @@
   const icon = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">${d}</svg>`;
   // data-i18n: I18n.apply() words them again when the language changes.
   document.body.insertAdjacentHTML('afterbegin', `<div class="ow-bar" id="ow-bar">
-      <span class="t">Counter<span>Board</span></span>
+      <span class="t">Counter<span>Atlas</span></span>
       <span class="h"></span>
       <button type="button" data-ow="calib" data-i18n="ow.calib" data-i18n-attr="title:ov.calib"></button>
       <button type="button" data-ow="min" data-i18n-attr="title:ow.min; aria-label:ow.min">${icon('<path d="M5 12h14"/>')}</button>

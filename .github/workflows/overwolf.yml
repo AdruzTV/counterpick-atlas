@@ -1,6 +1,6 @@
 name: Overwolf app
 
-# Packs the Overwolf app (manifest.json in the repo root) into counterboard.opk whenever the app changes,
+# Packs the Overwolf app (manifest.json in the repo root) into counteratlas.opk whenever the app changes,
 # downloadable from the run's artifacts. Overwolf installs it only for whitelisted developers until the app is in
 # the Overwolf store, so there is no public release here: players will get it from the store.
 on:
@@ -31,9 +31,9 @@ jobs:
 
       # Overwolf asks for a zip with normal compression (not the highest), manifest.json at its root.
       - name: Pack
-        run: zip -r -q counterboard.opk manifest.json index.html css js data art p overlay overwolf
+        run: zip -r -q counteratlas.opk manifest.json index.html css js data art p overlay overwolf
 
       - uses: actions/upload-artifact@v4
         with:
-          name: counterboard-overwolf-${{ steps.meta.outputs.version }}
-          path: counterboard.opk
+          name: counteratlas-overwolf-${{ steps.meta.outputs.version }}
+          path: counteratlas.opk

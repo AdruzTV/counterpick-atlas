@@ -1,4 +1,4 @@
-/* CounterBoard, "Výběr hrdiny" look: dark slate, Overwatch orange for your choice and what's new,
+/* CounterAtlas, "Výběr hrdiny" look: dark slate, Overwatch orange for your choice and what's new,
    against you on the left (red), for you on the right (green). Jost for the interface, Barlow Condensed Italic 800
    (the logo's face) for hero names, scores and dates. Used by index.html and support.html; overlay/css/overlay.css
    repeats the tokens for the in-game windows. */
@@ -48,8 +48,8 @@ kbd { font: 600 14px/22px var(--f-ui); color: var(--ink); border: 1px solid var(
 /* ---------- logo ---------- */
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--night-fg); flex: none; }
 .brand:hover { color: var(--night-fg); }
-/* The mark: two slanted rows like the two teams on the scoreboard, each with a cut-out portrait cell. */
-.mark { width: 34px; height: 26px; flex: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 244 184'%3E%3Cpath fill='%23F99E1A' fill-rule='evenodd' d='M64 0h180l-27 78H37zM82 20l-13 38h40l13-38zM30 98h180l-30 86H0zM52 118l-15 46h40l15-46z'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+/* The mark: a folded map in the logo's slant, three panels with the middle one a shade darker (the fold). */
+.mark { width: 34px; height: 26px; flex: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 244 184'%3E%3Cpath fill='%23F99E1A' d='M60 14 120 0 74 172 14 184zM188 14 244 0 198 172 138 184z'/%3E%3Cpath fill='%23B86F0C' d='M126 0l56 14-46 170-56-12z'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
 .word { font: italic 800 22px/1 var(--f-game); text-transform: uppercase; letter-spacing: .02em; }
 .word span { color: var(--orange); }
 
@@ -135,7 +135,7 @@ a.pill:hover { box-shadow: 0 0 0 2px currentColor; }
 .app-text p { margin: 10px 0 0; color: var(--ink-2); font-size: 17px; max-width: 52ch; }
 .app-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 22px; }
 .cta { height: 52px; padding: 0 22px; font-size: 17px; gap: 10px; }
-.cta .mark, .promo .btn .mark { width: 26px; height: 20px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 244 184'%3E%3Cpath fill='%23161E2C' fill-rule='evenodd' d='M64 0h180l-27 78H37zM82 20l-13 38h40l13-38zM30 98h180l-30 86H0zM52 118l-15 46h40l15-46z'/%3E%3C/svg%3E"); }
+.cta .mark, .promo .btn .mark { width: 26px; height: 20px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 244 184'%3E%3Cpath fill='%23161E2C' d='M60 14 120 0 74 172 14 184zM188 14 244 0 198 172 138 184z'/%3E%3Cpath fill='%235A3A0E' d='M126 0l56 14-46 170-56-12z'/%3E%3C/svg%3E"); }
 .cta2 { font: 500 16px var(--f-ui); }
 .app-text .fine { margin-top: 14px; font-size: 14px; }
 .app-shot { position: relative; background: var(--night); padding: 26px 30px 26px 76px; display: grid; align-content: center; clip-path: polygon(56px 0, 100% 0, 100% 100%, 0 100%); }

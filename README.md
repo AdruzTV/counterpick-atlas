@@ -1,4 +1,4 @@
-# CounterBoard
+# CounterAtlas
 
 *Dříve Counterpick Atlas.*
 
@@ -52,7 +52,7 @@ Stejná Action porovná seznam hrdinů v OverFast API s `data/heroes.json` (`scr
 
 ## Overlay do hry
 
-Ve hře umí CounterBoard ze screenshotu scoreboardu poradit, koho hrát. Běží jako **Overwolf aplikace** (`manifest.json`, `overwolf/`): ve hře jako overlay (`overlay/`), mimo hru ukáže stejný web jako GitHub Pages.
+Ve hře umí CounterAtlas ze screenshotu scoreboardu poradit, koho hrát. Běží jako **Overwolf aplikace** (`manifest.json`, `overwolf/`): ve hře jako overlay (`overlay/`), mimo hru ukáže stejný web jako GitHub Pages.
 
 **Ve hře**
 - Podrž **Tab** (scoreboard) a zmáčkni **Alt+C**. Aplikace vyfotí hru, pozná hrdiny v obou týmech a ukáže doporučení. Počítá je stejně jako stránka Counterpick, `js/counterpick-core.js` je společný. Scoreboard se po stisku Tab chvíli vysouvá, proto aplikace pořídí až čtyři snímky za sebou a použije ten, kde už stojí na místě.
@@ -82,7 +82,7 @@ Celý repozitář je Overwolf aplikace (`manifest.json` v kořeni). Ke hráčům
 - **Reklama**: hlavní okno (web) má vpravo panel s návodem, jak overlay používat, a pod ním v pravém dolním rohu jednu reklamu 300×250 přes Overwolf Ads SDK (`overwolf/js/shell.js`). V malém okně se posouvá návod, reklama zůstává celá vidět. Podle pravidel Overwolfu je jen v tomhle okně: overlay se otevírá během zápasu a reklamy během hraní zakázané jsou, nastavení skenu je stránka nastavení. Na webu na GitHub Pages reklama není. Skutečné reklamy začnou chodit, až je Overwolf po své kontrole aplikace zapne; do té doby může být místo prázdné.
 
 - **Spuštění ze složky**: Overwolf nainstaluje aplikaci mimo svůj obchod jen schváleným vývojářům (jinak hlásí „Unauthorized App“). Ve vývojářském účtu otevři v Overwolfu Settings → About → Development options → Load unpacked extension a vyber složku repozitáře; po změně v souborech stačí **Reload**. Data (`data/*.json`) se i tak berou z GitHub Pages, takže změny dat se projeví až po pushi.
-- **Log**: každý sken zapíše do `%localappdata%\Overwolf\Log\Apps\CounterBoard\background.html.log`, které snímky pořídil, kde na nich byl scoreboard a který použil. Logy herních událostí (tým, mapa, kill feed) jsou vedle ve složce `Overwolf General GameEvents Provider`.
+- **Log**: každý sken zapíše do `%localappdata%\Overwolf\Log\Apps\CounterAtlas\background.html.log`, které snímky pořídil, kde na nich byl scoreboard a který použil. Logy herních událostí (tým, mapa, kill feed) jsou vedle ve složce `Overwolf General GameEvents Provider`.
 - **Test bez hry**: overlay a nastavení skenu běží i v prohlížeči s vloženým screenshotem (viz výše).
-- **Balíček**: `.github/workflows/overwolf.yml` při každé změně zabalí `counterboard.opk` (Actions → Overwolf app → Artifacts). Do Overwolf obchodu ho nahraje autor přes Developers Console.
+- **Balíček**: `.github/workflows/overwolf.yml` při každé změně zabalí `counteratlas.opk` (Actions → Overwolf app → Artifacts). Do Overwolf obchodu ho nahraje autor přes Developers Console.
 - Overwatch má v Overwolfu ID hry 10844 (`manifest.json`). Běžící hra se hlásí jako 108441 (ID a číslo instance), stejně ji vede i soubor `GamesList` v `%localappdata%\Overwolf`.
