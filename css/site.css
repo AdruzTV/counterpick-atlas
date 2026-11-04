@@ -40,6 +40,8 @@ h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
 .wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; box-sizing: border-box; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .in-app .web-only { display: none !important; }
+/* The page fills the screen while its data loads, so the footer doesn't jump down when it arrives (layout shift). */
+#app { min-height: 100vh; }
 kbd { font: 600 14px/22px var(--f-ui); color: var(--ink); border: 1px solid var(--edge); border-bottom-width: 2px; border-radius: 5px; padding: 0 6px; background: var(--soft); white-space: nowrap; }
 .role-ic { width: 14px; height: 14px; fill: currentColor; flex: none; }
 

@@ -247,7 +247,7 @@
         target.scrollIntoView({ block: 'start' });
       } else window.scrollTo(0, 0);
     }
-    homeNav();
+    requestAnimationFrame(homeNav);   // after the browser has laid out the new page, not forcing it now
   }
 
   // On the home page the bar follows the reading: Patch notes above the heroes, Hrdinové once they fill the screen.
