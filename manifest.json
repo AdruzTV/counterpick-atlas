@@ -37,7 +37,10 @@
         "resizable": true,
         "size": { "width": 1460, "height": 820 },
         "min_size": { "width": 900, "height": 600 },
-        "keep_window_location": true
+        "keep_window_location": true,
+        "block_top_window_navigation": true,
+        "popup_blocker": true,
+        "mute": true
       },
       "ingame": {
         "file": "overlay/ingame.html",

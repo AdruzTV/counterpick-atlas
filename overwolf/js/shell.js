@@ -7,7 +7,7 @@
 
    The ad (Overwolf Ads SDK, dev.overwolf.com → Monetization → Advertising) follows Overwolf's rules: only in this
    desktop window, never over the game (the overlay opens during matches, and the scan settings are a settings
-   page); next to the app's content, always on screen while the window is, hidden while it is minimised. Overwolf
+   page); next to the app's content, always on screen while the window is, removed while it is minimised. Overwolf
    serves real ads once its QA has enabled them for the app; until then the container may stay empty. */
 (() => {
   const SITE = (window.CounterpickCore && CounterpickCore.SITE) || 'https://adruztv.github.io/counterpick-atlas/';
@@ -136,16 +136,17 @@
   if (overwolf.settings.hotkeys.onChanged) overwolf.settings.hotkeys.onChanged.addListener(readKeys);
   I18n.onChange(howTo);
 
-  // The ad: one container for the window's whole life (the rules ask not to recycle them), out of sight while
-  // the window is minimised.
+  // The ad: one container for the window's whole life (the rules ask not to recycle them). Minimising the window
+  // removes the ad (no ad runs out of sight) and restoring it loads a fresh one, as Overwolf's app testing guide asks.
   const adEl = document.getElementById('ow-ad');
+  let ad = null, adRemoved = false;
   const sdk = document.createElement('script');
   sdk.src = ADS_SDK;
   sdk.async = true;
   sdk.onload = () => {
     if (typeof window.OwAd !== 'function') { log('ads: SDK loaded without OwAd'); return; }
     try {
-      const ad = new OwAd(adEl, { size: AD, containerId: 'cpa_300x250_dt_rail' });
+      ad = new OwAd(adEl, { size: AD, containerId: 'cpa_300x250_dt_rail' });
       log('ads: container ready');
       for (const ev of ['display_ad_loaded', 'play', 'error']) ad.addEventListener(ev, () => log('ads:', ev));
     } catch (e) { log('ads: container failed', String(e && e.message || e)); }
@@ -154,8 +155,28 @@
   document.head.appendChild(sdk);
   overwolf.windows.onStateChanged.addListener(e => {
     if (!e || e.window_name !== 'desktop') return;
-    adEl.style.display = [e.window_state_ex, e.window_state].map(s => String(s || '').toLowerCase()).includes('minimized') ? 'none' : '';
+    const minimized = [e.window_state_ex, e.window_state].map(s => String(s || '').toLowerCase()).includes('minimized');
+    adEl.style.display = minimized ? 'none' : '';
+    if (!ad) return;
+    try {
+      if (minimized && !adRemoved) { ad.removeAd(); adRemoved = true; log('ads: removed (minimised)'); }
+      else if (!minimized && adRemoved) { ad.refreshAd(); adRemoved = false; log('ads: refreshed'); }
+    } catch (err) { log('ads: remove/refresh failed', String(err && err.message || err)); }
   });
+
+  // On a small screen (Overwolf tests 1366×720) the window, 1460×820 by default, must not reach past it: shrink it
+  // to the work area and centre it. Sizes compare in CSS pixels, so the window's own units (DPI) don't matter.
+  const fitScreen = () => current(w => {
+    const s = window.screen, cssW = window.outerWidth, cssH = window.outerHeight;
+    const k = w.width / cssW;   // window units per CSS pixel
+    if (!cssW || !cssH || !(k > 0) || (cssW <= s.availWidth && cssH <= s.availHeight)) return;
+    const nw = Math.min(cssW, s.availWidth - 16), nh = Math.min(cssH, s.availHeight - 16);
+    log('window: screen', s.availWidth, 'x', s.availHeight, '-> size', nw, 'x', nh);
+    overwolf.windows.changeSize(w.id, Math.round(nw * k), Math.round(nh * k), () =>
+      overwolf.windows.changePosition(w.id, Math.round(((s.availLeft || 0) + (s.availWidth - nw) / 2) * k),
+        Math.round(((s.availTop || 0) + (s.availHeight - nh) / 2) * k), () => {}));
+  });
+  if (document.readyState === 'complete') fitScreen(); else window.addEventListener('load', fitScreen);
 
   document.getElementById('ow-bar').addEventListener('click', e => {
     const b = e.target.closest('button');

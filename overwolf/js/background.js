@@ -42,14 +42,21 @@
   }
 
   // First time in game the overlay goes to the right edge, away from the scoreboard on the left; after that it
-  // stays wherever the player drags it (keep_window_location in manifest.json).
+  // stays wherever the player drags it (keep_window_location in manifest.json). On a game screen shorter than the
+  // overlay (Overwolf tests down to 1366×720, the overlay is 780 tall) it gets shorter and moves up to stay whole.
   function placeOverlay(w) {
-    try { if (localStorage.getItem('cpa:overlay:placed')) return; } catch (e) { return; }
+    let placed = true;
+    try { placed = !!localStorage.getItem('cpa:overlay:placed'); } catch (e) { /* storage blocked: leave it where it is */ }
     overwolf.games.getRunningGameInfo(info => {
-      const width = info && (info.logicalWidth || info.width);
-      if (!width) return;
-      overwolf.windows.changePosition(w.id, Math.max(0, width - (w.width || 470) - 40), 60, () => {});
-      try { localStorage.setItem('cpa:overlay:placed', '1'); } catch (e) { /* storage blocked */ }
+      const width = info && (info.logicalWidth || info.width), height = info && (info.logicalHeight || info.height);
+      if (!width || !height) return;
+      const h = w.height ? Math.min(w.height, height - 40) : 0;
+      if (h && h < w.height) overwolf.windows.changeSize(w.id, w.width, h, () => {});
+      let left = w.left || 0, top = w.top || 0;
+      if (!placed) { left = Math.max(0, width - (w.width || 470) - 40); top = 60; }
+      if (h) top = Math.max(0, Math.min(top, height - h - 20));
+      if (!placed || left !== (w.left || 0) || top !== (w.top || 0)) overwolf.windows.changePosition(w.id, left, top, () => {});
+      if (!placed) try { localStorage.setItem('cpa:overlay:placed', '1'); } catch (e) { /* storage blocked */ }
     });
   }
   async function hide(name) {

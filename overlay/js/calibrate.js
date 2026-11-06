@@ -348,6 +348,7 @@
   /* ---------- start ---------- */
   CPApp.dragBy(document.getElementById('drag'));
   CPApp.resizeBy(document.getElementById('grip'));
+  CPApp.fitScreen();
 
   const noShot = () => `<p class="empty-msg">${IN_APP ? t('cal.noShotApp', { key: KEYS.scan }) : t('cal.noShotBrowser')}</p>`;
   CPApp.onKeys(() => {

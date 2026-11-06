@@ -201,9 +201,28 @@
     });
   }
 
-  // An outside page in the player's browser (an Overwolf window would open it inside itself).
+  // A window bigger than the screen (Overwolf tests down to 1366×720) shrinks to the work area and centres. Sizes
+  // compare in CSS pixels, so the window's own units (DPI) don't matter.
+  function fitScreen() {
+    if (HOST !== 'overwolf') return;
+    overwolf.windows.getCurrentWindow(r => {
+      if (!r || !r.success) return;
+      const w = r.window, s = window.screen, cssW = window.outerWidth, cssH = window.outerHeight;
+      const k = w.width / cssW;   // window units per CSS pixel
+      if (!cssW || !cssH || !(k > 0) || (cssW <= s.availWidth && cssH <= s.availHeight)) return;
+      const nw = Math.min(cssW, s.availWidth - 16), nh = Math.min(cssH, s.availHeight - 16);
+      overwolf.windows.changeSize(w.id, Math.round(nw * k), Math.round(nh * k), () =>
+        overwolf.windows.changePosition(w.id, Math.round(((s.availLeft || 0) + (s.availWidth - nw) / 2) * k),
+          Math.round(((s.availTop || 0) + (s.availHeight - nh) / 2) * k), () => {}));
+    });
+  }
+
+  // An outside page. During a match it opens in Overwolf's browser on top of the game (the player's own browser
+  // would pull them out of it), otherwise in the player's browser (an Overwolf window would open it inside itself).
   function openUrl(url) {
-    if (HOST === 'overwolf' && overwolf.utils && overwolf.utils.openUrlInDefaultBrowser) overwolf.utils.openUrlInDefaultBrowser(url);
+    const u = HOST === 'overwolf' && overwolf.utils, b = bg(), inGame = !!(b && b.CPA && b.CPA.inGame);
+    if (u && inGame && u.openUrlInOverwolfBrowser) u.openUrlInOverwolfBrowser(url);
+    else if (u && u.openUrlInDefaultBrowser) u.openUrlInDefaultBrowser(url);
     else window.open(url, '_blank', 'noopener');
   }
 
@@ -222,6 +241,6 @@
 
   window.CPApp = {
     HOST, KEYS, DEFAULT_KEYS, onKeys, setKeys, pauseKeys, PREFS, read, write, bg, loadAtlas, layout, saveLayout, autoLayout, setAutoLayout,
-    onScan, onGame, gameInfo, hideOverlay, openCalibration, closeWindow, dragBy, resizeBy, openUrl, copyText, esc,
+    onScan, onGame, gameInfo, hideOverlay, openCalibration, closeWindow, dragBy, resizeBy, fitScreen, openUrl, copyText, esc,
   };
 })();
