@@ -3,12 +3,17 @@ name: Overwolf app
 # Packs the Overwolf app (manifest.json in the repo root) into counteratlas.opk whenever the app changes,
 # downloadable from the run's artifacts. Overwolf installs it only for whitelisted developers until the app is in
 # the Overwolf store, so there is no public release here: players will get it from the store.
+# data/ is packed too but doesn't trigger a build: the app loads it from GitHub Pages first, and the patch notes
+# bot changes it twice a day.
 on:
   push:
     branches: [main]
     paths:
       - manifest.json
       - index.html
+      - 'css/**'
+      - 'art/**'
+      - 'p/**'
       - 'js/**'
       - 'overlay/**'
       - 'overwolf/**'
