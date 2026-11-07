@@ -37,7 +37,8 @@
   async function show(name) {
     const w = await obtain(name);
     await new Promise(r => overwolf.windows.restore(w.id, r));
-    if (name === 'ingame') placeOverlay(w);
+    // Its size and place as they are now that it is shown (the first time, before that, the window isn't made yet).
+    if (name === 'ingame') placeOverlay(await obtain(name).catch(() => w));
     return w;
   }
 
@@ -51,10 +52,11 @@
       const width = info && (info.logicalWidth || info.width), height = info && (info.logicalHeight || info.height);
       if (!width || !height) return;
       const h = w.height ? Math.min(w.height, height - 40) : 0;
-      if (h && h < w.height) overwolf.windows.changeSize(w.id, w.width, h, () => {});
+      if (h && h < w.height) overwolf.windows.changeSize({ window_id: w.id, width: w.width, height: h }, () => {});
       let left = w.left || 0, top = w.top || 0;
       if (!placed) { left = Math.max(0, width - (w.width || 470) - 40); top = 60; }
       if (h) top = Math.max(0, Math.min(top, height - h - 20));
+      log('overlay fit: game', width, 'x', height, 'window', w.width, 'x', w.height, 'at', w.left, w.top, '->', w.width, 'x', h, 'at', left, top);
       if (!placed || left !== (w.left || 0) || top !== (w.top || 0)) overwolf.windows.changePosition(w.id, left, top, () => {});
       if (!placed) try { localStorage.setItem('cpa:overlay:placed', '1'); } catch (e) { /* storage blocked */ }
     });
@@ -230,7 +232,11 @@
   });
   overwolf.games.events.onInfoUpdates2.addListener(onInfo);
   overwolf.games.events.onNewEvents.addListener(onEvents);
-  overwolf.games.onGameInfoUpdated.addListener(e => { if (e && e.gameInfo && (e.runningChanged || e.gameChanged)) onGame(e.gameInfo); });
+  overwolf.games.onGameInfoUpdated.addListener(e => {
+    if (e && e.gameInfo && (e.runningChanged || e.gameChanged)) onGame(e.gameInfo);
+    // The game switched resolution while the overlay is open: keep it whole on the new screen.
+    else if (e && e.resolutionChanged && CPA.inGame) isVisible('ingame').then(v => v && obtain('ingame').then(placeOverlay)).catch(() => {});
+  });
   overwolf.extensions.onAppLaunchTriggered.addListener(() => (CPA.inGame ? show('ingame') : show('desktop')).catch(() => {}));
 
   overwolf.games.getRunningGameInfo(info => {

@@ -165,18 +165,21 @@
   });
 
   // On a small screen (Overwolf tests 1366×720) the window, 1460×820 by default, must not reach past it: shrink it
-  // to the work area and centre it. Sizes compare in CSS pixels, so the window's own units (DPI) don't matter.
+  // to the work area and centre it. The size comes from Overwolf (screen pixels, divided by the DPI scale to compare
+  // with the work area in CSS pixels); the page's outerWidth/outerHeight are cut to the screen and would always
+  // "fit". Checked again on focus: Overwolf notices a new screen resolution with a delay.
   const fitScreen = () => current(w => {
-    const s = window.screen, cssW = window.outerWidth, cssH = window.outerHeight;
-    const k = w.width / cssW;   // window units per CSS pixel
-    if (!cssW || !cssH || !(k > 0) || (cssW <= s.availWidth && cssH <= s.availHeight)) return;
-    const nw = Math.min(cssW, s.availWidth - 16), nh = Math.min(cssH, s.availHeight - 16);
-    log('window: screen', s.availWidth, 'x', s.availHeight, '-> size', nw, 'x', nh);
-    overwolf.windows.changeSize(w.id, Math.round(nw * k), Math.round(nh * k), () =>
-      overwolf.windows.changePosition(w.id, Math.round(((s.availLeft || 0) + (s.availWidth - nw) / 2) * k),
-        Math.round(((s.availTop || 0) + (s.availHeight - nh) / 2) * k), () => {}));
+    const s = window.screen, dpr = window.devicePixelRatio || 1;
+    const ww = w.width / dpr, wh = w.height / dpr;
+    if (!(ww > 0) || !(wh > 0) || (ww <= s.availWidth && wh <= s.availHeight)) return;
+    const nw = Math.min(ww, s.availWidth - 16), nh = Math.min(wh, s.availHeight - 16);
+    log('window fit:', Math.round(ww), 'x', Math.round(wh), 'on', s.availWidth, 'x', s.availHeight, '->', Math.round(nw), 'x', Math.round(nh), 'dpr', dpr);
+    overwolf.windows.changeSize({ window_id: w.id, width: Math.round(nw * dpr), height: Math.round(nh * dpr) }, () =>
+      overwolf.windows.changePosition(w.id, Math.round(((s.availLeft || 0) + (s.availWidth - nw) / 2) * dpr),
+        Math.round(((s.availTop || 0) + (s.availHeight - nh) / 2) * dpr), () => {}));
   });
   if (document.readyState === 'complete') fitScreen(); else window.addEventListener('load', fitScreen);
+  window.addEventListener('focus', fitScreen);
 
   document.getElementById('ow-bar').addEventListener('click', e => {
     const b = e.target.closest('button');
